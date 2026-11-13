@@ -1,0 +1,264 @@
+---
+// The résumé as a page. The text lives in src/data/resume.ts and the
+// projects in src/data/site.ts; the PDFs are in public/resume/.
+import Site from '../layouts/Site.astro';
+import { person, downloads, summary, certifications, competencies, employer, roles, education } from '../data/resume';
+import { projects } from '../data/site';
+---
+
+<Site
+  title="Résumé"
+  heading={person.name}
+  kicker={person.role}
+  home="/resume"
+  description={`${person.name}, ${person.role}. ${person.place}.`}
+>
+  <div class="top">
+    <p class="contact">
+      <span>{person.place}</span>
+      <a href={`tel:${person.phone.replace(/[^+\d]/g, '')}`}>{person.phone}</a>
+      <a href={`mailto:${person.email}`}>{person.email}</a>
+      <a href={person.linkedin}>LinkedIn</a>
+      <a href={person.github}>GitHub</a>
+    </p>
+    <p class="downloads">
+      {
+        downloads.map((d) => (
+          <a href={d.href} download>
+            ↓ {d.text}
+          </a>
+        ))
+      }
+    </p>
+  </div>
+
+  <section>
+    <h2>Professional summary</h2>
+    <p>{summary}</p>
+  </section>
+
+  <section>
+    <h2>Certifications</h2>
+    <dl class="pairs">
+      {
+        certifications.map(([group, items]) => (
+          <>
+            <dt>{group}</dt>
+            <dd>{items.join(' · ')}</dd>
+          </>
+        ))
+      }
+    </dl>
+  </section>
+
+  <section>
+    <h2>Core competencies</h2>
+    <dl class="pairs">
+      {
+        competencies.map(([group, items]) => (
+          <>
+            <dt>{group}</dt>
+            <dd>{items.join(' · ')}</dd>
+          </>
+        ))
+      }
+    </dl>
+  </section>
+
+  <section>
+    <h2>Professional experience</h2>
+    <p class="employer">
+      <strong>{employer.name}</strong>
+      <span class="label">{employer.when}</span>
+    </p>
+    <div class="roles">
+      {
+        roles.map((role) => (
+          <article class="role">
+            <header>
+              <h3>{role.title}</h3>
+              <span class="label">{role.when}</span>
+            </header>
+            <p class="where">{role.where}</p>
+            <ul>
+              {role.points.map((point) => (
+                <li>{point}</li>
+              ))}
+            </ul>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section>
+    <h2>Projects</h2>
+    <ul class="projects">
+      {
+        projects.map((p) => (
+          <li>
+            <strong>{p.name}</strong>: {p.about}
+            {p.link && (
+              <>
+                {' '}
+                <a href={p.link.href}>{p.link.text}&nbsp;→</a>
+              </>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section>
+    <h2>Education</h2>
+    <p>
+      <strong>{education.school}</strong>
+      <br />
+      {education.degree} · {education.when}
+    </p>
+  </section>
+</Site>
+
+<style>
+  .top {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem 1.2rem;
+    font-size: 0.95rem;
+  }
+
+  .contact a,
+  .projects a {
+    color: var(--mine);
+    font-weight: 600;
+  }
+
+  .downloads {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .downloads a {
+    padding: 0.55rem 1rem;
+    border-radius: 8px;
+    background: var(--mine);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+  }
+
+  .downloads a + a {
+    background: var(--card);
+    color: var(--ink);
+    border: 1.5px solid var(--ink);
+  }
+
+  .downloads a:hover {
+    filter: brightness(1.08);
+  }
+
+  section {
+    margin-top: 2.2rem;
+  }
+
+  h2 {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.9rem;
+    border-bottom: 1.5px solid var(--ink);
+  }
+
+  .pairs {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.35rem 1.5rem;
+    margin: 0;
+  }
+
+  .pairs dt {
+    font-weight: 600;
+  }
+
+  .pairs dd {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .employer,
+  .role header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.1rem 1rem;
+  }
+
+  .employer {
+    font-size: 1.15rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .roles {
+    display: grid;
+    gap: 1.4rem;
+    padding-left: 1rem;
+    border-left: 4px solid var(--rule);
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .where {
+    font-size: 0.88rem;
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  .role ul,
+  .projects {
+    margin-top: 0.4rem;
+    padding-left: 1.15rem;
+    display: grid;
+    gap: 0.35rem;
+    font-size: 0.98rem;
+    line-height: 1.5;
+  }
+
+  .projects {
+    margin-top: 0;
+  }
+
+  @media (max-width: 540px) {
+    .pairs {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .pairs dd {
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  @media print {
+    .downloads {
+      display: none;
+    }
+  }
+</style>

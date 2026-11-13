@@ -21,12 +21,13 @@ const {
   title,
   heading = title,
   kicker,
-  description = 'Cyber systems, writing, photography, and other preoccupations.',
+  description = 'Nicholas Cole Davis: vulnerability management and security engineer in Tokyo. Résumé, projects, writing and photography.',
   home,
 } = Astro.props;
 
 const nav = [
   { href: '/', text: 'Map' },
+  { href: '/resume', text: 'Résumé' },
   { href: '/thoughts', text: 'Thoughts' },
   { href: '/projects', text: 'Projects' },
   { href: '/work', text: 'Work' },
@@ -61,7 +62,7 @@ const stripe = station ? [...new Set(station.lines.map((l) => lines[l].color))] 
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <title>{title} · Cole</title>
+    <title>{title} · Nicholas Cole Davis</title>
     <script is:inline>
       // Like the map, the pages go dark after sunset in Tokyo
       // (?theme=day or ?theme=night in the address holds it one way).
@@ -78,7 +79,7 @@ const stripe = station ? [...new Set(station.lines.map((l) => lines[l].color))] 
   </head>
   <body>
     <header class="bar">
-      <a class="bar-name" href="/">Cole</a>
+      <a class="bar-name" href="/">Nicholas Cole Davis</a>
       <nav aria-label="Sections">
         {
           nav.map((item) => (
@@ -127,6 +128,6 @@ const stripe = station ? [...new Set(station.lines.map((l) => lines[l].color))] 
       <slot />
     </main>
 
-    <footer class="foot">© {new Date().getFullYear()} Cole</footer>
+    <footer class="foot">© {new Date().getFullYear()} Nicholas Cole Davis</footer>
   </body>
 </html>

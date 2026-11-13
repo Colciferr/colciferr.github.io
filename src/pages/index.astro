@@ -9,6 +9,7 @@
 // - The shape of the map is worked out in src/lib/metro-layout.ts
 import { getCollection } from 'astro:content';
 import { projects, work } from '../data/site';
+import { roles } from '../data/resume';
 import { stops } from '../data/stops';
 import pictures from '../data/pictures.json';
 import { lines, nodes, geo, width, height, lineWidth, labelSize, labelLine2, fetched } from '../lib/metro-layout';
@@ -35,6 +36,7 @@ const pageItems: Record<string, { title: string; note?: string; href?: string }[
   '/thoughts': posts.map((p) => ({ title: p.data.title, note: dateFmt.format(p.data.date), href: `/thoughts/${p.id}` })),
   '/projects': projects.map((p) => ({ title: p.name, note: p.about })),
   '/work': work.map((w) => ({ title: w.name, note: w.about })),
+  '/resume': roles.map((r) => ({ title: r.title, note: `${r.where} · ${r.when}` })),
 };
 const sections: Record<number, { title: string; href: string; items: { title: string; note?: string; href?: string }[] }> = {};
 for (const [station, page] of Object.entries(stops)) {
@@ -45,6 +47,11 @@ for (const [station, page] of Object.entries(stops)) {
   }
   sections[node.id] = { ...page, items: pageItems[page.href] ?? [] };
 }
+// The same pages in the order they are listed in stops.ts, for the sign.
+const pageLinks = Object.entries(stops).flatMap(([station, page]) => {
+  const node = byName.get(station.toLowerCase());
+  return node ? [{ ...page, node }] : [];
+});
 
 // Photographs, grouped by station.
 const photos: Record<number, Photo[]> = {};
@@ -139,7 +146,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <title>Cole</title>
+    <title>Nicholas Cole Davis</title>
   </head>
   <body>
     <div class="viewport" id="viewport">
@@ -222,27 +229,22 @@ const fetchedOn = dateFmt.format(new Date(fetched));
 
     <header class="sign">
       <div class="sign-head">
-        <h1>Cole</h1>
-        <p>Cyber systems, writing, photography, and other preoccupations.</p>
-      </div>
-      <p class="clock">
-        <span id="clock">--:--:--</span>
-        <span id="running">Loading the timetable…</span>
-      </p>
-      <div class="views" role="group" aria-label="Map style">
-        <button type="button" data-view="diagram" aria-pressed="true">Logical</button>
-        <button type="button" data-view="geo" aria-pressed="false">Physical</button>
+        <h1>Nicholas Cole Davis</h1>
+        <p>Vulnerability management and security engineer in Tokyo. This is my résumé, my projects, my writing and my photographs.</p>
       </div>
 
-      <details class="fold" open>
-        <summary>Pages</summary>
-        <ul class="stops">
+      <!-- The plain way in: every page of the site, one click each. -->
+      <nav class="go" aria-label="Pages">
+        <ul>
           {
-            Object.entries(sections).map(([id, section]) => (
+            pageLinks.map((page) => (
               <li>
-                <button type="button" data-goto={id}>
-                  <span class="stop-name">{section.title}</span>
-                  <span class="stop-what">{nodes[Number(id)].en} station</span>
+                <a href={page.href}>
+                  <span class="stop-name">{page.title}</span>
+                  <span class="stop-what">{page.node.en} station</span>
+                </a>
+                <button type="button" data-goto={page.node.id} title={`Show ${page.node.en} on the map`} aria-label={`Show ${page.node.en} on the map`}>
+                  ◎
                 </button>
               </li>
             ))
@@ -256,11 +258,19 @@ const fetchedOn = dateFmt.format(new Date(fetched));
             </a>
           </li>
         </ul>
-      </details>
+      </nav>
+      <p class="clock">
+        <span id="clock">--:--:--</span>
+        <span id="running">Loading the timetable…</span>
+      </p>
+      <div class="views" role="group" aria-label="Map style">
+        <button type="button" data-view="diagram" aria-pressed="true">Logical</button>
+        <button type="button" data-view="geo" aria-pressed="false">Physical</button>
+      </div>
 
       {
         photoStations.length > 0 && (
-          <details class="fold" open>
+          <details class="fold">
             <summary>Pictures taken near</summary>
             <ul class="stops compact">
               {photoStations.map((n) => (
@@ -304,6 +314,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
       </details>
 
       <nav class="elsewhere" aria-label="Sections">
+        <a href="/resume">Résumé</a>
         <a href="/thoughts">Thoughts</a>
         <a href="/projects">Projects</a>
         <a href="/work">Work</a>
@@ -1563,7 +1574,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
   }
 
   .sign h1 {
-    font-size: 2.1rem;
+    font-size: 1.55rem;
     font-weight: 700;
     line-height: 1;
     letter-spacing: -0.02em;
@@ -1620,6 +1631,55 @@ const fetchedOn = dateFmt.format(new Date(fetched));
   .views button[aria-pressed='true'] {
     background: var(--ink);
     color: var(--paper);
+  }
+
+  /* The page links at the top of the sign. */
+  .go ul {
+    list-style: none;
+    margin: 0;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .go li {
+    display: flex;
+    align-items: stretch;
+  }
+
+  .go a {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0.4rem 1rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .go a .stop-name {
+    font-size: 1.05rem;
+  }
+
+  .go a .stop-name::after {
+    content: ' →';
+  }
+
+  .go button {
+    flex: none;
+    width: 2.6rem;
+    background: none;
+    border: 0;
+    color: var(--muted);
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+
+  .go a:hover,
+  .go button:hover {
+    background: var(--hover);
+  }
+
+  .go button:hover {
+    color: var(--mine);
   }
 
   .fold summary {
