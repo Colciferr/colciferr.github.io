@@ -821,6 +821,12 @@ const south = Math.max(...everyKm.map((p) => p[1])) + GEO_MARGIN;
 const gpx = (p: Pt): Pt => [Math.round((p[0] - west) * GEO_SCALE * 10) / 10, Math.round((p[1] - north) * GEO_SCALE * 10) / 10];
 const realPx = realKm.map(gpx);
 
+// The Keio line out to Mt. Takao, and the stops on it worth naming.
+// The source spells long vowels with accents (Chōfu); the rest of the map does not.
+const plain = (name: string) => name.normalize('NFD').replace(/[̀-ͯ]/g, '');
+const keioWay = (otherStations.keio as { en: string; ja: string; lat: number; lon: number }[]).map((st) => ({ ...st, en: plain(st.en) }));
+const KEIO_NAMED = ['Meidaimae', 'Chofu', 'Fuchu', 'Seiseki-sakuragaoka', 'Takahatafudo', 'Kitano', 'Mejirodai'];
+
 const geoLines = lines.map((line) => {
   const pts = line.nodes.map((id) => realPx[id]);
   if (line.id === 'ToKyoto') {
@@ -828,6 +834,11 @@ const geoLines = lines.map((line) => {
     const stops = TOKAIDO_SHINKANSEN.slice(2, -1).map((st) => gpx(km(st.lat, st.lon)));
     const route = [pts[0], ...stops, pts[pts.length - 1]];
     return { segs: [route], path: rounded([realPx[at('Tokyo').id], ...route]) };
+  }
+  if (line.id === 'ToTakaosanguchi') {
+    // The spur to Mt. Takao becomes the Keio line all the way from Shinjuku.
+    const way = keioWay.slice(1, -1).map((st) => gpx(km(st.lat, st.lon)));
+    return { segs: [[pts[0], pts[pts.length - 1]]], path: rounded([realPx[at('Shinjuku').id], ...way, pts[pts.length - 1]]) };
   }
   const segs = pts.slice(1).map((p, i) => [pts[i], p]);
   if (line.loop) segs.push([pts[pts.length - 1], pts[0]]);
@@ -909,9 +920,13 @@ export const geo = {
   // The shape of the land and its large lakes, as SVG paths.
   land: landPaths,
   water: lakePaths,
-  // Shinkansen stops between Shinagawa and Kyoto, shown only on this map.
-  stops: TOKAIDO_SHINKANSEN.slice(2, -1).map((st) => {
+  // Stops on the long-distance routes, shown only on this map: the Shinkansen
+  // between Shinagawa and Kyoto, and the main stops of the Keio line.
+  stops: [
+    ...TOKAIDO_SHINKANSEN.slice(2, -1).map((st) => ({ ...st, color: '#1153af' })),
+    ...keioWay.filter((st) => KEIO_NAMED.includes(st.en)).map((st) => ({ ...st, color: '#8a93a6' })),
+  ].map((st) => {
     const p = gpx(km(st.lat, st.lon));
-    return { en: st.en, ja: st.ja, x: p[0], y: p[1] };
+    return { en: st.en, ja: st.ja, x: p[0], y: p[1], color: st.color };
   }),
 };

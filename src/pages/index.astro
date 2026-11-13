@@ -201,13 +201,13 @@ const fetchedOn = dateFmt.format(new Date(fetched));
               })
             }
           </g>
-          <!-- Shinkansen stops on the way to Kyoto: only on the physical map. -->
+          <!-- Stops on the way to Kyoto and to Mt. Takao: only on the physical map. -->
           <g class="geo-only">
             {
               geo.stops.map((stop) => (
                 <g transform={`translate(${stop.x} ${stop.y})`}>
                   <g class="mark">
-                    <circle class="way" r="4" />
+                    <circle class="way" r="4" stroke={stop.color} />
                     <text class="name" x="10" y="4">
                       {stop.en}
                     </text>
@@ -230,7 +230,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
         <span id="running">Loading the timetable…</span>
       </p>
       <div class="views" role="group" aria-label="Map style">
-        <button type="button" data-view="diagram" aria-pressed="true">Diagram</button>
+        <button type="button" data-view="diagram" aria-pressed="true">Logical</button>
         <button type="button" data-view="geo" aria-pressed="false">Physical</button>
       </div>
 
@@ -1362,7 +1362,6 @@ const fetchedOn = dateFmt.format(new Date(fetched));
 
   .geo-only .way {
     fill: var(--card);
-    stroke: #1153af;
     stroke-width: 2.5;
   }
 

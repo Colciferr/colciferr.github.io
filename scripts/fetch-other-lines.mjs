@@ -118,18 +118,34 @@ for (const [calendar, file] of [
 // Where each of these stations really is, for the physical map.
 {
   const railways = ['JR-East.Yamanote', 'JR-East.ChuoRapid', 'JR-East.Ome', 'Seibu.Shinjuku', 'Seibu.Haijima', 'Keio.Takao'];
-  const all = JSON.parse(await download('data/stations.json')).filter((s) => railways.includes(s.railway) && s.coord);
+  const everything = JSON.parse(await download('data/stations.json'));
+  const all = everything.filter((s) => railways.includes(s.railway) && s.coord);
   const stations = {};
   for (const name of [...new Set([...LINES.flatMap((l) => l.stations), 'Takaosanguchi'])]) {
     const found = all.find((s) => squash(lastPart(s.id)) === squash(name));
     if (found) stations[name] = [found.coord[1], found.coord[0]]; // latitude, longitude
     else console.warn(`  No coordinates found for ${name}`);
   }
+  // The way to Mt. Takao: the Keio Line from Shinjuku to Kitano, then the
+  // Keio Takao Line to Takaosanguchi, station by station.
+  const order = JSON.parse(await download('data/railways.json'));
+  const stationsOf = (id) => order.find((r) => r.id === id).stations;
+  const main = stationsOf('Keio.Keio');
+  const branch = stationsOf('Keio.Takao');
+  const way = [
+    ...main.slice(0, main.indexOf('Keio.Keio.Kitano') + 1),
+    ...branch.slice(branch.indexOf('Keio.Takao.Kitano') + 1),
+  ];
+  const keio = way
+    .map((id) => everything.find((s) => s.id === id))
+    .filter((s) => s?.coord)
+    .map((s) => ({ en: s.title.en, ja: s.title.ja, lat: s.coord[1], lon: s.coord[0] }));
+
   fs.writeFileSync(
     path.join(root, 'src/data/metro/other-stations.json'),
-    JSON.stringify({ source: 'Mini Tokyo 3D (github.com/nagix/mini-tokyo-3d), MIT licence', stations }, null, 1) + '\n',
+    JSON.stringify({ source: 'Mini Tokyo 3D (github.com/nagix/mini-tokyo-3d), MIT licence', stations, keio }, null, 1) + '\n',
   );
-  console.log(`  ${Object.keys(stations).length} station positions`);
+  console.log(`  ${Object.keys(stations).length} station positions, ${keio.length} stations on the way to Takaosanguchi`);
 }
 
 const licence = await download('LICENSE');
