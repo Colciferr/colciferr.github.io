@@ -253,7 +253,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
         <summary>About this map</summary>
         <p>
           Trains are drawn where their timetable says they should be right now. They are not tracked live, so
-          delays are not shown. The map is a diagram, not to scale.
+          delays are not shown. The map is a diagram, not to scale, and goes dark after sunset in Tokyo.
         </p>
         <p>
           Transport data is provided by the Public Transportation Open Data Center, based on data from Tokyo Metro. It
@@ -413,10 +413,73 @@ const fetchedOn = dateFmt.format(new Date(fetched));
         });
       }
       {
-        // Start with the loop in the middle of the space the sign leaves free.
+        // The resting view: the loop in the middle of the space the sign leaves free.
         const sign = document.querySelector('.sign')!.getBoundingClientRect();
         const covered = window.innerWidth > 640 ? sign.right : 0;
-        centerOn(data.start.x - covered / 2, data.start.y, false);
+        const homeX = () => data.start.x - covered / 2 / zoom;
+
+        // The opening: start close in on Tokyo, draw every line while pulling
+        // back, then bring the stations and trains in together. It plays once
+        // per visit (add ?intro to the address to see it again), and not at all
+        // if the address points at a station or the visitor prefers less motion.
+        let seen = false;
+        try {
+          seen = sessionStorage.getItem('intro') === '1';
+          sessionStorage.setItem('intro', '1');
+        } catch {
+          // Storage can be unavailable; the opening then simply plays each time.
+        }
+        const replay = new URLSearchParams(location.search).has('intro');
+        if (still || location.hash || (seen && !replay)) {
+          centerOn(homeX(), data.start.y, false);
+        } else {
+          const START = 1.7; // how far zoomed in the opening begins
+          const DRAW = 1000; // milliseconds to draw one line
+          const STAGGER = 80; // delay between one line starting and the next
+          const tokyo = data.nodes.find((n) => n.en === 'Tokyo') ?? { x: data.start.x, y: data.start.y };
+          const drawn = Array.from(svg.querySelectorAll<SVGPathElement>('path.line:not(.excursion)'))
+            .map((path) => {
+              const from = path.getPointAtLength(0);
+              return { path, length: path.getTotalLength(), far: Math.hypot(from.x - tokyo.x, from.y - tokyo.y) };
+            })
+            .sort((a, b) => a.far - b.far); // lines that begin nearest Tokyo go first
+          const total = DRAW + STAGGER * (drawn.length - 1);
+
+          svg.classList.add('intro');
+          // Hide each line by making it one long dash, pushed back by its own length...
+          drawn.forEach(({ path, length }) => {
+            path.style.transition = 'none';
+            path.style.strokeDasharray = `${length}`;
+            path.style.strokeDashoffset = `${length}`;
+          });
+          setZoom(START);
+          centerOn(tokyo.x, tokyo.y, false);
+          svg.getBoundingClientRect(); // make the browser take that in before anything moves
+          // ...then slide the dash forward, one line after another.
+          drawn.forEach(({ path }, i) => {
+            path.style.transition = `stroke-dashoffset ${DRAW}ms ease-in-out ${i * STAGGER}ms`;
+            path.style.strokeDashoffset = '0';
+          });
+
+          const began = performance.now();
+          const step = (now: number) => {
+            const t = Math.min(1, (now - began) / total);
+            const e = t * t * (3 - 2 * t);
+            setZoom(START + (1 - START) * e);
+            centerOn(tokyo.x + (homeX() - tokyo.x) * e, tokyo.y + (data.start.y - tokyo.y) * e, false);
+            if (t < 1) {
+              requestAnimationFrame(step);
+              return;
+            }
+            svg.classList.remove('intro');
+            drawn.forEach(({ path }) => {
+              path.style.strokeDasharray = '';
+              path.style.strokeDashoffset = '';
+              path.style.transition = '';
+            });
+          };
+          requestAnimationFrame(step);
+        }
       }
 
       let drag: { x: number; y: number; left: number; top: number } | null = null;
@@ -642,7 +705,23 @@ const fetchedOn = dateFmt.format(new Date(fetched));
         });
       }
 
+      // ------------------------------------------------------- Day and night
+      // The map goes dark between sunset and sunrise in Tokyo. The hours are
+      // rough monthly averages. Add ?theme=day or ?theme=night to the address
+      // to hold it one way.
+      const SUNRISE = [6.8, 6.5, 5.9, 5.2, 4.7, 4.4, 4.6, 5.0, 5.3, 5.7, 6.2, 6.7];
+      const SUNSET = [16.8, 17.3, 17.8, 18.2, 18.6, 19.0, 18.9, 18.5, 17.8, 17.1, 16.6, 16.5];
+      const held = new URLSearchParams(location.search).get('theme');
+      function applyDaylight() {
+        const t = new Date(Date.now() + 9 * 3600 * 1000);
+        const hour = t.getUTCHours() + t.getUTCMinutes() / 60;
+        const dark = held ? held === 'night' : hour < SUNRISE[t.getUTCMonth()] || hour >= SUNSET[t.getUTCMonth()];
+        document.documentElement.classList.toggle('night', dark);
+      }
+      applyDaylight();
+
       function draw() {
+        applyDaylight();
         const { minutes, holiday, clock } = tokyoNow();
         clockEl.textContent = clock;
         drawSim(minutes);
@@ -938,8 +1017,23 @@ const fetchedOn = dateFmt.format(new Date(fetched));
     --muted: #68718a;
     --rule: #d9dce4;
     --mine: #e6007e;
+    --head: #14213d;
+    --hover: #f0f2f7;
     --sans: 'IBM Plex Sans', 'Hiragino Sans', 'Yu Gothic UI', 'Yu Gothic', 'Noto Sans JP', system-ui, sans-serif;
     --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+  }
+
+  /* After dark in Tokyo. */
+  :root.night {
+    --paper: #0d1220;
+    --card: #171f33;
+    --ink: #e9ecf3;
+    --muted: #98a2b8;
+    --rule: #2a3450;
+    --mine: #ff4fa8;
+    --head: #080c17;
+    --hover: #222c46;
+    color-scheme: dark;
   }
 
   * {
@@ -1041,6 +1135,19 @@ const fetchedOn = dateFmt.format(new Date(fetched));
 
   .dim {
     opacity: 0.12;
+  }
+
+  /* During the opening, only the lines being drawn are visible. */
+  #map .stations,
+  #map #trains {
+    transition: opacity 0.45s;
+  }
+
+  #map.intro .stations,
+  #map.intro #trains,
+  #map.intro .casing,
+  #map.intro .line.excursion {
+    opacity: 0;
   }
 
   .station {
@@ -1178,7 +1285,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
   }
 
   .sign-head {
-    background: var(--ink);
+    background: var(--head);
     color: #fff;
     padding: 1rem 1rem 0.9rem;
     border-radius: 9px 9px 0 0;
@@ -1253,7 +1360,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
   .stops a:hover,
   .legend button:hover,
   .legend button[aria-pressed='true'] {
-    background: #f0f2f7;
+    background: var(--hover);
   }
 
   .stop-name {
@@ -1366,7 +1473,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
   }
 
   .zoom button:hover {
-    background: #f0f2f7;
+    background: var(--hover);
   }
 
   /* -------------------------------------------------------------- Panel */
@@ -1467,7 +1574,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
   }
 
   .found a:hover {
-    background: color-mix(in srgb, var(--mine) 7%, #fff);
+    background: color-mix(in srgb, var(--mine) 10%, var(--card));
   }
 
   .found span {
@@ -1568,7 +1675,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
     border: 0;
     border-radius: 4px;
     overflow: hidden;
-    background: #e9ebf0;
+    background: var(--hover);
     cursor: zoom-in;
   }
 
