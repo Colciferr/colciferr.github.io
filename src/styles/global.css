@@ -1,32 +1,34 @@
-/* Site-wide look. Change the values under :root to re-theme everything. */
+/* The look of every page except the map, kept in step with the map's own
+   styles: same paper, ink, pink accent and signage. Change the values under
+   :root to re-theme all of them. */
 
 :root {
-  --paper: #f4f4ef;
-  --ink: #121212;
-  --muted: #6c6c66;
-  --rule: #d9d9d1;
+  --paper: #f8f8f5;
+  --card: #ffffff;
+  --ink: #14213d;
+  --muted: #68718a;
+  --rule: #d9dce4;
+  --mine: #e6007e;
+  --head: #14213d;
+  --hover: #f0f2f7;
 
-  /* One colour per level of unfolding on the home page. */
-  --d1: #1f3bff;
-  --d2: #d4380d;
-  --d3: #0b7a53;
-
-  --serif: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --sans: 'IBM Plex Sans', 'Hiragino Sans', 'Yu Gothic UI', 'Yu Gothic', 'Noto Sans JP', system-ui, sans-serif;
   --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
 
-  --gutter: clamp(1.25rem, 5vw, 4rem);
+  --gutter: clamp(1rem, 4vw, 2.5rem);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #0e0f11;
-    --ink: #edebe6;
-    --muted: #8d8c86;
-    --rule: #2a2b2e;
-    --d1: #93a5ff;
-    --d2: #ff8a5c;
-    --d3: #5fd3a2;
-  }
+/* After dark in Tokyo. */
+:root.night {
+  --paper: #0d1220;
+  --card: #171f33;
+  --ink: #e9ecf3;
+  --muted: #98a2b8;
+  --rule: #2a3450;
+  --mine: #ff4fa8;
+  --head: #080c17;
+  --hover: #222c46;
+  color-scheme: dark;
 }
 
 *,
@@ -41,10 +43,13 @@ html {
 
 body {
   margin: 0;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
   background: var(--paper);
   color: var(--ink);
-  font-family: var(--serif);
-  font-size: 1.125rem;
+  font-family: var(--sans);
+  font-size: 1.0625rem;
   line-height: 1.6;
 }
 
@@ -60,115 +65,233 @@ ol {
 a {
   color: inherit;
   text-decoration-thickness: 0.06em;
-  text-underline-offset: 0.18em;
+  text-underline-offset: 0.2em;
 }
 
 a:hover {
-  color: var(--d1);
+  color: var(--mine);
 }
 
 :focus-visible {
-  outline: 2px solid var(--d1);
+  outline: 2px solid var(--mine);
   outline-offset: 3px;
   border-radius: 2px;
 }
 
-/* Small monospace labels used for nav, dates and controls. */
+/* Small capital labels, as used for dates and section names. */
 .label {
   font-family: var(--mono);
   font-size: 0.75rem;
   letter-spacing: 0.04em;
-  text-transform: uppercase;
   color: var(--muted);
 }
 
-/* Shared page shell */
-.shell {
-  min-height: 100vh;
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  padding: 0 var(--gutter);
-}
-
-.shell > header {
+/* ------------------------------------------------------------- Top bar */
+.bar {
   display: flex;
   flex-wrap: wrap;
+  align-items: baseline;
   justify-content: space-between;
-  gap: 0.5rem 2rem;
-  padding: 1.5rem 0;
+  gap: 0.4rem 2rem;
+  padding: 0.9rem var(--gutter);
+  background: var(--head);
+  color: #fff;
 }
 
-.shell > header a {
+.bar a {
   text-decoration: none;
 }
 
-.shell > header a:hover,
-.shell > header a[aria-current='page'] {
-  color: var(--ink);
-}
-
-.shell > header nav {
-  display: flex;
-  gap: 1.5rem;
-}
-
-.shell > main {
-  flex: 1;
-  padding: clamp(2rem, 8vh, 6rem) 0 4rem;
-}
-
-.shell > footer {
-  padding: 1.5rem 0;
-  border-top: 1px solid var(--rule);
-}
-
-/* Inner pages (Thoughts, Projects, Work) */
-.page-title {
-  font-size: clamp(2.5rem, 1.5rem + 5vw, 5rem);
-  font-weight: 350;
-  line-height: 1;
+.bar-name {
+  font-size: 1.5rem;
+  font-weight: 700;
   letter-spacing: -0.02em;
-  margin-bottom: clamp(2rem, 6vh, 4rem);
+  line-height: 1;
 }
 
+.bar nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1.4rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.bar nav a {
+  opacity: 0.75;
+  padding-bottom: 0.15rem;
+  border-bottom: 2px solid transparent;
+}
+
+.bar a:hover {
+  color: #fff;
+  opacity: 1;
+}
+
+.bar nav a[aria-current='page'] {
+  opacity: 1;
+  border-bottom-color: var(--mine);
+}
+
+/* ---------------------------------------------------------------- Page */
+.page {
+  flex: 1;
+  width: 100%;
+  max-width: 54rem;
+  margin: 0 auto;
+  padding: clamp(1.25rem, 4vw, 2.5rem) var(--gutter) 4rem;
+}
+
+/* The station name board at the top of each page. */
+.board {
+  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+  background: var(--card);
+  border: 1.5px solid var(--ink);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.board-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem 1.2rem;
+  padding: 1.1rem 1.3rem;
+}
+
+.board-signs {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.board h1 {
+  font-size: clamp(1.8rem, 1.3rem + 2.5vw, 3rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.board-kicker {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 0.2rem;
+}
+
+.board-band {
+  position: relative;
+  min-height: 0.5rem;
+  background: var(--head);
+  color: #fff;
+  font-size: 0.82rem;
+}
+
+.board-band a {
+  display: block;
+  padding: 0.5rem 1.3rem 0.4rem;
+  text-decoration: none;
+}
+
+.board-band a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.board-band [lang='ja'] {
+  opacity: 0.7;
+  margin-left: 0.3em;
+}
+
+/* A stripe in the colours of the lines that call at the station. */
+.board-stripe {
+  position: absolute;
+  inset: 0 0 auto 0;
+  display: flex;
+  height: 0.3rem;
+}
+
+.board-stripe i {
+  flex: 1;
+}
+
+/* The station number sign: ring, line letters, station number. */
+.code {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  width: 3rem;
+  height: 3rem;
+  border: 0.42rem solid var(--c);
+  border-radius: 50%;
+  background: #fff;
+  color: #111;
+  line-height: 0.95;
+}
+
+.code.square {
+  border-radius: 0.3rem;
+}
+
+.code b {
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.code i {
+  font-style: normal;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+/* --------------------------------------------------------------- Lists */
 .rows {
   list-style: none;
   padding: 0;
-  max-width: 52rem;
-  border-top: 1px solid var(--rule);
+  display: grid;
+  gap: 0.5rem;
 }
 
 .rows > li {
-  border-bottom: 1px solid var(--rule);
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+}
+
+.rows > li:hover,
+.rows > li:focus-within {
+  border-color: var(--mine);
 }
 
 .row {
   display: grid;
-  grid-template-columns: 7rem 1fr;
-  gap: 0.25rem 1.5rem;
+  grid-template-columns: 7.5rem 1fr;
+  gap: 0.15rem 1.25rem;
   align-items: baseline;
-  padding: 1.1rem 0;
+  padding: 0.9rem 1.1rem;
 }
 
 .row-title {
-  font-size: clamp(1.35rem, 1.1rem + 1vw, 1.9rem);
-  font-weight: 400;
-  line-height: 1.2;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.25;
 }
 
 .row-note {
   grid-column: 2;
   color: var(--muted);
-  max-width: 38rem;
+  font-size: 0.95rem;
 }
 
 a.row {
   text-decoration: none;
 }
 
+a.row:hover {
+  color: inherit;
+}
+
 a.row:hover .row-title {
-  color: var(--d1);
+  color: var(--mine);
 }
 
 /* Rows that open in place (Projects, Work) */
@@ -181,26 +304,27 @@ details.row-fold > summary::-webkit-details-marker {
   display: none;
 }
 
-details.row-fold > summary .row-title {
-  text-decoration: underline;
-  text-decoration-color: var(--d1);
-  text-decoration-thickness: 0.08em;
-  text-underline-offset: 0.2em;
+details.row-fold > summary .row-title::after {
+  content: '+';
+  float: right;
+  font-family: var(--mono);
+  font-weight: 400;
+  color: var(--muted);
 }
 
-details.row-fold[open] > summary .row-title {
-  text-decoration-style: dotted;
+details.row-fold[open] > summary .row-title::after {
+  content: '−';
 }
 
 details.row-fold > .row-body {
-  padding: 0 0 1.4rem 8.5rem;
-  color: var(--d1);
-  max-width: 46rem;
-  font-size: 1.2rem;
-  line-height: 1.5;
+  padding: 0 1.1rem 1.1rem 9.85rem;
+  color: var(--muted);
+  max-width: 48rem;
 }
 
 details.row-fold > .row-body a {
+  color: var(--mine);
+  font-weight: 600;
   white-space: nowrap;
 }
 
@@ -214,21 +338,18 @@ details.row-fold > .row-body a {
   }
 
   details.row-fold > .row-body {
-    padding-left: 0;
+    padding-left: 1.1rem;
   }
 }
 
-/* A single post */
+/* ------------------------------------------------------------ One post */
 .post {
-  max-width: 38rem;
+  max-width: 40rem;
 }
 
-.post h1 {
-  font-size: clamp(2rem, 1.4rem + 3vw, 3.5rem);
-  font-weight: 380;
-  line-height: 1.05;
-  letter-spacing: -0.015em;
-  margin: 0.75rem 0 2.5rem;
+.post-body {
+  font-size: 1.125rem;
+  line-height: 1.7;
 }
 
 .post-body > * + * {
@@ -236,20 +357,21 @@ details.row-fold > .row-body a {
 }
 
 .post-body h2 {
-  font-size: 1.5rem;
-  font-weight: 500;
+  font-size: 1.45rem;
+  font-weight: 700;
   line-height: 1.2;
+  letter-spacing: -0.01em;
   margin-top: 2.5rem;
 }
 
 .post-body a {
-  text-decoration-color: var(--d1);
+  color: var(--mine);
 }
 
 .post-body code {
   font-family: var(--mono);
   font-size: 0.85em;
-  background: color-mix(in srgb, var(--ink) 8%, transparent);
+  background: var(--hover);
   padding: 0.1em 0.35em;
   border-radius: 3px;
 }
@@ -257,7 +379,7 @@ details.row-fold > .row-body a {
 .post-body pre {
   overflow-x: auto;
   padding: 1rem;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 0.85rem;
 }
 
@@ -269,12 +391,23 @@ details.row-fold > .row-body a {
 .post-body blockquote {
   margin-left: 0;
   margin-right: 0;
-  padding-left: 1.25rem;
-  border-left: 2px solid var(--d2);
-  font-style: italic;
+  padding-left: 1.1rem;
+  border-left: 3px solid var(--mine);
+  color: var(--muted);
 }
 
 .back {
   display: inline-block;
-  margin-top: 4rem;
+  margin-top: 3rem;
+  font-size: 0.85rem;
+  color: var(--mine);
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------- Footer */
+.foot {
+  padding: 1.2rem var(--gutter);
+  border-top: 1px solid var(--rule);
+  font-size: 0.8rem;
+  color: var(--muted);
 }

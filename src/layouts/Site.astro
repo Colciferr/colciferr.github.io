@@ -1,28 +1,50 @@
 ---
-// The shared shell for every page: <head>, the top nav, and the footer.
-// Whatever a page puts between <Site> ... </Site> lands in the <slot />.
+// The shared shell for every page except the map: the top bar, a station
+// name board for the page, and the footer. Whatever a page puts between
+// <Site> ... </Site> lands in the <slot />.
+//
+// If a page lives at a station (see src/data/stops.ts), pass its address as
+// `home` and the name board shows that station's signs and a link to the map.
 import '../styles/global.css';
+import { stops } from '../data/stops';
+import { nodes, lines } from '../lib/metro-layout';
 
 interface Props {
-  title?: string;
+  title: string;
+  heading?: string; // the big text on the name board; defaults to the title
+  kicker?: string; // small text above the heading
   description?: string;
+  home?: string; // e.g. '/thoughts'
 }
 
 const {
   title,
+  heading = title,
+  kicker,
   description = 'Cyber systems, writing, photography, and other preoccupations.',
+  home,
 } = Astro.props;
 
-const pageTitle = title ? `${title} · Colciferr` : 'Colciferr';
-
 const nav = [
+  { href: '/', text: 'Map' },
   { href: '/thoughts', text: 'Thoughts' },
   { href: '/projects', text: 'Projects' },
   { href: '/work', text: 'Work' },
   { href: '/pictures', text: 'Pictures' },
 ];
-
 const here = Astro.url.pathname.replace(/\/$/, '') || '/';
+const current = (href: string) => (href === '/' ? here === '/' : here.startsWith(href));
+
+// The station this page lives at, with its number signs and line colours.
+const stationName = Object.keys(stops).find((name) => stops[name].href === home);
+const station = stationName ? nodes.find((n) => n.en.toLowerCase() === stationName.toLowerCase()) : undefined;
+const signs = (station?.codes ?? []).map((c) => ({
+  letters: c.code.replace(/\d+/g, ''),
+  number: c.code.replace(/\D+/g, ''),
+  color: lines[c.line].color,
+  square: lines[c.line].kind !== 'metro',
+}));
+const stripe = station ? [...new Set(station.lines.map((l) => lines[l].color))] : ['var(--ink)'];
 ---
 
 <!doctype html>
@@ -31,38 +53,80 @@ const here = Astro.url.pathname.replace(/\/$/, '') || '/';
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="color-scheme" content="light dark" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <title>{pageTitle}</title>
+    <title>{title} · Cole</title>
     <script is:inline>
-      document.documentElement.classList.add('js');
+      // Like the map, the pages go dark after sunset in Tokyo
+      // (?theme=day or ?theme=night in the address holds it one way).
+      (function () {
+        var sunrise = [6.8, 6.5, 5.9, 5.2, 4.7, 4.4, 4.6, 5.0, 5.3, 5.7, 6.2, 6.7];
+        var sunset = [16.8, 17.3, 17.8, 18.2, 18.6, 19.0, 18.9, 18.5, 17.8, 17.1, 16.6, 16.5];
+        var held = new URLSearchParams(location.search).get('theme');
+        var t = new Date(Date.now() + 9 * 3600 * 1000);
+        var hour = t.getUTCHours() + t.getUTCMinutes() / 60;
+        var dark = held ? held === 'night' : hour < sunrise[t.getUTCMonth()] || hour >= sunset[t.getUTCMonth()];
+        document.documentElement.classList.toggle('night', dark);
+      })();
     </script>
   </head>
   <body>
-    <div class="shell">
-      <header class="label">
-        <a href="/" aria-current={here === '/' ? 'page' : undefined}>Colciferr</a>
-        <nav aria-label="Sections">
+    <header class="bar">
+      <a class="bar-name" href="/">Cole</a>
+      <nav aria-label="Sections">
+        {
+          nav.map((item) => (
+            <a href={item.href} aria-current={current(item.href) ? 'page' : undefined}>
+              {item.text}
+            </a>
+          ))
+        }
+      </nav>
+    </header>
+
+    <main class="page">
+      <header class="board">
+        <div class="board-name">
           {
-            nav.map((item) => (
-              <a href={item.href} aria-current={here.startsWith(item.href) ? 'page' : undefined}>
-                {item.text}
-              </a>
-            ))
+            signs.length > 0 && (
+              <div class="board-signs">
+                {signs.map((s) => (
+                  <span class:list={['code', { square: s.square }]} style={`--c:${s.color}`}>
+                    <b>{s.letters}</b>
+                    <i>{s.number}</i>
+                  </span>
+                ))}
+              </div>
+            )
           }
-        </nav>
+          <div>
+            {kicker && <p class="board-kicker">{kicker}</p>}
+            <h1>{heading}</h1>
+          </div>
+        </div>
+        <div class="board-band">
+          <span class="board-stripe" aria-hidden="true">
+            {stripe.map((color) => <i style={`background:${color}`} />)}
+          </span>
+          {
+            station && (
+              <a href={`/#${encodeURIComponent(station.en)}`}>
+                {station.en} station <span lang="ja">{station.ja}</span> · on the map →
+              </a>
+            )
+          }
+        </div>
       </header>
-      <main>
-        <slot />
-      </main>
-      <footer class="label">© {new Date().getFullYear()} Cole</footer>
-    </div>
+
+      <slot />
+    </main>
+
+    <footer class="foot">© {new Date().getFullYear()} Cole</footer>
   </body>
 </html>

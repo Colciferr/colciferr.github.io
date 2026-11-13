@@ -19,10 +19,8 @@ const fmt = new Intl.DateTimeFormat('en-GB', {
 });
 ---
 
-<Site title={post.data.title} description={post.data.summary}>
+<Site title={post.data.title} home="/thoughts" kicker={`Thoughts · ${fmt.format(post.data.date)}`} description={post.data.summary}>
   <article class="post">
-    <time class="label" datetime={post.data.date.toISOString()}>{fmt.format(post.data.date)}</time>
-    <h1>{post.data.title}</h1>
     <div class="post-body">
       <Content />
     </div>

@@ -5,7 +5,6 @@ import EntryList from '../components/EntryList.astro';
 import { work } from '../data/site';
 ---
 
-<Site title="Work" description="Where the days go.">
-  <h1 class="page-title">Work</h1>
+<Site title="Work" home="/work" description="Where the days go.">
   <EntryList entries={work} />
 </Site>

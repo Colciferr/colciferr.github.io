@@ -28,7 +28,6 @@ const stations = [...new Set(photos.map((p) => p.station))].map((station) => {
 ---
 
 <Site title="Pictures" description="Photographs, filed by the station they were taken near.">
-  <h1 class="page-title">Pictures</h1>
   {photos.length === 0 && <p>Nothing here yet.</p>}
   {
     stations.map(({ station, places }) => (
@@ -62,14 +61,20 @@ const stations = [...new Set(photos.map((p) => p.station))].map((station) => {
   }
 
   h2 {
-    font-size: clamp(1.6rem, 1.2rem + 2vw, 2.6rem);
-    font-weight: 400;
+    font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.1rem);
+    font-weight: 700;
     line-height: 1.1;
-    margin-bottom: 0.5rem;
+    letter-spacing: -0.015em;
+    margin-bottom: 0.3rem;
   }
 
   h2 a {
-    text-decoration-color: var(--d1);
+    text-decoration: none;
+  }
+
+  h2 a::after {
+    content: ' →';
+    color: var(--mine);
   }
 
   .outing {
@@ -88,10 +93,11 @@ const stations = [...new Set(photos.map((p) => p.station))].map((station) => {
   }
 
   .grid a {
-    flex: calc(var(--ratio) * 10) 1 calc(var(--ratio) * 13rem);
-    max-width: calc(var(--ratio) * 16rem);
+    flex: calc(var(--ratio) * 10) 1 calc(var(--ratio) * 8.5rem);
+    max-width: calc(var(--ratio) * 12rem);
     aspect-ratio: var(--ratio);
     overflow: hidden;
+    border-radius: 4px;
     background: var(--rule);
   }
 
