@@ -127,7 +127,8 @@ export const CHUO_RAPID: [string, string][] = [
   ['Takao', '高尾'],
 ];
 
-// JR Ome Line, as far as Haijima (Tachikawa is JC19, then JC51 to JC55).
+// JR Ome Line, from Tachikawa up into the hills at Oku-Tama
+// (Tachikawa is JC19, then JC51 to JC74).
 export const OME: [string, string][] = [
   ['Tachikawa', '立川'],
   ['Nishi-Tachikawa', '西立川'],
@@ -135,6 +136,25 @@ export const OME: [string, string][] = [
   ['Nakagami', '中神'],
   ['Akishima', '昭島'],
   ['Haijima', '拝島'],
+  ['Ushihama', '牛浜'],
+  ['Fussa', '福生'],
+  ['Hamura', '羽村'],
+  ['Ozaku', '小作'],
+  ['Kabe', '河辺'],
+  ['Higashi-Ome', '東青梅'],
+  ['Ome', '青梅'],
+  ['Miyanohira', '宮ノ平'],
+  ['Hinatawada', '日向和田'],
+  ['Ishigamimae', '石神前'],
+  ['Futamatao', '二俣尾'],
+  ['Ikusabata', '軍畑'],
+  ['Sawai', '沢井'],
+  ['Mitake', '御嶽'],
+  ['Kawai', '川井'],
+  ['Kori', '古里'],
+  ['Hatonosu', '鳩ノ巣'],
+  ['Shiromaru', '白丸'],
+  ['Oku-Tama', '奥多摩'],
 ];
 
 // Tokaido Shinkansen from Tokyo to Kyoto, with approximate coordinates.

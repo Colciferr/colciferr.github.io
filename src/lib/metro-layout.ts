@@ -516,16 +516,19 @@ const chuo: Placed[] = [{ node: place(...CHUO_RAPID[0], CHUO_LINE, 'JC01', at('T
   leg(19, 23, [tachikawa[0] - 6.25, tachikawa[1] + 6.25]);
 }
 
-// JR Ome Line: from Tachikawa round to Haijima, where it meets the Seibu line.
+// JR Ome Line: from Tachikawa round to Haijima, where it meets the Seibu
+// line, then on north-west to Ome and west into the hills to Oku-Tama.
 const ome: Placed[] = [{ node: place(...OME[0], OME_LINE, '', tachikawa) }];
-ome.push(
-  ...stretch(
-    OME_LINE,
-    at('Tachikawa'),
-    coded(OME, 'JC', 50).slice(1),
-    levelFirst(tachikawa, at('Haijima').pos!),
-  ),
-);
+{
+  const stops = coded(OME, 'JC', 50);
+  const haijimaAt = OME.findIndex((st) => st[0] === 'Haijima');
+  const haijima = at('Haijima').pos!;
+  ome.push(...stretch(OME_LINE, at('Tachikawa'), stops.slice(1, haijimaAt + 1), levelFirst(tachikawa, haijima)));
+  const bend: Pt = [haijima[0] - 8.75, haijima[1] - 8.75];
+  const beyond = stops.slice(haijimaAt + 1);
+  const run = beyond.length * SEIBU_SPACING - Math.hypot(8.75, 8.75);
+  ome.push(...stretch(OME_LINE, at('Haijima'), beyond, [haijima, bend, [bend[0] - Math.max(run, 0), bend[1]]]));
+}
 
 // Long-distance spurs.
 const spurShapes: Record<string, { via: Pt[]; to: Pt }> = {
