@@ -99,9 +99,47 @@ export const SEIBU_HAIJIMA: [string, string][] = [
   ['Haijima', '拝島'],
 ];
 
+// JR Chuo Line (Rapid), JC01 to JC24, from Tokyo out to Takao.
+export const CHUO_RAPID: [string, string][] = [
+  ['Tokyo', '東京'],
+  ['Kanda', '神田'],
+  ['Ochanomizu', '御茶ノ水'],
+  ['Yotsuya', '四ツ谷'],
+  ['Shinjuku', '新宿'],
+  ['Nakano', '中野'],
+  ['Koenji', '高円寺'],
+  ['Asagaya', '阿佐ケ谷'],
+  ['Ogikubo', '荻窪'],
+  ['Nishi-Ogikubo', '西荻窪'],
+  ['Kichijoji', '吉祥寺'],
+  ['Mitaka', '三鷹'],
+  ['Musashi-Sakai', '武蔵境'],
+  ['Higashi-Koganei', '東小金井'],
+  ['Musashi-Koganei', '武蔵小金井'],
+  ['Kokubunji', '国分寺'],
+  ['Nishi-Kokubunji', '西国分寺'],
+  ['Kunitachi', '国立'],
+  ['Tachikawa', '立川'],
+  ['Hino', '日野'],
+  ['Toyoda', '豊田'],
+  ['Hachioji', '八王子'],
+  ['Nishi-Hachioji', '西八王子'],
+  ['Takao', '高尾'],
+];
+
+// JR Ome Line, as far as Haijima (Tachikawa is JC19, then JC51 to JC55).
+export const OME: [string, string][] = [
+  ['Tachikawa', '立川'],
+  ['Nishi-Tachikawa', '西立川'],
+  ['Higashi-Nakagami', '東中神'],
+  ['Nakagami', '中神'],
+  ['Akishima', '昭島'],
+  ['Haijima', '拝島'],
+];
+
 // Places reached by a long ride off the edge of the map. Each is drawn as a
 // short dashed spur from the station you would leave from.
 export const EXCURSIONS = [
   { from: 'Shinagawa', en: 'Kyoto', ja: '京都', by: 'Shinkansen' },
-  { from: 'Shinjuku', en: 'Takaosanguchi', ja: '高尾山口', by: 'Keio Line' },
+  { from: 'Takao', en: 'Takaosanguchi', ja: '高尾山口', by: 'Keio Takao Line' },
 ];

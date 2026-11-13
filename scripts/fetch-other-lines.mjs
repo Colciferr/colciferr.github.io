@@ -1,5 +1,5 @@
 // Downloads train timetables for the lines ODPT does not cover (Yamanote,
-// Seibu-Shinjuku, Seibu Haijima) from the Mini Tokyo 3D project and saves
+// Chuo, Ome, Seibu-Shinjuku, Seibu Haijima) from the Mini Tokyo 3D project and saves
 // them in the same compact form as the Tokyo Metro ones.
 //
 //   npm run lines:fetch
@@ -16,7 +16,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { YAMANOTE, SEIBU_SHINJUKU, SEIBU_HAIJIMA } from '../src/data/metro/other-lines.ts';
+import { YAMANOTE, SEIBU_SHINJUKU, SEIBU_HAIJIMA, CHUO_RAPID, OME } from '../src/data/metro/other-lines.ts';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const BASE = 'https://raw.githubusercontent.com/nagix/mini-tokyo-3d/master';
@@ -27,6 +27,8 @@ const LINES = [
   { id: 'Yamanote', file: 'jreast-yamanote.json', stations: YAMANOTE.map((s) => s.en) },
   { id: 'SeibuShinjuku', file: 'seibu-shinjuku.json', stations: SEIBU_SHINJUKU.map((s) => s[0]) },
   { id: 'SeibuHaijima', file: 'seibu-haijima.json', stations: ['Kodaira', ...SEIBU_HAIJIMA.map((s) => s[0])] },
+  { id: 'ChuoRapid', file: 'jreast-chuorapid.json', stations: CHUO_RAPID.map((s) => s[0]) },
+  { id: 'Ome', file: 'jreast-ome.json', stations: OME.map((s) => s[0]) },
 ];
 
 const squash = (name) => name.toLowerCase().replace(/[^a-z0-9]/g, '');

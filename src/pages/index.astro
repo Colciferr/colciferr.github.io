@@ -5,7 +5,7 @@
 // - Which page lives at which station: src/data/stops.ts
 // - Photographs, by the station they were taken near: `npm run pictures`
 // - Metro network and timetables come from ODPT: `npm run metro:fetch`
-// - Yamanote and Seibu timetables come from Mini Tokyo 3D: `npm run lines:fetch`
+// - JR and Seibu timetables come from Mini Tokyo 3D: `npm run lines:fetch`
 // - The shape of the map is worked out in src/lib/metro-layout.ts
 import { getCollection } from 'astro:content';
 import { projects, work } from '../data/site';
@@ -261,7 +261,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
           fetched {fetchedOn}.
         </p>
         <p>
-          Yamanote and Seibu timetables are from <a href="https://github.com/nagix/mini-tokyo-3d">Mini Tokyo 3D</a> by
+          JR and Seibu timetables are from <a href="https://github.com/nagix/mini-tokyo-3d">Mini Tokyo 3D</a> by
           Akihiko Kusanagi, used under the <a href="/metro/NOTICE-mini-tokyo-3d.txt">MIT licence</a>. They may lag
           behind the latest timetable revision.
         </p>
@@ -274,6 +274,11 @@ const fetchedOn = dateFmt.format(new Date(fetched));
         <a href="/pictures">Pictures</a>
       </nav>
     </header>
+
+    <div class="zoom" role="group" aria-label="Zoom">
+      <button type="button" id="zoom-in" aria-label="Zoom in" title="Zoom in (Ctrl + scroll)">+</button>
+      <button type="button" id="zoom-out" aria-label="Zoom out" title="Zoom out (Ctrl + scroll)">−</button>
+    </div>
 
     <aside class="panel" id="panel" hidden aria-live="polite">
       <button type="button" class="close" id="panel-close" aria-label="Close">×</button>
@@ -360,14 +365,50 @@ const fetchedOn = dateFmt.format(new Date(fetched));
       };
 
       // ------------------------------------------------------------ Panning
+      // --------------------------------------------------------------- Zoom
+      // Ctrl + scroll (or a trackpad pinch) zooms the map instead of the whole
+      // page, keeping whatever is under the pointer where it is.
+      const world = document.querySelector<HTMLElement>('.world')!;
+      const full = (svg as unknown as SVGSVGElement).viewBox.baseVal;
+      let zoom = 1;
+      function setZoom(next: number, cx?: number, cy?: number) {
+        next = Math.min(2.5, Math.max(0.3, next));
+        if (next === zoom) return;
+        const frame = vp.getBoundingClientRect();
+        cx ??= frame.left + frame.width / 2;
+        cy ??= frame.top + frame.height / 2;
+        const before = svg.getBoundingClientRect();
+        const mx = (cx - before.left) / zoom;
+        const my = (cy - before.top) / zoom;
+        zoom = next;
+        for (const el of [svg as HTMLElement, world]) {
+          el.style.width = `${full.width * zoom}px`;
+          el.style.height = `${full.height * zoom}px`;
+        }
+        const after = svg.getBoundingClientRect();
+        vp.scrollLeft += after.left + mx * zoom - cx;
+        vp.scrollTop += after.top + my * zoom - cy;
+      }
+      vp.addEventListener(
+        'wheel',
+        (e) => {
+          if (!e.ctrlKey && !e.metaKey) return;
+          e.preventDefault();
+          setZoom(zoom * Math.exp(-e.deltaY * 0.002), e.clientX, e.clientY);
+        },
+        { passive: false },
+      );
+      document.getElementById('zoom-in')!.addEventListener('click', () => setZoom(zoom * 1.3));
+      document.getElementById('zoom-out')!.addEventListener('click', () => setZoom(zoom / 1.3));
+
       function centerOn(x: number, y: number, smooth = true) {
         // The map sits inside some empty space, so that its edges can be
         // scrolled out from under the sign and the panel.
         const frame = vp.getBoundingClientRect();
         const map = svg.getBoundingClientRect();
         vp.scrollTo({
-          left: map.left - frame.left + vp.scrollLeft + x - vp.clientWidth / 2,
-          top: map.top - frame.top + vp.scrollTop + y - vp.clientHeight / 2,
+          left: map.left - frame.left + vp.scrollLeft + x * zoom - vp.clientWidth / 2,
+          top: map.top - frame.top + vp.scrollTop + y * zoom - vp.clientHeight / 2,
           behavior: smooth && !still ? 'smooth' : 'auto',
         });
       }
@@ -1296,6 +1337,36 @@ const fetchedOn = dateFmt.format(new Date(fetched));
     color: var(--ink);
     font-weight: 600;
     text-underline-offset: 0.2em;
+  }
+
+  .zoom {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    display: grid;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgb(20 33 61 / 0.12);
+    overflow: hidden;
+  }
+
+  .zoom button {
+    width: 2.4rem;
+    height: 2.4rem;
+    background: none;
+    border: 0;
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .zoom button + button {
+    border-top: 1px solid var(--rule);
+  }
+
+  .zoom button:hover {
+    background: #f0f2f7;
   }
 
   /* -------------------------------------------------------------- Panel */

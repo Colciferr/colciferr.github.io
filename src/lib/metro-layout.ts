@@ -9,7 +9,7 @@
 //
 // The numbers under "Tuning" control the overall look.
 import network from '../data/metro/network.json';
-import { YAMANOTE, SEIBU_SHINJUKU, SEIBU_HAIJIMA, SEIBU_SHINJUKU_KM, SEIBU_HAIJIMA_KM, EXCURSIONS } from '../data/metro/other-lines';
+import { YAMANOTE, SEIBU_SHINJUKU, SEIBU_HAIJIMA, SEIBU_SHINJUKU_KM, SEIBU_HAIJIMA_KM, CHUO_RAPID, OME, EXCURSIONS } from '../data/metro/other-lines';
 import { stops } from '../data/stops';
 
 export type Pt = [number, number];
@@ -32,7 +32,7 @@ export interface MetroLine {
   ja: string;
   code: string;
   color: string;
-  kind: 'metro' | 'jr' | 'seibu' | 'excursion';
+  kind: 'metro' | 'jr' | 'rail' | 'seibu' | 'excursion';
   loop: boolean;
   // Lines with no open timetable run on typical journey times instead:
   // a train every `headway` minutes, taking `hops[i]` minutes (including the
@@ -215,7 +215,9 @@ const METRO = network.lines.length;
 const YAMANOTE_LINE = METRO;
 const SHINJUKU_LINE = METRO + 1;
 const HAIJIMA_LINE = METRO + 2;
-const EXCURSION_LINE = METRO + 3;
+const CHUO_LINE = METRO + 3;
+const OME_LINE = METRO + 4;
+const EXCURSION_LINE = METRO + 5;
 
 // ------------------------------------------------------------------ Anchors
 // Interchanges and line ends are pinned to the grid first. Everything
@@ -467,10 +469,66 @@ const seibuHaijima: Placed[] = [{ node: at('Kodaira').id }];
   });
 }
 
+// A stretch of hand-placed line along a given route: the first station is
+// already in place, the last sits at the end of the route, and any stations in
+// between are spaced evenly along it.
+function stretch(line: number, from: RawNode, stations: [string, string, string][], route: Pt[]): Placed[] {
+  const total = polyLength(route);
+  let done = 0;
+  return stations.map(([en, ja, code], i) => {
+    const reach = (total * (i + 1)) / stations.length;
+    const n = raw[place(en, ja, line, code, pointAt(route, reach))];
+    const via = slice(route, done, reach).slice(1, -1);
+    done = reach;
+    return { node: n.id, via };
+  });
+}
+// Of the two ways to join two points, the one that sets off level, or the one that sets off at an angle.
+const levelFirst = (a: Pt, b: Pt) => elbows(a, b).find((r) => Math.abs(r[1][1] - r[0][1]) < 1e-6) ?? elbows(a, b)[0];
+const coded = (list: [string, string][], prefix: string, first: number) =>
+  list.map(([en, ja], i) => [en, ja, `${prefix}${String(first + i).padStart(2, '0')}`] as [string, string, string]);
+
+// JR Chuo Line: across the middle of the loop through stations that are
+// already on the map, then west, bending south to reach Tachikawa below the
+// Seibu Haijima line, and on to Takao.
+const tachikawa: Pt = [at('Seibu-Tachikawa').pos![0] + 6, at('Seibu-Tachikawa').pos![1] + 5];
+const chuo: Placed[] = [{ node: place(...CHUO_RAPID[0], CHUO_LINE, 'JC01', at('Tokyo').pos!) }];
+{
+  const stops = coded(CHUO_RAPID, 'JC', 1);
+  let here = at('Tokyo');
+  let heading: Pt | undefined;
+  const leg = (from: number, to: number, end: Pt, route?: Pt[]) => {
+    const chosen = route ?? chooseRoute(here, { pos: end, u: end[0], v: end[1] } as RawNode, [], heading);
+    chuo.push(...stretch(CHUO_LINE, here, stops.slice(from, to + 1), chosen));
+    const last = sub(chosen[chosen.length - 1], chosen[chosen.length - 2]);
+    const l = Math.hypot(last[0], last[1]) || 1;
+    heading = [last[0] / l, last[1] / l];
+    here = at(stops[to][0]);
+  };
+  // One stop at a time between stations that already have a place...
+  for (const i of [1, 2, 3, 4, 5]) leg(i, i, at(stops[i][0]).pos!);
+  // ...then Koenji and Asagaya on the way to Ogikubo...
+  leg(6, 8, at('Ogikubo').pos!);
+  // ...nine more stations to Tachikawa, and five beyond to Takao.
+  leg(9, 18, tachikawa, levelFirst(here.pos!, tachikawa));
+  leg(19, 23, [tachikawa[0] - 6.25, tachikawa[1] + 6.25]);
+}
+
+// JR Ome Line: from Tachikawa round to Haijima, where it meets the Seibu line.
+const ome: Placed[] = [{ node: place(...OME[0], OME_LINE, '', tachikawa) }];
+ome.push(
+  ...stretch(
+    OME_LINE,
+    at('Tachikawa'),
+    coded(OME, 'JC', 50).slice(1),
+    levelFirst(tachikawa, at('Haijima').pos!),
+  ),
+);
+
 // Long-distance spurs.
 const spurShapes: Record<string, { via: Pt[]; to: Pt }> = {
   Kyoto: { via: [[0, 2]], to: [-3.5, 5.5] },
-  Takaosanguchi: { via: [[-1.6, 1.6], [-1.6, 5]], to: [-7.6, 11] },
+  Takaosanguchi: { via: [], to: [-2, 2] },
 };
 const excursions = EXCURSIONS.map((e, i) => {
   const from = at(e.from);
@@ -620,6 +678,8 @@ export const lines: MetroLine[] = [
   yamanote,
   handPlaced('SeibuShinjuku', 'Seibu-Shinjuku Line', '西武新宿線', 'SS', '#0b9ad6', 'seibu', seibuShinjuku, { headway: 6, hops: gaps(SEIBU_SHINJUKU_KM) }),
   handPlaced('SeibuHaijima', 'Seibu Haijima Line', '西武拝島線', 'SS', '#0b9ad6', 'seibu', seibuHaijima, { headway: 10, hops: gaps(SEIBU_HAIJIMA_KM) }),
+  handPlaced('ChuoRapid', 'Chuo Line', '中央線', 'JC', '#f15a22', 'rail', chuo),
+  handPlaced('Ome', 'Ome Line', '青梅線', 'JC', '#f15a22', 'rail', ome),
   ...excursions.map((e) => handPlaced(`To${e.en}`, `${e.by} to ${e.en}`, e.ja, '', '#8a93a6', 'excursion', e.stations)),
 ];
 
