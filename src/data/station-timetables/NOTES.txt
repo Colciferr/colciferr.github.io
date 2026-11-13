@@ -1,0 +1,8 @@
+Station timetables for lines the open data (ODPT) does not cover.
+
+Each .json file here is one station, in the format written by the Desktop
+Dashboard's scrape-seibu.js: station, line, source, scrapedAt, and a list of
+departures for each direction on weekdays, Saturdays and holidays.
+
+Any file dropped in this folder is picked up automatically: its station shows
+those departures on the map. The station name must match a station on the map.

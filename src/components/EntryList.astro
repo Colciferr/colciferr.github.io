@@ -1,0 +1,34 @@
+---
+// A list of rows that open in place. Used by the Projects and Work pages.
+import type { Entry } from '../data/site';
+
+interface Props {
+  entries: Entry[];
+}
+
+const { entries } = Astro.props;
+---
+
+<ul class="rows">
+  {
+    entries.map((entry) => (
+      <li>
+        <details class="row-fold">
+          <summary class="row">
+            <span class="label">{entry.when}</span>
+            <span class="row-title">{entry.name}</span>
+          </summary>
+          <p class="row-body">
+            {entry.about}
+            {entry.link && (
+              <>
+                {' '}
+                <a href={entry.link.href}>{entry.link.text}&nbsp;→</a>
+              </>
+            )}
+          </p>
+        </details>
+      </li>
+    ))
+  }
+</ul>

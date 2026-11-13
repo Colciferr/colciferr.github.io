@@ -1,0 +1,280 @@
+/* Site-wide look. Change the values under :root to re-theme everything. */
+
+:root {
+  --paper: #f4f4ef;
+  --ink: #121212;
+  --muted: #6c6c66;
+  --rule: #d9d9d1;
+
+  /* One colour per level of unfolding on the home page. */
+  --d1: #1f3bff;
+  --d2: #d4380d;
+  --d3: #0b7a53;
+
+  --serif: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+
+  --gutter: clamp(1.25rem, 5vw, 4rem);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #0e0f11;
+    --ink: #edebe6;
+    --muted: #8d8c86;
+    --rule: #2a2b2e;
+    --d1: #93a5ff;
+    --d2: #ff8a5c;
+    --d3: #5fd3a2;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+ol {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: 0.06em;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  color: var(--d1);
+}
+
+:focus-visible {
+  outline: 2px solid var(--d1);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Small monospace labels used for nav, dates and controls. */
+.label {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Shared page shell */
+.shell {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--gutter);
+}
+
+.shell > header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  padding: 1.5rem 0;
+}
+
+.shell > header a {
+  text-decoration: none;
+}
+
+.shell > header a:hover,
+.shell > header a[aria-current='page'] {
+  color: var(--ink);
+}
+
+.shell > header nav {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.shell > main {
+  flex: 1;
+  padding: clamp(2rem, 8vh, 6rem) 0 4rem;
+}
+
+.shell > footer {
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+/* Inner pages (Thoughts, Projects, Work) */
+.page-title {
+  font-size: clamp(2.5rem, 1.5rem + 5vw, 5rem);
+  font-weight: 350;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: clamp(2rem, 6vh, 4rem);
+}
+
+.rows {
+  list-style: none;
+  padding: 0;
+  max-width: 52rem;
+  border-top: 1px solid var(--rule);
+}
+
+.rows > li {
+  border-bottom: 1px solid var(--rule);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 7rem 1fr;
+  gap: 0.25rem 1.5rem;
+  align-items: baseline;
+  padding: 1.1rem 0;
+}
+
+.row-title {
+  font-size: clamp(1.35rem, 1.1rem + 1vw, 1.9rem);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.row-note {
+  grid-column: 2;
+  color: var(--muted);
+  max-width: 38rem;
+}
+
+a.row {
+  text-decoration: none;
+}
+
+a.row:hover .row-title {
+  color: var(--d1);
+}
+
+/* Rows that open in place (Projects, Work) */
+details.row-fold > summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+details.row-fold > summary::-webkit-details-marker {
+  display: none;
+}
+
+details.row-fold > summary .row-title {
+  text-decoration: underline;
+  text-decoration-color: var(--d1);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.2em;
+}
+
+details.row-fold[open] > summary .row-title {
+  text-decoration-style: dotted;
+}
+
+details.row-fold > .row-body {
+  padding: 0 0 1.4rem 8.5rem;
+  color: var(--d1);
+  max-width: 46rem;
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+
+details.row-fold > .row-body a {
+  white-space: nowrap;
+}
+
+@media (max-width: 540px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  .row-note {
+    grid-column: 1;
+  }
+
+  details.row-fold > .row-body {
+    padding-left: 0;
+  }
+}
+
+/* A single post */
+.post {
+  max-width: 38rem;
+}
+
+.post h1 {
+  font-size: clamp(2rem, 1.4rem + 3vw, 3.5rem);
+  font-weight: 380;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  margin: 0.75rem 0 2.5rem;
+}
+
+.post-body > * + * {
+  margin-top: 1.25rem;
+}
+
+.post-body h2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-top: 2.5rem;
+}
+
+.post-body a {
+  text-decoration-color: var(--d1);
+}
+
+.post-body code {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+
+.post-body pre {
+  overflow-x: auto;
+  padding: 1rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.post-body pre code {
+  background: none;
+  padding: 0;
+}
+
+.post-body blockquote {
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--d2);
+  font-style: italic;
+}
+
+.back {
+  display: inline-block;
+  margin-top: 4rem;
+}

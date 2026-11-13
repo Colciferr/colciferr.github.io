@@ -1,0 +1,562 @@
+{
+ "photos": [
+  {
+   "station": "Kyoto",
+   "place": "Kyoto",
+   "src": "/pictures/kyoto/kyoto-img-0016.jpg",
+   "thumb": "/pictures/kyoto/kyoto-img-0016-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Kyoto",
+   "place": "Kyoto",
+   "src": "/pictures/kyoto/kyoto-img-0095.jpg",
+   "thumb": "/pictures/kyoto/kyoto-img-0095-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Kyoto",
+   "place": "Kyoto",
+   "src": "/pictures/kyoto/kyoto-img-0137.jpg",
+   "thumb": "/pictures/kyoto/kyoto-img-0137-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Kyoto",
+   "place": "Kyoto",
+   "src": "/pictures/kyoto/kyoto-img-0161.jpg",
+   "thumb": "/pictures/kyoto/kyoto-img-0161-thumb.jpg",
+   "w": 1800,
+   "h": 1242,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Kyoto",
+   "place": "Kyoto",
+   "src": "/pictures/kyoto/kyoto-img-0170.jpg",
+   "thumb": "/pictures/kyoto/kyoto-img-0170-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Kyoto",
+   "place": "Kyoto",
+   "src": "/pictures/kyoto/kyoto-img-0201.jpg",
+   "thumb": "/pictures/kyoto/kyoto-img-0201-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Kyoto",
+   "place": "Kyoto",
+   "src": "/pictures/kyoto/kyoto-img-0218.jpg",
+   "thumb": "/pictures/kyoto/kyoto-img-0218-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Kyoto",
+   "place": "Kyoto",
+   "src": "/pictures/kyoto/kyoto-img-0230.jpg",
+   "thumb": "/pictures/kyoto/kyoto-img-0230-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Kyoto",
+   "place": "Kyoto",
+   "src": "/pictures/kyoto/kyoto-img-0248.jpg",
+   "thumb": "/pictures/kyoto/kyoto-img-0248-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Kyoto",
+   "place": "Kyoto",
+   "src": "/pictures/kyoto/kyoto-img-0253.jpg",
+   "thumb": "/pictures/kyoto/kyoto-img-0253-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Kyoto",
+   "place": "Kyoto",
+   "src": "/pictures/kyoto/kyoto-img-0261.jpg",
+   "thumb": "/pictures/kyoto/kyoto-img-0261-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Kyoto",
+   "place": "Kyoto",
+   "src": "/pictures/kyoto/kyoto-img-0274.jpg",
+   "thumb": "/pictures/kyoto/kyoto-img-0274-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Kyoto",
+   "place": "Kyoto",
+   "src": "/pictures/kyoto/kyoto-img-0282.jpg",
+   "thumb": "/pictures/kyoto/kyoto-img-0282-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Musashi-Sunagawa",
+   "place": "Showa Kinen Park in autumn",
+   "src": "/pictures/musashi-sunagawa/showa-kinen-park-in-autumn-img-0297.jpg",
+   "thumb": "/pictures/musashi-sunagawa/showa-kinen-park-in-autumn-img-0297-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Musashi-Sunagawa",
+   "place": "Showa Kinen Park in autumn",
+   "src": "/pictures/musashi-sunagawa/showa-kinen-park-in-autumn-img-0317.jpg",
+   "thumb": "/pictures/musashi-sunagawa/showa-kinen-park-in-autumn-img-0317-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Musashi-Sunagawa",
+   "place": "Showa Kinen Park in autumn",
+   "src": "/pictures/musashi-sunagawa/showa-kinen-park-in-autumn-img-0319.jpg",
+   "thumb": "/pictures/musashi-sunagawa/showa-kinen-park-in-autumn-img-0319-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Musashi-Sunagawa",
+   "place": "Showa Kinen Park in autumn",
+   "src": "/pictures/musashi-sunagawa/showa-kinen-park-in-autumn-img-0325.jpg",
+   "thumb": "/pictures/musashi-sunagawa/showa-kinen-park-in-autumn-img-0325-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Musashi-Sunagawa",
+   "place": "Showa Kinen Park in autumn",
+   "src": "/pictures/musashi-sunagawa/showa-kinen-park-in-autumn-img-0329.jpg",
+   "thumb": "/pictures/musashi-sunagawa/showa-kinen-park-in-autumn-img-0329-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Musashi-Sunagawa",
+   "place": "Showa Kinen Park in autumn",
+   "src": "/pictures/musashi-sunagawa/showa-kinen-park-in-autumn-img-0333.jpg",
+   "thumb": "/pictures/musashi-sunagawa/showa-kinen-park-in-autumn-img-0333-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Musashi-Sunagawa",
+   "place": "Showa Kinen Park in autumn",
+   "src": "/pictures/musashi-sunagawa/showa-kinen-park-in-autumn-img-0339.jpg",
+   "thumb": "/pictures/musashi-sunagawa/showa-kinen-park-in-autumn-img-0339-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Musashi-Sunagawa",
+   "place": "Showa Kinen Park in autumn",
+   "src": "/pictures/musashi-sunagawa/showa-kinen-park-in-autumn-img-0349.jpg",
+   "thumb": "/pictures/musashi-sunagawa/showa-kinen-park-in-autumn-img-0349-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Musashi-Sunagawa",
+   "place": "Showa Kinen Park in autumn",
+   "src": "/pictures/musashi-sunagawa/showa-kinen-park-in-autumn-img-0356.jpg",
+   "thumb": "/pictures/musashi-sunagawa/showa-kinen-park-in-autumn-img-0356-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Musashi-Sunagawa",
+   "place": "Showa Kinen Park in autumn",
+   "src": "/pictures/musashi-sunagawa/showa-kinen-park-in-autumn-img-0369.jpg",
+   "thumb": "/pictures/musashi-sunagawa/showa-kinen-park-in-autumn-img-0369-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Musashi-Sunagawa",
+   "place": "Showa Kinen Park in autumn",
+   "src": "/pictures/musashi-sunagawa/showa-kinen-park-in-autumn-img-0387.jpg",
+   "thumb": "/pictures/musashi-sunagawa/showa-kinen-park-in-autumn-img-0387-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Musashi-Sunagawa",
+   "place": "Showa Kinen Park in spring",
+   "src": "/pictures/musashi-sunagawa/showa-kinen-park-in-spring-img-0581.jpg",
+   "thumb": "/pictures/musashi-sunagawa/showa-kinen-park-in-spring-img-0581-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Apr 2026"
+  },
+  {
+   "station": "Musashi-Sunagawa",
+   "place": "Showa Kinen Park in spring",
+   "src": "/pictures/musashi-sunagawa/showa-kinen-park-in-spring-img-0587.jpg",
+   "thumb": "/pictures/musashi-sunagawa/showa-kinen-park-in-spring-img-0587-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Apr 2026"
+  },
+  {
+   "station": "Musashi-Sunagawa",
+   "place": "Showa Kinen Park in spring",
+   "src": "/pictures/musashi-sunagawa/showa-kinen-park-in-spring-img-0591.jpg",
+   "thumb": "/pictures/musashi-sunagawa/showa-kinen-park-in-spring-img-0591-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Apr 2026"
+  },
+  {
+   "station": "Musashi-Sunagawa",
+   "place": "Showa Kinen Park in spring",
+   "src": "/pictures/musashi-sunagawa/showa-kinen-park-in-spring-img-0604.jpg",
+   "thumb": "/pictures/musashi-sunagawa/showa-kinen-park-in-spring-img-0604-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Apr 2026"
+  },
+  {
+   "station": "Musashi-Sunagawa",
+   "place": "Showa Kinen Park in spring",
+   "src": "/pictures/musashi-sunagawa/showa-kinen-park-in-spring-img-0608.jpg",
+   "thumb": "/pictures/musashi-sunagawa/showa-kinen-park-in-spring-img-0608-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Apr 2026"
+  },
+  {
+   "station": "Musashi-Sunagawa",
+   "place": "Showa Kinen Park in spring",
+   "src": "/pictures/musashi-sunagawa/showa-kinen-park-in-spring-img-0628.jpg",
+   "thumb": "/pictures/musashi-sunagawa/showa-kinen-park-in-spring-img-0628-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Apr 2026"
+  },
+  {
+   "station": "Musashi-Sunagawa",
+   "place": "Showa Kinen Park in spring",
+   "src": "/pictures/musashi-sunagawa/showa-kinen-park-in-spring-img-0638.jpg",
+   "thumb": "/pictures/musashi-sunagawa/showa-kinen-park-in-spring-img-0638-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Apr 2026"
+  },
+  {
+   "station": "Musashi-Sunagawa",
+   "place": "Showa Kinen Park in spring",
+   "src": "/pictures/musashi-sunagawa/showa-kinen-park-in-spring-img-0644.jpg",
+   "thumb": "/pictures/musashi-sunagawa/showa-kinen-park-in-spring-img-0644-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Apr 2026"
+  },
+  {
+   "station": "Musashi-Sunagawa",
+   "place": "Showa Kinen Park in spring",
+   "src": "/pictures/musashi-sunagawa/showa-kinen-park-in-spring-img-0646.jpg",
+   "thumb": "/pictures/musashi-sunagawa/showa-kinen-park-in-spring-img-0646-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Apr 2026"
+  },
+  {
+   "station": "Musashi-Sunagawa",
+   "place": "Showa Kinen Park in spring",
+   "src": "/pictures/musashi-sunagawa/showa-kinen-park-in-spring-img-0649.jpg",
+   "thumb": "/pictures/musashi-sunagawa/showa-kinen-park-in-spring-img-0649-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Apr 2026"
+  },
+  {
+   "station": "Seibu-Tachikawa",
+   "place": "At home, inside",
+   "src": "/pictures/seibu-tachikawa/at-home-inside-img-0391.jpg",
+   "thumb": "/pictures/seibu-tachikawa/at-home-inside-img-0391-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Seibu-Tachikawa",
+   "place": "At home, inside",
+   "src": "/pictures/seibu-tachikawa/at-home-inside-img-0395.jpg",
+   "thumb": "/pictures/seibu-tachikawa/at-home-inside-img-0395-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Nov 2025"
+  },
+  {
+   "station": "Seibu-Tachikawa",
+   "place": "At home, the garden",
+   "src": "/pictures/seibu-tachikawa/at-home-the-garden-img-0511.jpg",
+   "thumb": "/pictures/seibu-tachikawa/at-home-the-garden-img-0511-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Apr 2026"
+  },
+  {
+   "station": "Seibu-Tachikawa",
+   "place": "At home, the garden",
+   "src": "/pictures/seibu-tachikawa/at-home-the-garden-img-0516.jpg",
+   "thumb": "/pictures/seibu-tachikawa/at-home-the-garden-img-0516-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Apr 2026"
+  },
+  {
+   "station": "Seibu-Tachikawa",
+   "place": "At home, the garden",
+   "src": "/pictures/seibu-tachikawa/at-home-the-garden-img-0527.jpg",
+   "thumb": "/pictures/seibu-tachikawa/at-home-the-garden-img-0527-thumb.jpg",
+   "w": 1200,
+   "h": 1800,
+   "date": "Apr 2026"
+  },
+  {
+   "station": "Seibu-Tachikawa",
+   "place": "At home, the garden",
+   "src": "/pictures/seibu-tachikawa/at-home-the-garden-img-0537.jpg",
+   "thumb": "/pictures/seibu-tachikawa/at-home-the-garden-img-0537-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Apr 2026"
+  },
+  {
+   "station": "Seibu-Tachikawa",
+   "place": "At home, the garden",
+   "src": "/pictures/seibu-tachikawa/at-home-the-garden-img-0546.jpg",
+   "thumb": "/pictures/seibu-tachikawa/at-home-the-garden-img-0546-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Apr 2026"
+  },
+  {
+   "station": "Seibu-Tachikawa",
+   "place": "At home, the garden",
+   "src": "/pictures/seibu-tachikawa/at-home-the-garden-img-0552.jpg",
+   "thumb": "/pictures/seibu-tachikawa/at-home-the-garden-img-0552-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Apr 2026"
+  },
+  {
+   "station": "Seibu-Tachikawa",
+   "place": "At home, the garden",
+   "src": "/pictures/seibu-tachikawa/at-home-the-garden-img-0555.jpg",
+   "thumb": "/pictures/seibu-tachikawa/at-home-the-garden-img-0555-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Apr 2026"
+  },
+  {
+   "station": "Seibu-Tachikawa",
+   "place": "At home, the garden",
+   "src": "/pictures/seibu-tachikawa/at-home-the-garden-img-0567.jpg",
+   "thumb": "/pictures/seibu-tachikawa/at-home-the-garden-img-0567-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Apr 2026"
+  },
+  {
+   "station": "Takaosanguchi",
+   "place": "Mt. Takao",
+   "src": "/pictures/takaosanguchi/mt-takao-img-0401.jpg",
+   "thumb": "/pictures/takaosanguchi/mt-takao-img-0401-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Dec 2025"
+  },
+  {
+   "station": "Takaosanguchi",
+   "place": "Mt. Takao",
+   "src": "/pictures/takaosanguchi/mt-takao-img-0403.jpg",
+   "thumb": "/pictures/takaosanguchi/mt-takao-img-0403-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Dec 2025"
+  },
+  {
+   "station": "Takaosanguchi",
+   "place": "Mt. Takao",
+   "src": "/pictures/takaosanguchi/mt-takao-img-0406.jpg",
+   "thumb": "/pictures/takaosanguchi/mt-takao-img-0406-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Dec 2025"
+  },
+  {
+   "station": "Takaosanguchi",
+   "place": "Mt. Takao",
+   "src": "/pictures/takaosanguchi/mt-takao-img-0422.jpg",
+   "thumb": "/pictures/takaosanguchi/mt-takao-img-0422-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Dec 2025"
+  },
+  {
+   "station": "Takaosanguchi",
+   "place": "Mt. Takao",
+   "src": "/pictures/takaosanguchi/mt-takao-img-0427.jpg",
+   "thumb": "/pictures/takaosanguchi/mt-takao-img-0427-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Dec 2025"
+  },
+  {
+   "station": "Takaosanguchi",
+   "place": "Mt. Takao",
+   "src": "/pictures/takaosanguchi/mt-takao-img-0443.jpg",
+   "thumb": "/pictures/takaosanguchi/mt-takao-img-0443-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Dec 2025"
+  },
+  {
+   "station": "Takaosanguchi",
+   "place": "Mt. Takao",
+   "src": "/pictures/takaosanguchi/mt-takao-img-0449.jpg",
+   "thumb": "/pictures/takaosanguchi/mt-takao-img-0449-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Dec 2025"
+  },
+  {
+   "station": "Takaosanguchi",
+   "place": "Mt. Takao",
+   "src": "/pictures/takaosanguchi/mt-takao-img-0452.jpg",
+   "thumb": "/pictures/takaosanguchi/mt-takao-img-0452-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Dec 2025"
+  },
+  {
+   "station": "Takaosanguchi",
+   "place": "Mt. Takao",
+   "src": "/pictures/takaosanguchi/mt-takao-img-0463.jpg",
+   "thumb": "/pictures/takaosanguchi/mt-takao-img-0463-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Dec 2025"
+  },
+  {
+   "station": "Takaosanguchi",
+   "place": "Mt. Takao",
+   "src": "/pictures/takaosanguchi/mt-takao-img-0469.jpg",
+   "thumb": "/pictures/takaosanguchi/mt-takao-img-0469-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Dec 2025"
+  },
+  {
+   "station": "Takaosanguchi",
+   "place": "Mt. Takao",
+   "src": "/pictures/takaosanguchi/mt-takao-img-0473.jpg",
+   "thumb": "/pictures/takaosanguchi/mt-takao-img-0473-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Dec 2025"
+  },
+  {
+   "station": "Yotsuya",
+   "place": "Akasaka Palace",
+   "src": "/pictures/yotsuya/akasaka-palace-img-0479.jpg",
+   "thumb": "/pictures/yotsuya/akasaka-palace-img-0479-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Dec 2025"
+  },
+  {
+   "station": "Yotsuya",
+   "place": "Akasaka Palace",
+   "src": "/pictures/yotsuya/akasaka-palace-img-0482.jpg",
+   "thumb": "/pictures/yotsuya/akasaka-palace-img-0482-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Dec 2025"
+  },
+  {
+   "station": "Yotsuya",
+   "place": "Akasaka Palace",
+   "src": "/pictures/yotsuya/akasaka-palace-img-0485.jpg",
+   "thumb": "/pictures/yotsuya/akasaka-palace-img-0485-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Dec 2025"
+  },
+  {
+   "station": "Yotsuya",
+   "place": "Akasaka Palace",
+   "src": "/pictures/yotsuya/akasaka-palace-img-0488.jpg",
+   "thumb": "/pictures/yotsuya/akasaka-palace-img-0488-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Dec 2025"
+  },
+  {
+   "station": "Yotsuya",
+   "place": "Akasaka Palace",
+   "src": "/pictures/yotsuya/akasaka-palace-img-0489.jpg",
+   "thumb": "/pictures/yotsuya/akasaka-palace-img-0489-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Dec 2025"
+  },
+  {
+   "station": "Yotsuya",
+   "place": "Akasaka Palace",
+   "src": "/pictures/yotsuya/akasaka-palace-img-0491.jpg",
+   "thumb": "/pictures/yotsuya/akasaka-palace-img-0491-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Dec 2025"
+  },
+  {
+   "station": "Yotsuya",
+   "place": "Akasaka Palace",
+   "src": "/pictures/yotsuya/akasaka-palace-img-0497.jpg",
+   "thumb": "/pictures/yotsuya/akasaka-palace-img-0497-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Dec 2025"
+  }
+ ]
+}

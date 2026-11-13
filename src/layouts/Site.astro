@@ -1,0 +1,68 @@
+---
+// The shared shell for every page: <head>, the top nav, and the footer.
+// Whatever a page puts between <Site> ... </Site> lands in the <slot />.
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'Cyber systems, writing, photography, and other preoccupations.',
+} = Astro.props;
+
+const pageTitle = title ? `${title} · Colciferr` : 'Colciferr';
+
+const nav = [
+  { href: '/thoughts', text: 'Thoughts' },
+  { href: '/projects', text: 'Projects' },
+  { href: '/work', text: 'Work' },
+  { href: '/pictures', text: 'Pictures' },
+];
+
+const here = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    />
+    <title>{pageTitle}</title>
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="label">
+        <a href="/" aria-current={here === '/' ? 'page' : undefined}>Colciferr</a>
+        <nav aria-label="Sections">
+          {
+            nav.map((item) => (
+              <a href={item.href} aria-current={here.startsWith(item.href) ? 'page' : undefined}>
+                {item.text}
+              </a>
+            ))
+          }
+        </nav>
+      </header>
+      <main>
+        <slot />
+      </main>
+      <footer class="label">© {new Date().getFullYear()} Cole</footer>
+    </div>
+  </body>
+</html>

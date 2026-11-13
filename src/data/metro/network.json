@@ -1,0 +1,1584 @@
+{
+ "fetched": "2026-11-12T12:50:33.354Z",
+ "source": "Public Transportation Open Data Center (ODPT), data provided by Tokyo Metro",
+ "lines": [
+  {
+   "id": "Ginza",
+   "name": "Ginza Line",
+   "ja": "銀座線",
+   "code": "G",
+   "color": "#FF9500",
+   "stations": [
+    {
+     "id": "TokyoMetro.Ginza.Shibuya",
+     "code": "G01",
+     "en": "Shibuya",
+     "ja": "渋谷",
+     "lat": 35.659097,
+     "lon": 139.702673
+    },
+    {
+     "id": "TokyoMetro.Ginza.OmoteSando",
+     "code": "G02",
+     "en": "Omote-sando",
+     "ja": "表参道",
+     "lat": 35.665042,
+     "lon": 139.712473
+    },
+    {
+     "id": "TokyoMetro.Ginza.Gaiemmae",
+     "code": "G03",
+     "en": "Gaiemmae",
+     "ja": "外苑前",
+     "lat": 35.670375,
+     "lon": 139.717825
+    },
+    {
+     "id": "TokyoMetro.Ginza.AoyamaItchome",
+     "code": "G04",
+     "en": "Aoyama-itchome",
+     "ja": "青山一丁目",
+     "lat": 35.67279,
+     "lon": 139.724145
+    },
+    {
+     "id": "TokyoMetro.Ginza.AkasakaMitsuke",
+     "code": "G05",
+     "en": "Akasaka-mitsuke",
+     "ja": "赤坂見附",
+     "lat": 35.676845,
+     "lon": 139.737347
+    },
+    {
+     "id": "TokyoMetro.Ginza.TameikeSanno",
+     "code": "G06",
+     "en": "Tameike-sanno",
+     "ja": "溜池山王",
+     "lat": 35.671511,
+     "lon": 139.741943
+    },
+    {
+     "id": "TokyoMetro.Ginza.Toranomon",
+     "code": "G07",
+     "en": "Toranomon",
+     "ja": "虎ノ門",
+     "lat": 35.67016,
+     "lon": 139.75012
+    },
+    {
+     "id": "TokyoMetro.Ginza.Shimbashi",
+     "code": "G08",
+     "en": "Shimbashi",
+     "ja": "新橋",
+     "lat": 35.667382,
+     "lon": 139.758512
+    },
+    {
+     "id": "TokyoMetro.Ginza.Ginza",
+     "code": "G09",
+     "en": "Ginza",
+     "ja": "銀座",
+     "lat": 35.6715,
+     "lon": 139.765366
+    },
+    {
+     "id": "TokyoMetro.Ginza.Kyobashi",
+     "code": "G10",
+     "en": "Kyobashi",
+     "ja": "京橋",
+     "lat": 35.676704,
+     "lon": 139.77011
+    },
+    {
+     "id": "TokyoMetro.Ginza.Nihombashi",
+     "code": "G11",
+     "en": "Nihombashi",
+     "ja": "日本橋",
+     "lat": 35.681879,
+     "lon": 139.773335
+    },
+    {
+     "id": "TokyoMetro.Ginza.Mitsukoshimae",
+     "code": "G12",
+     "en": "Mitsukoshimae",
+     "ja": "三越前",
+     "lat": 35.687173,
+     "lon": 139.773582
+    },
+    {
+     "id": "TokyoMetro.Ginza.Kanda",
+     "code": "G13",
+     "en": "Kanda",
+     "ja": "神田",
+     "lat": 35.693715,
+     "lon": 139.77089
+    },
+    {
+     "id": "TokyoMetro.Ginza.Suehirocho",
+     "code": "G14",
+     "en": "Suehirocho",
+     "ja": "末広町",
+     "lat": 35.70278,
+     "lon": 139.771762
+    },
+    {
+     "id": "TokyoMetro.Ginza.UenoHirokoji",
+     "code": "G15",
+     "en": "Ueno-hirokoji",
+     "ja": "上野広小路",
+     "lat": 35.707765,
+     "lon": 139.773011
+    },
+    {
+     "id": "TokyoMetro.Ginza.Ueno",
+     "code": "G16",
+     "en": "Ueno",
+     "ja": "上野",
+     "lat": 35.711835,
+     "lon": 139.775625
+    },
+    {
+     "id": "TokyoMetro.Ginza.Inaricho",
+     "code": "G17",
+     "en": "Inaricho",
+     "ja": "稲荷町",
+     "lat": 35.711389,
+     "lon": 139.78221
+    },
+    {
+     "id": "TokyoMetro.Ginza.Tawaramachi",
+     "code": "G18",
+     "en": "Tawaramachi",
+     "ja": "田原町",
+     "lat": 35.709917,
+     "lon": 139.790306
+    },
+    {
+     "id": "TokyoMetro.Ginza.Asakusa",
+     "code": "G19",
+     "en": "Asakusa",
+     "ja": "浅草",
+     "lat": 35.710746,
+     "lon": 139.797774
+    }
+   ]
+  },
+  {
+   "id": "Marunouchi",
+   "name": "Marunouchi Line",
+   "ja": "丸ノ内線",
+   "code": "M",
+   "color": "#F62E36",
+   "stations": [
+    {
+     "id": "TokyoMetro.Marunouchi.Ogikubo",
+     "code": "M01",
+     "en": "Ogikubo",
+     "ja": "荻窪",
+     "lat": 35.704175,
+     "lon": 139.61976
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.MinamiAsagaya",
+     "code": "M02",
+     "en": "Minami-asagaya",
+     "ja": "南阿佐ケ谷",
+     "lat": 35.699455,
+     "lon": 139.635575
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.ShinKoenji",
+     "code": "M03",
+     "en": "Shin-koenji",
+     "ja": "新高円寺",
+     "lat": 35.69786,
+     "lon": 139.64851
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.HigashiKoenji",
+     "code": "M04",
+     "en": "Higashi-koenji",
+     "ja": "東高円寺",
+     "lat": 35.697965,
+     "lon": 139.658295
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.ShinNakano",
+     "code": "M05",
+     "en": "Shin-nakano",
+     "ja": "新中野",
+     "lat": 35.697475,
+     "lon": 139.66951
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.NakanoSakaue",
+     "code": "M06",
+     "en": "Nakano-sakaue",
+     "ja": "中野坂上",
+     "lat": 35.697085,
+     "lon": 139.682205
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.NishiShinjuku",
+     "code": "M07",
+     "en": "Nishi-shinjuku",
+     "ja": "西新宿",
+     "lat": 35.694515,
+     "lon": 139.69256
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.Shinjuku",
+     "code": "M08",
+     "en": "Shinjuku",
+     "ja": "新宿",
+     "lat": 35.692452,
+     "lon": 139.700548
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.ShinjukuSanchome",
+     "code": "M09",
+     "en": "Shinjuku-sanchome",
+     "ja": "新宿三丁目",
+     "lat": 35.69118,
+     "lon": 139.70421
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.ShinjukuGyoemmae",
+     "code": "M10",
+     "en": "Shinjuku-gyoemmae",
+     "ja": "新宿御苑前",
+     "lat": 35.688525,
+     "lon": 139.710915
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.YotsuyaSanchome",
+     "code": "M11",
+     "en": "Yotsuya-sanchome",
+     "ja": "四谷三丁目",
+     "lat": 35.687835,
+     "lon": 139.719325
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.Yotsuya",
+     "code": "M12",
+     "en": "Yotsuya",
+     "ja": "四ツ谷",
+     "lat": 35.684197,
+     "lon": 139.730047
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.AkasakaMitsuke",
+     "code": "M13",
+     "en": "Akasaka-mitsuke",
+     "ja": "赤坂見附",
+     "lat": 35.676845,
+     "lon": 139.737347
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.KokkaiGijidomae",
+     "code": "M14",
+     "en": "Kokkai-gijidomae",
+     "ja": "国会議事堂前",
+     "lat": 35.674926,
+     "lon": 139.745473
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.Kasumigaseki",
+     "code": "M15",
+     "en": "Kasumigaseki",
+     "ja": "霞ケ関",
+     "lat": 35.674235,
+     "lon": 139.75268
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.Ginza",
+     "code": "M16",
+     "en": "Ginza",
+     "ja": "銀座",
+     "lat": 35.673159,
+     "lon": 139.763876
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.Tokyo",
+     "code": "M17",
+     "en": "Tokyo",
+     "ja": "東京",
+     "lat": 35.681935,
+     "lon": 139.7648
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.Otemachi",
+     "code": "M18",
+     "en": "Otemachi",
+     "ja": "大手町",
+     "lat": 35.686875,
+     "lon": 139.766203
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.Awajicho",
+     "code": "M19",
+     "en": "Awajicho",
+     "ja": "淡路町",
+     "lat": 35.69487,
+     "lon": 139.767455
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.Ochanomizu",
+     "code": "M20",
+     "en": "Ochanomizu",
+     "ja": "御茶ノ水",
+     "lat": 35.70043,
+     "lon": 139.764405
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.HongoSanchome",
+     "code": "M21",
+     "en": "Hongo-sanchome",
+     "ja": "本郷三丁目",
+     "lat": 35.706726,
+     "lon": 139.760154
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.Korakuen",
+     "code": "M22",
+     "en": "Korakuen",
+     "ja": "後楽園",
+     "lat": 35.707307,
+     "lon": 139.750861
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.Myogadani",
+     "code": "M23",
+     "en": "Myogadani",
+     "ja": "茗荷谷",
+     "lat": 35.7172,
+     "lon": 139.736895
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.ShinOtsuka",
+     "code": "M24",
+     "en": "Shin-otsuka",
+     "ja": "新大塚",
+     "lat": 35.72613,
+     "lon": 139.729354
+    },
+    {
+     "id": "TokyoMetro.Marunouchi.Ikebukuro",
+     "code": "M25",
+     "en": "Ikebukuro",
+     "ja": "池袋",
+     "lat": 35.730345,
+     "lon": 139.71115
+    }
+   ]
+  },
+  {
+   "id": "MarunouchiBranch",
+   "name": "Marunouchi Branch Line",
+   "ja": "丸ノ内線支線",
+   "code": "Mb",
+   "color": "#F62E36",
+   "stations": [
+    {
+     "id": "TokyoMetro.MarunouchiBranch.Honancho",
+     "code": "Mb03",
+     "en": "Honancho",
+     "ja": "方南町",
+     "lat": 35.683515,
+     "lon": 139.657935
+    },
+    {
+     "id": "TokyoMetro.MarunouchiBranch.NakanoFujimicho",
+     "code": "Mb04",
+     "en": "Nakano-fujimicho",
+     "ja": "中野富士見町",
+     "lat": 35.69082,
+     "lon": 139.668155
+    },
+    {
+     "id": "TokyoMetro.MarunouchiBranch.NakanoShimbashi",
+     "code": "Mb05",
+     "en": "Nakano-Shimbashi",
+     "ja": "中野新橋",
+     "lat": 35.691685,
+     "lon": 139.674001
+    },
+    {
+     "id": "TokyoMetro.MarunouchiBranch.NakanoSakaue",
+     "code": "M06",
+     "en": "Nakano-sakaue",
+     "ja": "中野坂上",
+     "lat": 35.697085,
+     "lon": 139.682205
+    }
+   ]
+  },
+  {
+   "id": "Hibiya",
+   "name": "Hibiya Line",
+   "ja": "日比谷線",
+   "code": "H",
+   "color": "#B5B5AC",
+   "stations": [
+    {
+     "id": "TokyoMetro.Hibiya.NakaMeguro",
+     "code": "H01",
+     "en": "Naka-meguro",
+     "ja": "中目黒",
+     "lat": 35.644108,
+     "lon": 139.698833
+    },
+    {
+     "id": "TokyoMetro.Hibiya.Ebisu",
+     "code": "H02",
+     "en": "Ebisu",
+     "ja": "恵比寿",
+     "lat": 35.64704,
+     "lon": 139.708701
+    },
+    {
+     "id": "TokyoMetro.Hibiya.HiroO",
+     "code": "H03",
+     "en": "Hiro-o",
+     "ja": "広尾",
+     "lat": 35.651499,
+     "lon": 139.722209
+    },
+    {
+     "id": "TokyoMetro.Hibiya.Roppongi",
+     "code": "H04",
+     "en": "Roppongi",
+     "ja": "六本木",
+     "lat": 35.6628,
+     "lon": 139.731155
+    },
+    {
+     "id": "TokyoMetro.Hibiya.Kamiyacho",
+     "code": "H05",
+     "en": "Kamiyacho",
+     "ja": "神谷町",
+     "lat": 35.662625,
+     "lon": 139.744725
+    },
+    {
+     "id": "TokyoMetro.Hibiya.ToranomonHills",
+     "code": "H06",
+     "en": "Toranomon-hills",
+     "ja": "虎ノ門ヒルズ",
+     "lat": 35.667309,
+     "lon": 139.747738
+    },
+    {
+     "id": "TokyoMetro.Hibiya.Kasumigaseki",
+     "code": "H07",
+     "en": "Kasumigaseki",
+     "ja": "霞ケ関",
+     "lat": 35.673875,
+     "lon": 139.75106
+    },
+    {
+     "id": "TokyoMetro.Hibiya.Hibiya",
+     "code": "H08",
+     "en": "Hibiya",
+     "ja": "日比谷",
+     "lat": 35.674271,
+     "lon": 139.7606
+    },
+    {
+     "id": "TokyoMetro.Hibiya.Ginza",
+     "code": "H09",
+     "en": "Ginza",
+     "ja": "銀座",
+     "lat": 35.671983,
+     "lon": 139.764007
+    },
+    {
+     "id": "TokyoMetro.Hibiya.HigashiGinza",
+     "code": "H10",
+     "en": "Higashi-ginza",
+     "ja": "東銀座",
+     "lat": 35.669129,
+     "lon": 139.767633
+    },
+    {
+     "id": "TokyoMetro.Hibiya.Tsukiji",
+     "code": "H11",
+     "en": "Tsukiji",
+     "ja": "築地",
+     "lat": 35.667928,
+     "lon": 139.772473
+    },
+    {
+     "id": "TokyoMetro.Hibiya.Hatchobori",
+     "code": "H12",
+     "en": "Hatchobori",
+     "ja": "八丁堀",
+     "lat": 35.675368,
+     "lon": 139.777334
+    },
+    {
+     "id": "TokyoMetro.Hibiya.Kayabacho",
+     "code": "H13",
+     "en": "Kayabacho",
+     "ja": "茅場町",
+     "lat": 35.679078,
+     "lon": 139.779619
+    },
+    {
+     "id": "TokyoMetro.Hibiya.Ningyocho",
+     "code": "H14",
+     "en": "Ningyocho",
+     "ja": "人形町",
+     "lat": 35.686259,
+     "lon": 139.782339
+    },
+    {
+     "id": "TokyoMetro.Hibiya.Kodemmacho",
+     "code": "H15",
+     "en": "Kodemmacho",
+     "ja": "小伝馬町",
+     "lat": 35.690423,
+     "lon": 139.778758
+    },
+    {
+     "id": "TokyoMetro.Hibiya.Akihabara",
+     "code": "H16",
+     "en": "Akihabara",
+     "ja": "秋葉原",
+     "lat": 35.697965,
+     "lon": 139.775529
+    },
+    {
+     "id": "TokyoMetro.Hibiya.NakaOkachimachi",
+     "code": "H17",
+     "en": "Naka-okachimachi",
+     "ja": "仲御徒町",
+     "lat": 35.706655,
+     "lon": 139.77619
+    },
+    {
+     "id": "TokyoMetro.Hibiya.Ueno",
+     "code": "H18",
+     "en": "Ueno",
+     "ja": "上野",
+     "lat": 35.711558,
+     "lon": 139.777061
+    },
+    {
+     "id": "TokyoMetro.Hibiya.Iriya",
+     "code": "H19",
+     "en": "Iriya",
+     "ja": "入谷",
+     "lat": 35.720565,
+     "lon": 139.784466
+    },
+    {
+     "id": "TokyoMetro.Hibiya.Minowa",
+     "code": "H20",
+     "en": "Minowa",
+     "ja": "三ノ輪",
+     "lat": 35.729285,
+     "lon": 139.791165
+    },
+    {
+     "id": "TokyoMetro.Hibiya.MinamiSenju",
+     "code": "H21",
+     "en": "Minami-senju",
+     "ja": "南千住",
+     "lat": 35.73231,
+     "lon": 139.79878
+    },
+    {
+     "id": "TokyoMetro.Hibiya.KitaSenju",
+     "code": "H22",
+     "en": "Kita-senju",
+     "ja": "北千住",
+     "lat": 35.749904,
+     "lon": 139.805591
+    }
+   ]
+  },
+  {
+   "id": "Tozai",
+   "name": "Tozai Line",
+   "ja": "東西線",
+   "code": "T",
+   "color": "#009BBF",
+   "stations": [
+    {
+     "id": "TokyoMetro.Tozai.Nakano",
+     "code": "T01",
+     "en": "Nakano",
+     "ja": "中野",
+     "lat": 35.70574,
+     "lon": 139.665605
+    },
+    {
+     "id": "TokyoMetro.Tozai.Ochiai",
+     "code": "T02",
+     "en": "Ochiai",
+     "ja": "落合",
+     "lat": 35.710635,
+     "lon": 139.685965
+    },
+    {
+     "id": "TokyoMetro.Tozai.Takadanobaba",
+     "code": "T03",
+     "en": "Takadanobaba",
+     "ja": "高田馬場",
+     "lat": 35.71328,
+     "lon": 139.705045
+    },
+    {
+     "id": "TokyoMetro.Tozai.Waseda",
+     "code": "T04",
+     "en": "Waseda",
+     "ja": "早稲田",
+     "lat": 35.70568,
+     "lon": 139.72219
+    },
+    {
+     "id": "TokyoMetro.Tozai.Kagurazaka",
+     "code": "T05",
+     "en": "Kagurazaka",
+     "ja": "神楽坂",
+     "lat": 35.703865,
+     "lon": 139.73452
+    },
+    {
+     "id": "TokyoMetro.Tozai.Iidabashi",
+     "code": "T06",
+     "en": "Iidabashi",
+     "ja": "飯田橋",
+     "lat": 35.701403,
+     "lon": 139.746521
+    },
+    {
+     "id": "TokyoMetro.Tozai.Kudanshita",
+     "code": "T07",
+     "en": "Kudanshita",
+     "ja": "九段下",
+     "lat": 35.696091,
+     "lon": 139.751265
+    },
+    {
+     "id": "TokyoMetro.Tozai.Takebashi",
+     "code": "T08",
+     "en": "Takebashi",
+     "ja": "竹橋",
+     "lat": 35.69044,
+     "lon": 139.75767
+    },
+    {
+     "id": "TokyoMetro.Tozai.Otemachi",
+     "code": "T09",
+     "en": "Otemachi",
+     "ja": "大手町",
+     "lat": 35.684697,
+     "lon": 139.76603
+    },
+    {
+     "id": "TokyoMetro.Tozai.Nihombashi",
+     "code": "T10",
+     "en": "Nihombashi",
+     "ja": "日本橋",
+     "lat": 35.682376,
+     "lon": 139.774101
+    },
+    {
+     "id": "TokyoMetro.Tozai.Kayabacho",
+     "code": "T11",
+     "en": "Kayabacho",
+     "ja": "茅場町",
+     "lat": 35.680346,
+     "lon": 139.77927
+    },
+    {
+     "id": "TokyoMetro.Tozai.MonzenNakacho",
+     "code": "T12",
+     "en": "Monzen-nakacho",
+     "ja": "門前仲町",
+     "lat": 35.671892,
+     "lon": 139.796099
+    },
+    {
+     "id": "TokyoMetro.Tozai.Kiba",
+     "code": "T13",
+     "en": "Kiba",
+     "ja": "木場",
+     "lat": 35.669356,
+     "lon": 139.807115
+    },
+    {
+     "id": "TokyoMetro.Tozai.Toyocho",
+     "code": "T14",
+     "en": "Toyocho",
+     "ja": "東陽町",
+     "lat": 35.66959,
+     "lon": 139.81768
+    },
+    {
+     "id": "TokyoMetro.Tozai.MinamiSunamachi",
+     "code": "T15",
+     "en": "Minami-sunamachi",
+     "ja": "南砂町",
+     "lat": 35.668415,
+     "lon": 139.831695
+    },
+    {
+     "id": "TokyoMetro.Tozai.NishiKasai",
+     "code": "T16",
+     "en": "Nishi-kasai",
+     "ja": "西葛西",
+     "lat": 35.664562,
+     "lon": 139.8596
+    },
+    {
+     "id": "TokyoMetro.Tozai.Kasai",
+     "code": "T17",
+     "en": "Kasai",
+     "ja": "葛西",
+     "lat": 35.663616,
+     "lon": 139.87253
+    },
+    {
+     "id": "TokyoMetro.Tozai.Urayasu",
+     "code": "T18",
+     "en": "Urayasu",
+     "ja": "浦安",
+     "lat": 35.665903,
+     "lon": 139.893236
+    },
+    {
+     "id": "TokyoMetro.Tozai.MinamiGyotoku",
+     "code": "T19",
+     "en": "Minami-gyotoku",
+     "ja": "南行徳",
+     "lat": 35.672729,
+     "lon": 139.902276
+    },
+    {
+     "id": "TokyoMetro.Tozai.Gyotoku",
+     "code": "T20",
+     "en": "Gyotoku",
+     "ja": "行徳",
+     "lat": 35.68262,
+     "lon": 139.914185
+    },
+    {
+     "id": "TokyoMetro.Tozai.Myoden",
+     "code": "T21",
+     "en": "Myoden",
+     "ja": "妙典",
+     "lat": 35.691014,
+     "lon": 139.924286
+    },
+    {
+     "id": "TokyoMetro.Tozai.BarakiNakayama",
+     "code": "T22",
+     "en": "Baraki-nakayama",
+     "ja": "原木中山",
+     "lat": 35.7033,
+     "lon": 139.941915
+    },
+    {
+     "id": "TokyoMetro.Tozai.NishiFunabashi",
+     "code": "T23",
+     "en": "Nishi-funabashi",
+     "ja": "西船橋",
+     "lat": 35.707174,
+     "lon": 139.958767
+    }
+   ]
+  },
+  {
+   "id": "Chiyoda",
+   "name": "Chiyoda Line",
+   "ja": "千代田線",
+   "code": "C",
+   "color": "#00BB85",
+   "stations": [
+    {
+     "id": "TokyoMetro.Chiyoda.YoyogiUehara",
+     "code": "C01",
+     "en": "Yoyogi-uehara",
+     "ja": "代々木上原",
+     "lat": 35.669017,
+     "lon": 139.679884
+    },
+    {
+     "id": "TokyoMetro.Chiyoda.YoyogiKoen",
+     "code": "C02",
+     "en": "Yoyogi-koen",
+     "ja": "代々木公園",
+     "lat": 35.669104,
+     "lon": 139.689791
+    },
+    {
+     "id": "TokyoMetro.Chiyoda.MeijiJingumae",
+     "code": "C03",
+     "en": "Meiji-jingumae<Harajuku>",
+     "ja": "明治神宮前〈原宿〉",
+     "lat": 35.669123,
+     "lon": 139.703944
+    },
+    {
+     "id": "TokyoMetro.Chiyoda.OmoteSando",
+     "code": "C04",
+     "en": "Omote-sando",
+     "ja": "表参道",
+     "lat": 35.665652,
+     "lon": 139.711346
+    },
+    {
+     "id": "TokyoMetro.Chiyoda.Nogizaka",
+     "code": "C05",
+     "en": "Nogizaka",
+     "ja": "乃木坂",
+     "lat": 35.666592,
+     "lon": 139.726229
+    },
+    {
+     "id": "TokyoMetro.Chiyoda.Akasaka",
+     "code": "C06",
+     "en": "Akasaka",
+     "ja": "赤坂",
+     "lat": 35.672104,
+     "lon": 139.736413
+    },
+    {
+     "id": "TokyoMetro.Chiyoda.KokkaiGijidomae",
+     "code": "C07",
+     "en": "Kokkai-gijidomae",
+     "ja": "国会議事堂前",
+     "lat": 35.673566,
+     "lon": 139.743188
+    },
+    {
+     "id": "TokyoMetro.Chiyoda.Kasumigaseki",
+     "code": "C08",
+     "en": "Kasumigaseki",
+     "ja": "霞ケ関",
+     "lat": 35.67256,
+     "lon": 139.75177
+    },
+    {
+     "id": "TokyoMetro.Chiyoda.Hibiya",
+     "code": "C09",
+     "en": "Hibiya",
+     "ja": "日比谷",
+     "lat": 35.673955,
+     "lon": 139.758765
+    },
+    {
+     "id": "TokyoMetro.Chiyoda.Nijubashimae",
+     "code": "C10",
+     "en": "Nijubashimae<Marunouchi>",
+     "ja": "二重橋前〈丸の内〉",
+     "lat": 35.680505,
+     "lon": 139.76178
+    },
+    {
+     "id": "TokyoMetro.Chiyoda.Otemachi",
+     "code": "C11",
+     "en": "Otemachi",
+     "ja": "大手町",
+     "lat": 35.68525,
+     "lon": 139.763285
+    },
+    {
+     "id": "TokyoMetro.Chiyoda.ShinOchanomizu",
+     "code": "C12",
+     "en": "Shin-ochanomizu",
+     "ja": "新御茶ノ水",
+     "lat": 35.696925,
+     "lon": 139.76545
+    },
+    {
+     "id": "TokyoMetro.Chiyoda.Yushima",
+     "code": "C13",
+     "en": "Yushima",
+     "ja": "湯島",
+     "lat": 35.706805,
+     "lon": 139.769981
+    },
+    {
+     "id": "TokyoMetro.Chiyoda.Nezu",
+     "code": "C14",
+     "en": "Nezu",
+     "ja": "根津",
+     "lat": 35.717325,
+     "lon": 139.76575
+    },
+    {
+     "id": "TokyoMetro.Chiyoda.Sendagi",
+     "code": "C15",
+     "en": "Sendagi",
+     "ja": "千駄木",
+     "lat": 35.725746,
+     "lon": 139.763303
+    },
+    {
+     "id": "TokyoMetro.Chiyoda.NishiNippori",
+     "code": "C16",
+     "en": "Nishi-nippori",
+     "ja": "西日暮里",
+     "lat": 35.732355,
+     "lon": 139.76689
+    },
+    {
+     "id": "TokyoMetro.Chiyoda.Machiya",
+     "code": "C17",
+     "en": "Machiya",
+     "ja": "町屋",
+     "lat": 35.742068,
+     "lon": 139.780047
+    },
+    {
+     "id": "TokyoMetro.Chiyoda.KitaSenju",
+     "code": "C18",
+     "en": "Kita-senju",
+     "ja": "北千住",
+     "lat": 35.7492,
+     "lon": 139.804403
+    },
+    {
+     "id": "TokyoMetro.Chiyoda.Ayase",
+     "code": "C19",
+     "en": "Ayase",
+     "ja": "綾瀬",
+     "lat": 35.762285,
+     "lon": 139.82489
+    },
+    {
+     "id": "TokyoMetro.Chiyoda.KitaAyase",
+     "code": "C20",
+     "en": "Kita-ayase",
+     "ja": "北綾瀬",
+     "lat": 35.77689,
+     "lon": 139.832095
+    }
+   ]
+  },
+  {
+   "id": "Yurakucho",
+   "name": "Yurakucho Line",
+   "ja": "有楽町線",
+   "code": "Y",
+   "color": "#C1A470",
+   "stations": [
+    {
+     "id": "TokyoMetro.Yurakucho.Wakoshi",
+     "code": "Y01",
+     "en": "Wakoshi",
+     "ja": "和光市",
+     "lat": 35.78835,
+     "lon": 139.612865
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.ChikatetsuNarimasu",
+     "code": "Y02",
+     "en": "Chikatetsu-narimasu",
+     "ja": "地下鉄成増",
+     "lat": 35.77674,
+     "lon": 139.63117
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.ChikatetsuAkatsuka",
+     "code": "Y03",
+     "en": "Chikatetsu-akatsuka",
+     "ja": "地下鉄赤塚",
+     "lat": 35.769981,
+     "lon": 139.644
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.Heiwadai",
+     "code": "Y04",
+     "en": "Heiwadai",
+     "ja": "平和台",
+     "lat": 35.757555,
+     "lon": 139.6543
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.Hikawadai",
+     "code": "Y05",
+     "en": "Hikawadai",
+     "ja": "氷川台",
+     "lat": 35.74962,
+     "lon": 139.66547
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.KotakeMukaihara",
+     "code": "Y06",
+     "en": "Kotake-mukaihara",
+     "ja": "小竹向原",
+     "lat": 35.743395,
+     "lon": 139.67952
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.Senkawa",
+     "code": "Y07",
+     "en": "Senkawa",
+     "ja": "千川",
+     "lat": 35.738175,
+     "lon": 139.6894
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.Kanamecho",
+     "code": "Y08",
+     "en": "Kanamecho",
+     "ja": "要町",
+     "lat": 35.733215,
+     "lon": 139.69848
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.Ikebukuro",
+     "code": "Y09",
+     "en": "Ikebukuro",
+     "ja": "池袋",
+     "lat": 35.729185,
+     "lon": 139.710885
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.HigashiIkebukuro",
+     "code": "Y10",
+     "en": "Higashi-ikebukuro",
+     "ja": "東池袋",
+     "lat": 35.72595,
+     "lon": 139.718865
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.Gokokuji",
+     "code": "Y11",
+     "en": "Gokokuji",
+     "ja": "護国寺",
+     "lat": 35.71918,
+     "lon": 139.72745
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.Edogawabashi",
+     "code": "Y12",
+     "en": "Edogawabashi",
+     "ja": "江戸川橋",
+     "lat": 35.709295,
+     "lon": 139.73413
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.Iidabashi",
+     "code": "Y13",
+     "en": "Iidabashi",
+     "ja": "飯田橋",
+     "lat": 35.701342,
+     "lon": 139.743207
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.Ichigaya",
+     "code": "Y14",
+     "en": "Ichigaya",
+     "ja": "市ケ谷",
+     "lat": 35.692576,
+     "lon": 139.736891
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.Kojimachi",
+     "code": "Y15",
+     "en": "Kojimachi",
+     "ja": "麴町",
+     "lat": 35.684785,
+     "lon": 139.73735
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.Nagatacho",
+     "code": "Y16",
+     "en": "Nagatacho",
+     "ja": "永田町",
+     "lat": 35.677895,
+     "lon": 139.741773
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.Sakuradamon",
+     "code": "Y17",
+     "en": "Sakuradamon",
+     "ja": "桜田門",
+     "lat": 35.677459,
+     "lon": 139.751886
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.Yurakucho",
+     "code": "Y18",
+     "en": "Yurakucho",
+     "ja": "有楽町",
+     "lat": 35.675973,
+     "lon": 139.762286
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.GinzaItchome",
+     "code": "Y19",
+     "en": "Ginza-itchome",
+     "ja": "銀座一丁目",
+     "lat": 35.674519,
+     "lon": 139.766786
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.Shintomicho",
+     "code": "Y20",
+     "en": "Shintomicho",
+     "ja": "新富町",
+     "lat": 35.670529,
+     "lon": 139.773594
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.Tsukishima",
+     "code": "Y21",
+     "en": "Tsukishima",
+     "ja": "月島",
+     "lat": 35.664711,
+     "lon": 139.784405
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.Toyosu",
+     "code": "Y22",
+     "en": "Toyosu",
+     "ja": "豊洲",
+     "lat": 35.655153,
+     "lon": 139.795994
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.Tatsumi",
+     "code": "Y23",
+     "en": "Tatsumi",
+     "ja": "辰巳",
+     "lat": 35.645775,
+     "lon": 139.81033
+    },
+    {
+     "id": "TokyoMetro.Yurakucho.ShinKiba",
+     "code": "Y24",
+     "en": "Shin-kiba",
+     "ja": "新木場",
+     "lat": 35.64578,
+     "lon": 139.826605
+    }
+   ]
+  },
+  {
+   "id": "Hanzomon",
+   "name": "Hanzomon Line",
+   "ja": "半蔵門線",
+   "code": "Z",
+   "color": "#8F76D6",
+   "stations": [
+    {
+     "id": "TokyoMetro.Hanzomon.Shibuya",
+     "code": "Z01",
+     "en": "Shibuya",
+     "ja": "渋谷",
+     "lat": 35.65945,
+     "lon": 139.701035
+    },
+    {
+     "id": "TokyoMetro.Hanzomon.OmoteSando",
+     "code": "Z02",
+     "en": "Omote-sando",
+     "ja": "表参道",
+     "lat": 35.665143,
+     "lon": 139.712383
+    },
+    {
+     "id": "TokyoMetro.Hanzomon.AoyamaItchome",
+     "code": "Z03",
+     "en": "Aoyama-itchome",
+     "ja": "青山一丁目",
+     "lat": 35.672956,
+     "lon": 139.724075
+    },
+    {
+     "id": "TokyoMetro.Hanzomon.Nagatacho",
+     "code": "Z04",
+     "en": "Nagatacho",
+     "ja": "永田町",
+     "lat": 35.678407,
+     "lon": 139.738865
+    },
+    {
+     "id": "TokyoMetro.Hanzomon.Hanzomon",
+     "code": "Z05",
+     "en": "Hanzomon",
+     "ja": "半蔵門",
+     "lat": 35.68538,
+     "lon": 139.741695
+    },
+    {
+     "id": "TokyoMetro.Hanzomon.Kudanshita",
+     "code": "Z06",
+     "en": "Kudanshita",
+     "ja": "九段下",
+     "lat": 35.695501,
+     "lon": 139.751117
+    },
+    {
+     "id": "TokyoMetro.Hanzomon.Jimbocho",
+     "code": "Z07",
+     "en": "Jimbocho",
+     "ja": "神保町",
+     "lat": 35.696021,
+     "lon": 139.75756
+    },
+    {
+     "id": "TokyoMetro.Hanzomon.Otemachi",
+     "code": "Z08",
+     "en": "Otemachi",
+     "ja": "大手町",
+     "lat": 35.686745,
+     "lon": 139.764905
+    },
+    {
+     "id": "TokyoMetro.Hanzomon.Mitsukoshimae",
+     "code": "Z09",
+     "en": "Mitsukoshimae",
+     "ja": "三越前",
+     "lat": 35.684928,
+     "lon": 139.77308
+    },
+    {
+     "id": "TokyoMetro.Hanzomon.Suitengumae",
+     "code": "Z10",
+     "en": "Suitengumae",
+     "ja": "水天宮前",
+     "lat": 35.683,
+     "lon": 139.785171
+    },
+    {
+     "id": "TokyoMetro.Hanzomon.KiyosumiShirakawa",
+     "code": "Z11",
+     "en": "Kiyosumi-shirakawa",
+     "ja": "清澄白河",
+     "lat": 35.682119,
+     "lon": 139.799841
+    },
+    {
+     "id": "TokyoMetro.Hanzomon.Sumiyoshi",
+     "code": "Z12",
+     "en": "Sumiyoshi",
+     "ja": "住吉",
+     "lat": 35.688704,
+     "lon": 139.815667
+    },
+    {
+     "id": "TokyoMetro.Hanzomon.Kinshicho",
+     "code": "Z13",
+     "en": "Kinshicho",
+     "ja": "錦糸町",
+     "lat": 35.697441,
+     "lon": 139.814957
+    },
+    {
+     "id": "TokyoMetro.Hanzomon.Oshiage",
+     "code": "Z14",
+     "en": "Oshiage<SKYTREE>",
+     "ja": "押上〈スカイツリー前〉",
+     "lat": 35.708467,
+     "lon": 139.813735
+    }
+   ]
+  },
+  {
+   "id": "Namboku",
+   "name": "Namboku Line",
+   "ja": "南北線",
+   "code": "N",
+   "color": "#00AC9B",
+   "stations": [
+    {
+     "id": "TokyoMetro.Namboku.Meguro",
+     "code": "N01",
+     "en": "Meguro",
+     "ja": "目黒",
+     "lat": 35.632485,
+     "lon": 139.71566
+    },
+    {
+     "id": "TokyoMetro.Namboku.Shirokanedai",
+     "code": "N02",
+     "en": "Shirokanedai",
+     "ja": "白金台",
+     "lat": 35.63777,
+     "lon": 139.72586
+    },
+    {
+     "id": "TokyoMetro.Namboku.ShirokaneTakanawa",
+     "code": "N03",
+     "en": "Shirokane-takanawa",
+     "ja": "白金高輪",
+     "lat": 35.643145,
+     "lon": 139.734285
+    },
+    {
+     "id": "TokyoMetro.Namboku.AzabuJuban",
+     "code": "N04",
+     "en": "Azabu-juban",
+     "ja": "麻布十番",
+     "lat": 35.65481,
+     "lon": 139.737045
+    },
+    {
+     "id": "TokyoMetro.Namboku.RoppongiItchome",
+     "code": "N05",
+     "en": "Roppongi-itchome",
+     "ja": "六本木一丁目",
+     "lat": 35.665075,
+     "lon": 139.7389
+    },
+    {
+     "id": "TokyoMetro.Namboku.TameikeSanno",
+     "code": "N06",
+     "en": "Tameike-sanno",
+     "ja": "溜池山王",
+     "lat": 35.673091,
+     "lon": 139.741294
+    },
+    {
+     "id": "TokyoMetro.Namboku.Nagatacho",
+     "code": "N07",
+     "en": "Nagatacho",
+     "ja": "永田町",
+     "lat": 35.678338,
+     "lon": 139.739288
+    },
+    {
+     "id": "TokyoMetro.Namboku.Yotsuya",
+     "code": "N08",
+     "en": "Yotsuya",
+     "ja": "四ツ谷",
+     "lat": 35.686082,
+     "lon": 139.72968
+    },
+    {
+     "id": "TokyoMetro.Namboku.Ichigaya",
+     "code": "N09",
+     "en": "Ichigaya",
+     "ja": "市ケ谷",
+     "lat": 35.692894,
+     "lon": 139.736324
+    },
+    {
+     "id": "TokyoMetro.Namboku.Iidabashi",
+     "code": "N10",
+     "en": "Iidabashi",
+     "ja": "飯田橋",
+     "lat": 35.701532,
+     "lon": 139.743716
+    },
+    {
+     "id": "TokyoMetro.Namboku.Korakuen",
+     "code": "N11",
+     "en": "Korakuen",
+     "ja": "後楽園",
+     "lat": 35.70839,
+     "lon": 139.751786
+    },
+    {
+     "id": "TokyoMetro.Namboku.Todaimae",
+     "code": "N12",
+     "en": "Todaimae",
+     "ja": "東大前",
+     "lat": 35.718014,
+     "lon": 139.75788
+    },
+    {
+     "id": "TokyoMetro.Namboku.HonKomagome",
+     "code": "N13",
+     "en": "Hon-komagome",
+     "ja": "本駒込",
+     "lat": 35.724365,
+     "lon": 139.753812
+    },
+    {
+     "id": "TokyoMetro.Namboku.Komagome",
+     "code": "N14",
+     "en": "Komagome",
+     "ja": "駒込",
+     "lat": 35.735913,
+     "lon": 139.746909
+    },
+    {
+     "id": "TokyoMetro.Namboku.Nishigahara",
+     "code": "N15",
+     "en": "Nishigahara",
+     "ja": "西ケ原",
+     "lat": 35.745945,
+     "lon": 139.74226
+    },
+    {
+     "id": "TokyoMetro.Namboku.Oji",
+     "code": "N16",
+     "en": "Oji",
+     "ja": "王子",
+     "lat": 35.75447,
+     "lon": 139.737362
+    },
+    {
+     "id": "TokyoMetro.Namboku.OjiKamiya",
+     "code": "N17",
+     "en": "Oji-kamiya",
+     "ja": "王子神谷",
+     "lat": 35.765292,
+     "lon": 139.735641
+    },
+    {
+     "id": "TokyoMetro.Namboku.Shimo",
+     "code": "N18",
+     "en": "Shimo",
+     "ja": "志茂",
+     "lat": 35.778025,
+     "lon": 139.7325
+    },
+    {
+     "id": "TokyoMetro.Namboku.AkabaneIwabuchi",
+     "code": "N19",
+     "en": "Akabane-iwabuchi",
+     "ja": "赤羽岩淵",
+     "lat": 35.783355,
+     "lon": 139.72211
+    }
+   ]
+  },
+  {
+   "id": "Fukutoshin",
+   "name": "Fukutoshin Line",
+   "ja": "副都心線",
+   "code": "F",
+   "color": "#9C5E31",
+   "stations": [
+    {
+     "id": "TokyoMetro.Fukutoshin.Wakoshi",
+     "code": "F01",
+     "en": "Wakoshi",
+     "ja": "和光市",
+     "lat": 35.78835,
+     "lon": 139.612865
+    },
+    {
+     "id": "TokyoMetro.Fukutoshin.ChikatetsuNarimasu",
+     "code": "F02",
+     "en": "Chikatetsu-narimasu",
+     "ja": "地下鉄成増",
+     "lat": 35.77674,
+     "lon": 139.63117
+    },
+    {
+     "id": "TokyoMetro.Fukutoshin.ChikatetsuAkatsuka",
+     "code": "F03",
+     "en": "Chikatetsu-akatsuka",
+     "ja": "地下鉄赤塚",
+     "lat": 35.76998,
+     "lon": 139.644001
+    },
+    {
+     "id": "TokyoMetro.Fukutoshin.Heiwadai",
+     "code": "F04",
+     "en": "Heiwadai",
+     "ja": "平和台",
+     "lat": 35.757555,
+     "lon": 139.6543
+    },
+    {
+     "id": "TokyoMetro.Fukutoshin.Hikawadai",
+     "code": "F05",
+     "en": "Hikawadai",
+     "ja": "氷川台",
+     "lat": 35.74962,
+     "lon": 139.66547
+    },
+    {
+     "id": "TokyoMetro.Fukutoshin.KotakeMukaihara",
+     "code": "F06",
+     "en": "Kotake-mukaihara",
+     "ja": "小竹向原",
+     "lat": 35.743395,
+     "lon": 139.67952
+    },
+    {
+     "id": "TokyoMetro.Fukutoshin.Senkawa",
+     "code": "F07",
+     "en": "Senkawa",
+     "ja": "千川",
+     "lat": 35.738175,
+     "lon": 139.6894
+    },
+    {
+     "id": "TokyoMetro.Fukutoshin.Kanamecho",
+     "code": "F08",
+     "en": "Kanamecho",
+     "ja": "要町",
+     "lat": 35.733215,
+     "lon": 139.69848
+    },
+    {
+     "id": "TokyoMetro.Fukutoshin.Ikebukuro",
+     "code": "F09",
+     "en": "Ikebukuro",
+     "ja": "池袋",
+     "lat": 35.730345,
+     "lon": 139.71115
+    },
+    {
+     "id": "TokyoMetro.Fukutoshin.Zoshigaya",
+     "code": "F10",
+     "en": "Zoshigaya",
+     "ja": "雑司が谷",
+     "lat": 35.7202,
+     "lon": 139.714715
+    },
+    {
+     "id": "TokyoMetro.Fukutoshin.NishiWaseda",
+     "code": "F11",
+     "en": "Nishi-waseda",
+     "ja": "西早稲田",
+     "lat": 35.707806,
+     "lon": 139.70912
+    },
+    {
+     "id": "TokyoMetro.Fukutoshin.HigashiShinjuku",
+     "code": "F12",
+     "en": "Higashi-shinjuku",
+     "ja": "東新宿",
+     "lat": 35.699829,
+     "lon": 139.707846
+    },
+    {
+     "id": "TokyoMetro.Fukutoshin.ShinjukuSanchome",
+     "code": "F13",
+     "en": "Shinjuku-sanchome",
+     "ja": "新宿三丁目",
+     "lat": 35.690609,
+     "lon": 139.704727
+    },
+    {
+     "id": "TokyoMetro.Fukutoshin.KitaSando",
+     "code": "F14",
+     "en": "Kita-sando",
+     "ja": "北参道",
+     "lat": 35.678503,
+     "lon": 139.705469
+    },
+    {
+     "id": "TokyoMetro.Fukutoshin.MeijiJingumae",
+     "code": "F15",
+     "en": "Meiji-jingumae<Harajuku>",
+     "ja": "明治神宮前〈原宿〉",
+     "lat": 35.668205,
+     "lon": 139.70524
+    },
+    {
+     "id": "TokyoMetro.Fukutoshin.Shibuya",
+     "code": "F16",
+     "en": "Shibuya",
+     "ja": "渋谷",
+     "lat": 35.659092,
+     "lon": 139.70257
+    }
+   ]
+  }
+ ]
+}

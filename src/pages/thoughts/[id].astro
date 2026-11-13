@@ -1,0 +1,31 @@
+---
+// Turns each Markdown file in src/content/thoughts/ into its own page.
+import { getCollection, render } from 'astro:content';
+import Site from '../../layouts/Site.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('thoughts', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const fmt = new Intl.DateTimeFormat('en-GB', {
+  day: '2-digit',
+  month: 'short',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+---
+
+<Site title={post.data.title} description={post.data.summary}>
+  <article class="post">
+    <time class="label" datetime={post.data.date.toISOString()}>{fmt.format(post.data.date)}</time>
+    <h1>{post.data.title}</h1>
+    <div class="post-body">
+      <Content />
+    </div>
+    <a class="label back" href="/thoughts">← All thoughts</a>
+  </article>
+</Site>

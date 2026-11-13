@@ -1,0 +1,110 @@
+---
+// Every photograph, grouped by the station it was taken near.
+// The list is built by `npm run pictures` (see scripts/build-pictures.mjs).
+import Site from '../layouts/Site.astro';
+import pictures from '../data/pictures.json';
+
+interface Photo {
+  station: string;
+  place: string;
+  src: string;
+  thumb: string;
+  w: number;
+  h: number;
+  date?: string;
+}
+
+const photos = (pictures as { photos: Photo[] }).photos;
+const stations = [...new Set(photos.map((p) => p.station))].map((station) => {
+  const here = photos.filter((p) => p.station === station);
+  return {
+    station,
+    places: [...new Set(here.map((p) => p.place))].map((place) => {
+      const shots = here.filter((p) => p.place === place);
+      return { place, date: shots.find((p) => p.date)?.date, shots };
+    }),
+  };
+});
+---
+
+<Site title="Pictures" description="Photographs, filed by the station they were taken near.">
+  <h1 class="page-title">Pictures</h1>
+  {photos.length === 0 && <p>Nothing here yet.</p>}
+  {
+    stations.map(({ station, places }) => (
+      <section class="station">
+        <h2>
+          <a href={`/#${encodeURIComponent(station)}`}>{station}</a>
+        </h2>
+        {places.map(({ place, date, shots }) => (
+          <div class="outing">
+            <p class="label">
+              {place}
+              {date && ` · ${date}`}
+            </p>
+            <div class="grid">
+              {shots.map((p) => (
+                <a href={p.src} style={`--ratio:${(p.w / p.h).toFixed(3)}`}>
+                  <img src={p.thumb} alt={place} width={p.w} height={p.h} loading="lazy" />
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
+      </section>
+    ))
+  }
+</Site>
+
+<style>
+  .station {
+    margin-bottom: 4rem;
+  }
+
+  h2 {
+    font-size: clamp(1.6rem, 1.2rem + 2vw, 2.6rem);
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+
+  h2 a {
+    text-decoration-color: var(--d1);
+  }
+
+  .outing {
+    margin-top: 1.5rem;
+  }
+
+  .label {
+    margin-bottom: 0.6rem;
+  }
+
+  /* Rows of equal height, each photo as wide as its shape needs. */
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .grid a {
+    flex: calc(var(--ratio) * 10) 1 calc(var(--ratio) * 13rem);
+    max-width: calc(var(--ratio) * 16rem);
+    aspect-ratio: var(--ratio);
+    overflow: hidden;
+    background: var(--rule);
+  }
+
+  .grid img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.15s;
+  }
+
+  .grid a:hover img,
+  .grid a:focus-visible img {
+    opacity: 0.85;
+  }
+</style>
