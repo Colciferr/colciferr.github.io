@@ -227,38 +227,31 @@ const fetchedOn = dateFmt.format(new Date(fetched));
       </div>
     </div>
 
-    <header class="sign">
-      <div class="sign-head">
+    <!-- The bar across the top: who this is, and every page one click away. -->
+    <header class="top">
+      <div class="top-id">
         <h1>Nicholas Cole Davis</h1>
-        <p>Vulnerability management and security engineer in Tokyo. This is my résumé, my projects, my writing and my photographs.</p>
+        <p>Vulnerability management and security engineer in Tokyo</p>
       </div>
-
-      <!-- The plain way in: every page of the site, one click each. -->
-      <nav class="go" aria-label="Pages">
-        <ul>
-          {
-            pageLinks.map((page) => (
-              <li>
-                <a href={page.href}>
-                  <span class="stop-name">{page.title}</span>
-                  <span class="stop-what">{page.node.en} station</span>
-                </a>
-                <button type="button" data-goto={page.node.id} title={`Show ${page.node.en} on the map`} aria-label={`Show ${page.node.en} on the map`}>
-                  ◎
-                </button>
-              </li>
-            ))
-          }
-          <li>
-            <a href="/pictures">
-              <span class="stop-name">Pictures</span>
-              <span class="stop-what">
-                {photoCount} photographs at {photoStations.length} stations
-              </span>
+      <button type="button" class="top-menu" id="top-menu" aria-expanded="false" aria-controls="top-nav">Menu</button>
+      <nav class="top-nav" id="top-nav" aria-label="Pages">
+        {
+          pageLinks.map((page) => (
+            <a href={page.href}>
+              <span class="top-page">{page.title}</span>
+              <span class="top-at">{page.node.en}</span>
             </a>
-          </li>
-        </ul>
+          ))
+        }
+        <a href="/pictures">
+          <span class="top-page">Pictures</span>
+          <span class="top-at">{photoStations.length} stations</span>
+        </a>
       </nav>
+    </header>
+
+    <!-- The map's own controls, down in the corner. -->
+    <section class="sign" aria-label="Map controls">
       <p class="clock">
         <span id="clock">--:--:--</span>
         <span id="running">Loading the timetable…</span>
@@ -304,23 +297,16 @@ const fetchedOn = dateFmt.format(new Date(fetched));
         </ul>
       </details>
 
-      <details class="fold about">
-        <summary>About this map</summary>
-        <p>
+    </section>
+
+    <details class="about">
+      <summary>About this map</summary>
+      <p>
           Tokyo Metro data is from the Public Transportation Open Data Center. JR and Seibu timetables are from <a href="https://github.com/nagix/mini-tokyo-3d">Mini Tokyo 3D</a> by
           Akihiko Kusanagi, used under the <a href="/metro/NOTICE-mini-tokyo-3d.txt">MIT licence</a>. They may lag
           behind the latest timetable revision.
-        </p>
-      </details>
-
-      <nav class="elsewhere" aria-label="Sections">
-        <a href="/resume">Résumé</a>
-        <a href="/thoughts">Thoughts</a>
-        <a href="/projects">Projects</a>
-        <a href="/work">Work</a>
-        <a href="/pictures">Pictures</a>
-      </nav>
-    </header>
+      </p>
+    </details>
 
     <div class="zoom" role="group" aria-label="Zoom">
       <button type="button" id="zoom-in" aria-label="Zoom in" title="Zoom in (Ctrl + scroll)">+</button>
@@ -431,7 +417,9 @@ const fetchedOn = dateFmt.format(new Date(fetched));
       let zoom = 1;
       let view: 'diagram' | 'geo' = 'diagram';
       // How far out is far enough to see the whole map, and how far in is useful.
-      const signWidth = () => (window.innerWidth > 640 ? document.querySelector('.sign')!.getBoundingClientRect().right : 0);
+      // Nothing covers the side of the map any more: the bar is above it and
+      // the controls sit in a corner.
+      const signWidth = () => 0;
       const fitZoom = () => Math.min((vp.clientWidth - signWidth()) / full.width, vp.clientHeight / full.height) * 0.92;
       const zoomLimits = () => (view === 'geo' ? [Math.min(fitZoom(), 1), 60000 / full.width] : [Math.min(fitZoom(), 0.3), 2.5]);
       function setZoom(next: number, cx?: number, cy?: number, force = false) {
@@ -488,8 +476,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
       }
       {
         // The resting view: the loop in the middle of the space the sign leaves free.
-        const sign = document.querySelector('.sign')!.getBoundingClientRect();
-        const covered = window.innerWidth > 640 ? sign.right : 0;
+        const covered = 0;
         const homeX = () => data.start.x - covered / 2 / zoom;
 
         // The opening: start close in on Tokyo, draw every line while pulling
@@ -584,12 +571,13 @@ const fetchedOn = dateFmt.format(new Date(fetched));
       function follow(at: { x: number; y: number }) {
         const wide = window.innerWidth > 640;
         const box = panel.getBoundingClientRect();
-        const left = wide ? document.querySelector('.sign')!.getBoundingClientRect().right : 0;
+        const left = 0;
+        const top = vp.getBoundingClientRect().top;
         const right = wide && !panel.hidden ? box.left : window.innerWidth;
         const bottom = !wide && !panel.hidden ? box.top : window.innerHeight;
         const map = svg.getBoundingClientRect();
         vp.scrollLeft += (map.left + at.x * zoom - (left + right) / 2) * 0.2;
-        vp.scrollTop += (map.top + at.y * zoom - bottom / 2) * 0.2;
+        vp.scrollTop += (map.top + at.y * zoom - (top + bottom) / 2) * 0.2;
       }
 
       window.addEventListener('pointerup', () => {
@@ -659,7 +647,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
         data.start = { ...layout.start };
         following = null;
         setZoom(layout.zoom, undefined, undefined, true);
-        const covered = window.innerWidth > 640 ? document.querySelector('.sign')!.getBoundingClientRect().right : 0;
+        const covered = 0;
         centerOn(layout.start.x - covered / 2 / zoom, layout.start.y, false);
         document.querySelectorAll<HTMLButtonElement>('[data-view]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.view === next)));
       }
@@ -1114,6 +1102,13 @@ const fetchedOn = dateFmt.format(new Date(fetched));
         });
       });
 
+      // On a narrow screen the page links fold away behind the Menu button.
+      const menu = document.getElementById('top-menu')!;
+      menu.addEventListener('click', () => {
+        const open = document.querySelector('.top')!.classList.toggle('open');
+        menu.setAttribute('aria-expanded', String(open));
+      });
+
       document.querySelectorAll<HTMLButtonElement>('[data-goto]').forEach((button) => {
         button.addEventListener('click', () => {
           const node = data.nodes[Number(button.dataset.goto)];
@@ -1243,9 +1238,13 @@ const fetchedOn = dateFmt.format(new Date(fetched));
   }
 
   /* ---------------------------------------------------------------- Map */
+  :root {
+    --bar: 4.5rem;
+  }
+
   .viewport {
     position: fixed;
-    inset: 0;
+    inset: var(--bar) 0 0 0;
     overflow: auto;
     cursor: grab;
     scrollbar-width: none;
@@ -1266,7 +1265,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
     /* When the whole map is smaller than the window, sit it in the middle. */
     display: grid;
     align-content: center;
-    min-height: 100dvh;
+    min-height: calc(100dvh - var(--bar));
     box-sizing: content-box;
     padding: 0 24rem 0 20rem;
     background: var(--paper);
@@ -1558,33 +1557,94 @@ const fetchedOn = dateFmt.format(new Date(fetched));
   }
 
   .sign {
-    top: 1rem;
+    bottom: 1rem;
     left: 1rem;
-    width: min(18rem, calc(100vw - 2rem));
-    max-height: calc(100dvh - 2rem);
+    width: min(17rem, calc(100vw - 2rem));
+    max-height: calc(100dvh - var(--bar) - 2rem);
     overflow: auto;
     padding: 0 0 0.5rem;
   }
 
-  .sign-head {
+  /* ------------------------------------------------------------ Top bar */
+  .top {
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: var(--bar);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 0 clamp(1rem, 2.5vw, 2rem);
     background: var(--head);
     color: #fff;
-    padding: 1rem 1rem 0.9rem;
-    border-radius: 9px 9px 0 0;
+    box-shadow: 0 2px 14px rgb(8 12 23 / 0.25);
   }
 
-  .sign h1 {
-    font-size: 1.55rem;
+  .top h1 {
+    font-size: 1.5rem;
     font-weight: 700;
-    line-height: 1;
+    line-height: 1.1;
     letter-spacing: -0.02em;
+    white-space: nowrap;
   }
 
-  .sign-head p {
-    margin-top: 0.45rem;
-    font-size: 0.85rem;
-    line-height: 1.35;
-    opacity: 0.85;
+  .top-id p {
+    margin-top: 0.2rem;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    opacity: 0.75;
+    white-space: nowrap;
+  }
+
+  .top-nav {
+    display: flex;
+    align-self: stretch;
+  }
+
+  .top-nav a {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 1.1rem;
+    color: #fff;
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+  }
+
+  .top-nav a:hover,
+  .top-nav a:focus-visible {
+    background: rgb(255 255 255 / 0.09);
+    border-bottom-color: var(--mine);
+  }
+
+  .top-page {
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .top-at {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    opacity: 0.65;
+    white-space: nowrap;
+  }
+
+  .top-menu {
+    display: none;
+    padding: 0.45rem 0.9rem;
+    background: none;
+    border: 1.5px solid rgb(255 255 255 / 0.6);
+    border-radius: 7px;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  @media (max-width: 900px) {
+    .top-id p {
+      display: none;
+    }
   }
 
   .clock {
@@ -1592,17 +1652,19 @@ const fetchedOn = dateFmt.format(new Date(fetched));
     flex-wrap: wrap;
     align-items: baseline;
     gap: 0.1rem 0.6rem;
-    padding: 0.7rem 1rem;
+    padding: 0.75rem 1rem 0.7rem;
     font-size: 0.78rem;
-    color: var(--muted);
-    border-bottom: 1px solid var(--rule);
+    background: var(--head);
+    color: rgb(255 255 255 / 0.75);
+    border-radius: 9px 9px 0 0;
   }
 
   #clock {
     font-family: var(--mono);
-    font-size: 1.05rem;
+    font-size: 1.7rem;
+    line-height: 1;
     font-weight: 500;
-    color: var(--ink);
+    color: #fff;
   }
 
   .views {
@@ -1631,55 +1693,6 @@ const fetchedOn = dateFmt.format(new Date(fetched));
   .views button[aria-pressed='true'] {
     background: var(--ink);
     color: var(--paper);
-  }
-
-  /* The page links at the top of the sign. */
-  .go ul {
-    list-style: none;
-    margin: 0;
-    padding: 0.35rem 0;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  .go li {
-    display: flex;
-    align-items: stretch;
-  }
-
-  .go a {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 0.4rem 1rem;
-    text-decoration: none;
-    color: inherit;
-  }
-
-  .go a .stop-name {
-    font-size: 1.05rem;
-  }
-
-  .go a .stop-name::after {
-    content: ' →';
-  }
-
-  .go button {
-    flex: none;
-    width: 2.6rem;
-    background: none;
-    border: 0;
-    color: var(--muted);
-    font-size: 1.1rem;
-    cursor: pointer;
-  }
-
-  .go a:hover,
-  .go button:hover {
-    background: var(--hover);
-  }
-
-  .go button:hover {
-    color: var(--mine);
   }
 
   .fold summary {
@@ -1778,31 +1791,47 @@ const fetchedOn = dateFmt.format(new Date(fetched));
     font-size: 1.4rem;
   }
 
+  /* The credits: a small link by the zoom buttons that opens a note. */
+  .about {
+    position: fixed;
+    right: 4.2rem;
+    bottom: 1rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  .about summary {
+    list-style: none;
+    text-align: right;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    cursor: pointer;
+  }
+
+  .about summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .about summary:hover {
+    color: var(--mine);
+  }
+
   .about a {
     color: inherit;
   }
 
   .about p {
-    padding: 0.2rem 1rem 0.4rem;
+    position: absolute;
+    right: 0;
+    bottom: 1.6rem;
+    width: min(19rem, calc(100vw - 6rem));
+    padding: 0.7rem 0.9rem;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    box-shadow: 0 6px 24px rgb(20 33 61 / 0.12);
     font-size: 0.78rem;
     line-height: 1.45;
-    color: var(--muted);
-  }
-
-  .elsewhere {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem 1rem;
-    margin-top: 0.5rem;
-    padding: 0.7rem 1rem 0.3rem;
-    border-top: 1px solid var(--rule);
-    font-size: 0.82rem;
-  }
-
-  .elsewhere a {
-    color: var(--ink);
-    font-weight: 600;
-    text-underline-offset: 0.2em;
   }
 
   .zoom {
@@ -1837,10 +1866,10 @@ const fetchedOn = dateFmt.format(new Date(fetched));
 
   /* -------------------------------------------------------------- Panel */
   .panel {
-    top: 1rem;
+    top: calc(var(--bar) + 1rem);
     right: 1rem;
     width: min(22rem, calc(100vw - 2rem));
-    max-height: calc(100dvh - 2rem);
+    max-height: calc(100dvh - var(--bar) - 2rem);
     overflow: auto;
     padding: 1.1rem 1.2rem 1.3rem;
   }
@@ -2131,18 +2160,55 @@ const fetchedOn = dateFmt.format(new Date(fetched));
   }
 
   @media (max-width: 640px) {
+    :root {
+      --bar: 3.5rem;
+    }
+
     .world {
-      padding: 8rem 1rem 60dvh;
+      padding: 1rem 1rem 60dvh;
     }
 
     .sign {
-      width: min(15.5rem, calc(100vw - 1.5rem));
-      top: 0.75rem;
+      width: 12.5rem;
+      bottom: 0.75rem;
       left: 0.75rem;
     }
 
-    .sign h1 {
-      font-size: 1.5rem;
+    #clock {
+      font-size: 1.35rem;
+    }
+
+    .top h1 {
+      font-size: 1.25rem;
+    }
+
+    .top-menu {
+      display: block;
+    }
+
+    /* The page links drop down from the bar when Menu is pressed. */
+    .top-nav {
+      display: none;
+      position: absolute;
+      top: var(--bar);
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      background: var(--head);
+      border-top: 1px solid rgb(255 255 255 / 0.15);
+      box-shadow: 0 10px 20px rgb(8 12 23 / 0.3);
+    }
+
+    .top.open .top-nav {
+      display: flex;
+    }
+
+    .top-nav a {
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid rgb(255 255 255 / 0.1);
     }
 
     .panel {
