@@ -250,7 +250,9 @@ const fetchedOn = dateFmt.format(new Date(fetched));
       </nav>
     </header>
 
-    <!-- The map's own controls, under the right-hand end of the bar. -->
+    <!-- The right-hand column: the map's own controls, and under them the
+         panel for whichever station or train is open. -->
+    <div class="side">
     <section class="sign" aria-label="Map controls">
       <p class="clock">
         <span id="clock">--:--:--</span>
@@ -299,6 +301,12 @@ const fetchedOn = dateFmt.format(new Date(fetched));
 
     </section>
 
+    <aside class="panel" id="panel" hidden aria-live="polite">
+      <button type="button" class="close" id="panel-close" aria-label="Close">×</button>
+      <div id="panel-body"></div>
+    </aside>
+    </div>
+
     <details class="about">
       <summary>About this map</summary>
       <p>
@@ -313,11 +321,6 @@ const fetchedOn = dateFmt.format(new Date(fetched));
       <button type="button" id="zoom-out" aria-label="Zoom out" title="Zoom out (Ctrl + scroll)">−</button>
       <button type="button" id="zoom-fit" aria-label="Show the whole map" title="Show the whole map">⤢</button>
     </div>
-
-    <aside class="panel" id="panel" hidden aria-live="polite">
-      <button type="button" class="close" id="panel-close" aria-label="Close">×</button>
-      <div id="panel-body"></div>
-    </aside>
 
     <dialog class="lightbox" id="lightbox" aria-label="Photograph">
       <img id="lightbox-img" alt="" />
@@ -571,10 +574,10 @@ const fetchedOn = dateFmt.format(new Date(fetched));
       function follow(at: { x: number; y: number }) {
         const wide = window.innerWidth > 640;
         const box = panel.getBoundingClientRect();
-        // The station panel opens on the left; the controls sit on the right.
-        const left = wide && !panel.hidden ? box.right : 0;
+        // The station panel opens on the right, under the controls.
+        const left = 0;
         const top = vp.getBoundingClientRect().top;
-        const right = window.innerWidth;
+        const right = wide && !panel.hidden ? box.left : window.innerWidth;
         const bottom = !wide && !panel.hidden ? box.top : window.innerHeight;
         const map = svg.getBoundingClientRect();
         vp.scrollLeft += (map.left + at.x * zoom - (left + right) / 2) * 0.2;
@@ -1268,7 +1271,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
     align-content: center;
     min-height: calc(100dvh - var(--bar));
     box-sizing: content-box;
-    padding: 0 20rem 0 24rem;
+    padding: 0 24rem 0 6rem;
     background: var(--paper);
     user-select: none;
   }
@@ -1795,7 +1798,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
   /* The credits: a small link by the zoom buttons that opens a note. */
   .about {
     position: fixed;
-    right: 4.2rem;
+    left: 4.2rem;
     bottom: 1rem;
     font-size: 0.75rem;
     color: var(--muted);
@@ -1803,7 +1806,6 @@ const fetchedOn = dateFmt.format(new Date(fetched));
 
   .about summary {
     list-style: none;
-    text-align: right;
     text-decoration: underline;
     text-underline-offset: 0.2em;
     cursor: pointer;
@@ -1823,7 +1825,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
 
   .about p {
     position: absolute;
-    right: 0;
+    left: 0;
     bottom: 1.6rem;
     width: min(19rem, calc(100vw - 6rem));
     padding: 0.7rem 0.9rem;
@@ -1837,7 +1839,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
 
   .zoom {
     position: fixed;
-    right: 1rem;
+    left: 1rem;
     bottom: 1rem;
     display: grid;
     background: var(--card);
@@ -2160,6 +2162,41 @@ const fetchedOn = dateFmt.format(new Date(fetched));
     right: 0;
   }
 
+  /* On a wide screen the controls and the station panel stack in one column
+     down the right-hand side, the panel always under the controls. */
+  @media (min-width: 641px) {
+    .side {
+      position: fixed;
+      top: calc(var(--bar) + 1rem);
+      right: 1rem;
+      bottom: 1rem;
+      width: min(21rem, calc(100vw - 2rem));
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      pointer-events: none;
+    }
+
+    .side .sign,
+    .side .panel {
+      position: relative;
+      inset: auto;
+      width: auto;
+      pointer-events: auto;
+    }
+
+    .side .sign {
+      flex: 0 0 auto;
+      max-height: 55%;
+    }
+
+    .side .panel {
+      flex: 0 1 auto;
+      min-height: 0;
+      max-height: none;
+    }
+  }
+
   @media (max-width: 640px) {
     :root {
       --bar: 3.5rem;
@@ -2170,7 +2207,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
     }
 
     .sign {
-      width: 12.5rem;
+      width: 14rem;
       top: calc(var(--bar) + 0.75rem);
       right: 0.75rem;
     }
