@@ -145,6 +145,12 @@ const fetchedOn = dateFmt.format(new Date(fetched));
     <div class="viewport" id="viewport">
       <div class="world" style={`width:${width}px;height:${height}px`}>
         <svg id="map" viewBox={`0 0 ${width} ${height}`} width={width} height={height} style={`--lw:${lineWidth}px;--label:${labelSize}px`}>
+          <!-- Sea, land and lakes: only on the physical map. -->
+          <g class="geo-only backdrop">
+            <rect class="sea" width={geo.width} height={geo.height} />
+            {geo.land.map((d) => <path class="land" d={d} />)}
+            {geo.water.map((d) => <path class="lake" d={d} />)}
+          </g>
           <g class="lines">
             {lines.map((l, i) => <path class:list={['casing', l.kind]} d={l.path} data-line={i} />)}
             {lines.map((l, i) => <path class:list={['line', l.kind]} d={l.path} stroke={l.color} data-line={i} />)}
@@ -1172,6 +1178,8 @@ const fetchedOn = dateFmt.format(new Date(fetched));
     --mine: #e6007e;
     --head: #14213d;
     --hover: #f0f2f7;
+    --sea: #dce8ee;
+    --coast: #b4c6d1;
     --sans: 'IBM Plex Sans', 'Hiragino Sans', 'Yu Gothic UI', 'Yu Gothic', 'Noto Sans JP', system-ui, sans-serif;
     --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
   }
@@ -1186,6 +1194,8 @@ const fetchedOn = dateFmt.format(new Date(fetched));
     --mine: #ff4fa8;
     --head: #080c17;
     --hover: #222c46;
+    --sea: #070a13;
+    --coast: #26324d;
     color-scheme: dark;
   }
 
@@ -1242,6 +1252,10 @@ const fetchedOn = dateFmt.format(new Date(fetched));
   /* Empty space either side, as wide as the sign and the panel, so the ends
      of the map can be scrolled clear of them. */
   .world {
+    /* When the whole map is smaller than the window, sit it in the middle. */
+    display: grid;
+    align-content: center;
+    min-height: 100dvh;
     box-sizing: content-box;
     padding: 0 24rem 0 20rem;
     background: var(--paper);
@@ -1313,6 +1327,33 @@ const fetchedOn = dateFmt.format(new Date(fetched));
 
   .geo-only {
     display: none;
+  }
+
+  /* Let the land carry on past the edge of the map, so it never looks cut off. */
+  #map.geo {
+    overflow: visible;
+  }
+
+  .backdrop .sea,
+  #map .backdrop .lake {
+    fill: var(--sea);
+  }
+
+  #map .backdrop .land {
+    fill: var(--paper);
+  }
+
+  #map .backdrop .land,
+  #map .backdrop .lake {
+    stroke: var(--coast);
+    stroke-width: 1.5px;
+    vector-effect: non-scaling-stroke;
+  }
+
+  /* The margin around the physical map is sea too. */
+  .viewport:has(#map.geo),
+  .viewport:has(#map.geo) .world {
+    background: var(--sea);
   }
 
   #map.geo .geo-only {

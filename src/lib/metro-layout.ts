@@ -11,6 +11,7 @@
 import network from '../data/metro/network.json';
 import { YAMANOTE, SEIBU_SHINJUKU, SEIBU_HAIJIMA, SEIBU_SHINJUKU_KM, SEIBU_HAIJIMA_KM, CHUO_RAPID, OME, EXCURSIONS, TOKAIDO_SHINKANSEN } from '../data/metro/other-lines';
 import otherStations from '../data/metro/other-stations.json';
+import landData from '../data/metro/land.json';
 import { stops } from '../data/stops';
 
 export type Pt = [number, number];
@@ -569,7 +570,7 @@ function offset(poly: Pt[], d: number): Pt[] {
   });
 }
 
-function rounded(points: Pt[], close = false) {
+function rounded(points: Pt[], close = false, radius = close ? CORNER * 3 : CORNER) {
   const pts = close ? [...points, points[0], points[1]] : points;
   let d = '';
   const start = close ? ([(pts[0][0] + pts[1][0]) / 2, (pts[0][1] + pts[1][1]) / 2] as Pt) : pts[0];
@@ -580,7 +581,7 @@ function rounded(points: Pt[], close = false) {
     const b = pts[i + 1];
     const la = len(a, p);
     const lb = len(b, p);
-    const r = Math.min(close ? CORNER * 3 : CORNER, la / 2, lb / 2);
+    const r = Math.min(radius, la / 2, lb / 2);
     if (r < 0.5) {
       d += ` L${p[0]} ${p[1]}`;
       continue;
@@ -786,7 +787,9 @@ export const fetched = network.fetched;
 // positions are worked out for one particular zoom (GEO_ZOOM).
 const GEO_SCALE = 40; // pixels per kilometre at zoom 1
 const GEO_ZOOM = 2.5; // the zoom the physical map opens at
-const GEO_MARGIN = 6; // kilometres of empty space around everything
+const GEO_MARGIN = 25; // kilometres of surroundings shown around everything
+const COAST_GRID = 2; // kilometres: the size of the steps the coastline is drawn in
+const COAST_CORNER = 16; // how rounded the coastline's corners are, in pixels
 
 const metroWhere = new Map<string, Pt[]>();
 for (const line of network.lines) {
@@ -848,6 +851,40 @@ const geoLabels = new Map<number, MetroNode['label']>();
   .sort((a, b) => Number(tall.has(b.id)) - Number(tall.has(a.id)) || b.lines.length - a.lines.length || a.id - b.id)
   .forEach((n) => geoLabels.set(n.id, placeLabel(n)));
 
+// The coastline, redrawn the way the lines are: every point is moved onto a
+// coarse grid, and each stretch between two points becomes one diagonal and
+// one straight step, so the land only ever turns in 45-degree corners.
+function angular(ring: number[][]): Pt[] {
+  const snapped: Pt[] = [];
+  for (const [lat, lon] of ring) {
+    const p = km(lat, lon);
+    const q: Pt = [Math.round(p[0] / COAST_GRID) * COAST_GRID, Math.round(p[1] / COAST_GRID) * COAST_GRID];
+    const last = snapped[snapped.length - 1];
+    if (!last || last[0] !== q[0] || last[1] !== q[1]) snapped.push(q);
+  }
+  const stepped: Pt[] = [];
+  snapped.forEach((a, i) => {
+    const b = snapped[(i + 1) % snapped.length];
+    const dx = b[0] - a[0];
+    const dy = b[1] - a[1];
+    const d = Math.min(Math.abs(dx), Math.abs(dy));
+    stepped.push(a);
+    if (d > 0 && Math.abs(dx) !== Math.abs(dy)) stepped.push([a[0] + Math.sign(dx) * d, a[1] + Math.sign(dy) * d]);
+  });
+  // Points in the middle of a straight run add nothing.
+  return stepped.filter((p, i) => {
+    const a = stepped[(i - 1 + stepped.length) % stepped.length];
+    const b = stepped[(i + 1) % stepped.length];
+    return Math.abs((p[0] - a[0]) * (b[1] - p[1]) - (p[1] - a[1]) * (b[0] - p[0])) > 1e-9;
+  });
+}
+const outline = (ring: number[][]) => {
+  const points = angular(ring);
+  return points.length >= 4 ? rounded(points.map(gpx), true, COAST_CORNER) : null;
+};
+const landPaths = (landData.land as number[][][]).map(outline).filter((d): d is string => d !== null);
+const lakePaths = (landData.lakes as number[][][]).map(outline).filter((d): d is string => d !== null);
+
 const loopReal = loopNodes.map((id) => realPx[id]);
 export const geo = {
   width: Math.round((east - west) * GEO_SCALE),
@@ -869,6 +906,9 @@ export const geo = {
     ] as [number, number, number, number, 'start' | 'middle' | 'end'];
   }),
   lines: geoLines,
+  // The shape of the land and its large lakes, as SVG paths.
+  land: landPaths,
+  water: lakePaths,
   // Shinkansen stops between Shinagawa and Kyoto, shown only on this map.
   stops: TOKAIDO_SHINKANSEN.slice(2, -1).map((st) => {
     const p = gpx(km(st.lat, st.lon));
