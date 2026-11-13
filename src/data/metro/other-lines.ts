@@ -137,6 +137,27 @@ export const OME: [string, string][] = [
   ['Haijima', '拝島'],
 ];
 
+// Tokaido Shinkansen from Tokyo to Kyoto, with approximate coordinates.
+// Only drawn on the physical map.
+export const TOKAIDO_SHINKANSEN: LoopStation[] = [
+  { en: 'Tokyo', ja: '東京', lat: 35.6812, lon: 139.7671 },
+  { en: 'Shinagawa', ja: '品川', lat: 35.6285, lon: 139.7388 },
+  { en: 'Shin-Yokohama', ja: '新横浜', lat: 35.5075, lon: 139.6176 },
+  { en: 'Odawara', ja: '小田原', lat: 35.2562, lon: 139.1554 },
+  { en: 'Atami', ja: '熱海', lat: 35.1038, lon: 139.0778 },
+  { en: 'Mishima', ja: '三島', lat: 35.1263, lon: 138.9111 },
+  { en: 'Shin-Fuji', ja: '新富士', lat: 35.1421, lon: 138.6633 },
+  { en: 'Shizuoka', ja: '静岡', lat: 34.9716, lon: 138.389 },
+  { en: 'Kakegawa', ja: '掛川', lat: 34.7693, lon: 138.0146 },
+  { en: 'Hamamatsu', ja: '浜松', lat: 34.7038, lon: 137.7349 },
+  { en: 'Toyohashi', ja: '豊橋', lat: 34.7629, lon: 137.382 },
+  { en: 'Mikawa-Anjo', ja: '三河安城', lat: 34.969, lon: 137.0607 },
+  { en: 'Nagoya', ja: '名古屋', lat: 35.1709, lon: 136.8815 },
+  { en: 'Gifu-Hashima', ja: '岐阜羽島', lat: 35.3158, lon: 136.6856 },
+  { en: 'Maibara', ja: '米原', lat: 35.3144, lon: 136.2898 },
+  { en: 'Kyoto', ja: '京都', lat: 34.9858, lon: 135.7588 },
+];
+
 // Places reached by a long ride off the edge of the map. Each is drawn as a
 // short dashed spur from the station you would leave from.
 export const EXCURSIONS = [

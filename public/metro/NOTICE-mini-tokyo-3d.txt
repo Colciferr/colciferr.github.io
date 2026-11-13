@@ -1,5 +1,6 @@
-The files trains-other-weekday.json and trains-other-holiday.json in this folder are
-derived from timetable data in Mini Tokyo 3D (https://github.com/nagix/mini-tokyo-3d),
+The files trains-other-weekday.json and trains-other-holiday.json in this folder, and
+src/data/metro/other-stations.json in the site's source, are
+derived from data in Mini Tokyo 3D (https://github.com/nagix/mini-tokyo-3d),
 which is distributed under the following licence.
 
 The MIT License (MIT)

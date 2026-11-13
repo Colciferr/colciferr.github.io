@@ -12,6 +12,7 @@
 //   public/metro/trains-other-weekday.json
 //   public/metro/trains-other-holiday.json
 //   public/metro/NOTICE-mini-tokyo-3d.txt
+//   src/data/metro/other-stations.json   where those stations really are
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -114,9 +115,26 @@ for (const [calendar, file] of [
   console.log(`  ${calendar}: ${data.trains.length} trains, ${(fs.statSync(target).size / 1024).toFixed(0)} KB`);
 }
 
+// Where each of these stations really is, for the physical map.
+{
+  const railways = ['JR-East.Yamanote', 'JR-East.ChuoRapid', 'JR-East.Ome', 'Seibu.Shinjuku', 'Seibu.Haijima', 'Keio.Takao'];
+  const all = JSON.parse(await download('data/stations.json')).filter((s) => railways.includes(s.railway) && s.coord);
+  const stations = {};
+  for (const name of [...new Set([...LINES.flatMap((l) => l.stations), 'Takaosanguchi'])]) {
+    const found = all.find((s) => squash(lastPart(s.id)) === squash(name));
+    if (found) stations[name] = [found.coord[1], found.coord[0]]; // latitude, longitude
+    else console.warn(`  No coordinates found for ${name}`);
+  }
+  fs.writeFileSync(
+    path.join(root, 'src/data/metro/other-stations.json'),
+    JSON.stringify({ source: 'Mini Tokyo 3D (github.com/nagix/mini-tokyo-3d), MIT licence', stations }, null, 1) + '\n',
+  );
+  console.log(`  ${Object.keys(stations).length} station positions`);
+}
+
 const licence = await download('LICENSE');
 fs.writeFileSync(
   path.join(root, 'public/metro/NOTICE-mini-tokyo-3d.txt'),
-  `The files trains-other-weekday.json and trains-other-holiday.json in this folder are\nderived from timetable data in Mini Tokyo 3D (https://github.com/nagix/mini-tokyo-3d),\nwhich is distributed under the following licence.\n\n${licence}`,
+  `The files trains-other-weekday.json and trains-other-holiday.json in this folder, and\nsrc/data/metro/other-stations.json in the site's source, are\nderived from data in Mini Tokyo 3D (https://github.com/nagix/mini-tokyo-3d),\nwhich is distributed under the following licence.\n\n${licence}`,
 );
 console.log('Done.');

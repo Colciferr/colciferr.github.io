@@ -9,7 +9,8 @@
 //
 // The numbers under "Tuning" control the overall look.
 import network from '../data/metro/network.json';
-import { YAMANOTE, SEIBU_SHINJUKU, SEIBU_HAIJIMA, SEIBU_SHINJUKU_KM, SEIBU_HAIJIMA_KM, CHUO_RAPID, OME, EXCURSIONS } from '../data/metro/other-lines';
+import { YAMANOTE, SEIBU_SHINJUKU, SEIBU_HAIJIMA, SEIBU_SHINJUKU_KM, SEIBU_HAIJIMA_KM, CHUO_RAPID, OME, EXCURSIONS, TOKAIDO_SHINKANSEN } from '../data/metro/other-lines';
+import otherStations from '../data/metro/other-stations.json';
 import { stops } from '../data/stops';
 
 export type Pt = [number, number];
@@ -680,7 +681,7 @@ export const lines: MetroLine[] = [
   handPlaced('SeibuHaijima', 'Seibu Haijima Line', '西武拝島線', 'SS', '#0b9ad6', 'seibu', seibuHaijima, { headway: 10, hops: gaps(SEIBU_HAIJIMA_KM) }),
   handPlaced('ChuoRapid', 'Chuo Line', '中央線', 'JC', '#f15a22', 'rail', chuo),
   handPlaced('Ome', 'Ome Line', '青梅線', 'JC', '#f15a22', 'rail', ome),
-  ...excursions.map((e) => handPlaced(`To${e.en}`, `${e.by} to ${e.en}`, e.ja, '', '#8a93a6', 'excursion', e.stations)),
+  ...excursions.map((e) => handPlaced(`To${e.en}`, `${e.by} to ${e.en}`, e.ja, '', e.en === 'Kyoto' ? '#1153af' : '#8a93a6', 'excursion', e.stations)),
 ];
 
 // ------------------------------------------------------------------- Labels
@@ -777,3 +778,100 @@ export const lineWidth = LINE_WIDTH;
 export const labelSize = LABEL_SIZE;
 export const labelLine2 = LINE2;
 export const fetched = network.fetched;
+
+// ---------------------------------------------------------- The physical map
+// A second arrangement of the same stations and lines, this time where they
+// really are. Lines run straight from station to station. Station markers and
+// labels are kept the same size on screen whatever the zoom, so their label
+// positions are worked out for one particular zoom (GEO_ZOOM).
+const GEO_SCALE = 40; // pixels per kilometre at zoom 1
+const GEO_ZOOM = 2.5; // the zoom the physical map opens at
+const GEO_MARGIN = 6; // kilometres of empty space around everything
+
+const metroWhere = new Map<string, Pt[]>();
+for (const line of network.lines) {
+  for (const st of line.stations) {
+    if (st.lat == null || st.lon == null) continue;
+    const k = clean(st.en).toLowerCase();
+    metroWhere.set(k, [...(metroWhere.get(k) ?? []), [st.lat, st.lon]]);
+  }
+}
+const otherWhere = new Map<string, Pt>([
+  ...YAMANOTE.map((st) => [st.en.toLowerCase(), [st.lat, st.lon]] as [string, Pt]),
+  ...Object.entries(otherStations.stations as Record<string, number[]>).map(([name, c]) => [name.toLowerCase(), [c[0], c[1]]] as [string, Pt]),
+  ...TOKAIDO_SHINKANSEN.map((st) => [st.en.toLowerCase(), [st.lat, st.lon]] as [string, Pt]),
+]);
+const realKm = raw.map((n) => {
+  const metro = metroWhere.get(n.en.toLowerCase());
+  const at: Pt | undefined = metro
+    ? [metro.reduce((sum, c) => sum + c[0], 0) / metro.length, metro.reduce((sum, c) => sum + c[1], 0) / metro.length]
+    : otherWhere.get(n.en.toLowerCase());
+  if (!at) console.warn(`[map] No real-world position for ${n.en}; it is drawn at the centre of the physical map.`);
+  return at ? km(at[0], at[1]) : ([0, 0] as Pt);
+});
+const bulletKm = TOKAIDO_SHINKANSEN.map((st) => km(st.lat, st.lon));
+const everyKm = [...realKm, ...bulletKm];
+const west = Math.min(...everyKm.map((p) => p[0])) - GEO_MARGIN;
+const north = Math.min(...everyKm.map((p) => p[1])) - GEO_MARGIN;
+const east = Math.max(...everyKm.map((p) => p[0])) + GEO_MARGIN;
+const south = Math.max(...everyKm.map((p) => p[1])) + GEO_MARGIN;
+const gpx = (p: Pt): Pt => [Math.round((p[0] - west) * GEO_SCALE * 10) / 10, Math.round((p[1] - north) * GEO_SCALE * 10) / 10];
+const realPx = realKm.map(gpx);
+
+const geoLines = lines.map((line) => {
+  const pts = line.nodes.map((id) => realPx[id]);
+  if (line.id === 'ToKyoto') {
+    // The spur to Kyoto becomes the whole Shinkansen route, stop by stop.
+    const stops = TOKAIDO_SHINKANSEN.slice(2, -1).map((st) => gpx(km(st.lat, st.lon)));
+    const route = [pts[0], ...stops, pts[pts.length - 1]];
+    return { segs: [route], path: rounded([realPx[at('Tokyo').id], ...route]) };
+  }
+  const segs = pts.slice(1).map((p, i) => [pts[i], p]);
+  if (line.loop) segs.push([pts[pts.length - 1], pts[0]]);
+  return { segs, path: line.loop ? rounded(pts, true) : rounded(pts) };
+});
+
+// Arrange the labels as they will look at the opening zoom, reusing the
+// label placer above by handing it this map's positions and lines.
+ink.length = 0;
+placed.length = 0;
+for (const line of geoLines) {
+  for (const seg of line.segs) {
+    const scaled = seg.map((p) => [p[0] * GEO_ZOOM, p[1] * GEO_ZOOM] as Pt);
+    const total = polyLength(scaled);
+    for (let d = 0; d <= total; d += 5) ink.push(pointAt(scaled, d));
+  }
+}
+realPx.forEach((p, i) => (positions[i] = [p[0] * GEO_ZOOM, p[1] * GEO_ZOOM]));
+const geoLabels = new Map<number, MetroNode['label']>();
+[...raw]
+  .sort((a, b) => Number(tall.has(b.id)) - Number(tall.has(a.id)) || b.lines.length - a.lines.length || a.id - b.id)
+  .forEach((n) => geoLabels.set(n.id, placeLabel(n)));
+
+const loopReal = loopNodes.map((id) => realPx[id]);
+export const geo = {
+  width: Math.round((east - west) * GEO_SCALE),
+  height: Math.round((south - north) * GEO_SCALE),
+  zoom: GEO_ZOOM,
+  start: {
+    x: Math.round(loopReal.reduce((sum, p) => sum + p[0], 0) / loopReal.length),
+    y: Math.round(loopReal.reduce((sum, p) => sum + p[1], 0) / loopReal.length),
+  },
+  // For each station: where it is, then where its label goes relative to it (in screen pixels).
+  nodes: raw.map((n) => {
+    const label = geoLabels.get(n.id)!;
+    return [
+      realPx[n.id][0],
+      realPx[n.id][1],
+      Math.round((label.x - realPx[n.id][0] * GEO_ZOOM) * 10) / 10,
+      Math.round((label.y - realPx[n.id][1] * GEO_ZOOM) * 10) / 10,
+      label.anchor,
+    ] as [number, number, number, number, 'start' | 'middle' | 'end'];
+  }),
+  lines: geoLines,
+  // Shinkansen stops between Shinagawa and Kyoto, shown only on this map.
+  stops: TOKAIDO_SHINKANSEN.slice(2, -1).map((st) => {
+    const p = gpx(km(st.lat, st.lon));
+    return { en: st.en, ja: st.ja, x: p[0], y: p[1] };
+  }),
+};
