@@ -169,6 +169,19 @@ const fetchedOn = dateFmt.format(new Date(fetched));
                         {section.title} →
                       </text>
                     )}
+                    {shots > 0 && (
+                      <g
+                        class="peek"
+                        transform={`translate(${n.x - 34} ${n.label.anchor === 'middle' && n.label.y < n.y ? n.y + 16 : n.y - 66})`}
+                      >
+                        <rect width="68" height="48" rx="5" />
+                        <image href={photos[n.id][0].thumb} x="3" y="3" width="62" height="42" preserveAspectRatio="xMidYMid slice" />
+                        <circle cx="66" cy="2" r="9" />
+                        <text x="66" y="5.5" text-anchor="middle">
+                          {shots}
+                        </text>
+                      </g>
+                    )}
                     <circle class="hit" cx={n.x} cy={n.y} r="13" />
                   </g>
                 );
@@ -381,6 +394,8 @@ const fetchedOn = dateFmt.format(new Date(fetched));
         const mx = (cx - before.left) / zoom;
         const my = (cy - before.top) / zoom;
         zoom = next;
+        // Zoomed in far enough, stations with photographs show one of them.
+        svg.classList.toggle('zoomed-in', zoom >= 1.4);
         for (const el of [svg as HTMLElement, world]) {
           el.style.width = `${full.width * zoom}px`;
           el.style.height = `${full.height * zoom}px`;
@@ -487,6 +502,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
       vp.addEventListener('pointerdown', (e) => {
         if (e.pointerType !== 'mouse' || e.button !== 0) return;
         drag = { x: e.clientX, y: e.clientY, left: vp.scrollLeft, top: vp.scrollTop };
+        following = null; // taking hold of the map lets go of the train
         dragged = false;
       });
       window.addEventListener('pointermove', (e) => {
@@ -499,6 +515,23 @@ const fetchedOn = dateFmt.format(new Date(fetched));
         vp.scrollLeft = drag.left - dx;
         vp.scrollTop = drag.top - dy;
       });
+      // So does scrolling it by wheel or by touch.
+      vp.addEventListener('wheel', (e) => !e.ctrlKey && !e.metaKey && (following = null), { passive: true });
+      vp.addEventListener('touchmove', () => (following = null), { passive: true });
+
+      // Keep a train in the middle of the space the sign and the panel leave
+      // free, closing a fifth of the gap each time so the map glides.
+      function follow(at: { x: number; y: number }) {
+        const wide = window.innerWidth > 640;
+        const box = panel.getBoundingClientRect();
+        const left = wide ? document.querySelector('.sign')!.getBoundingClientRect().right : 0;
+        const right = wide && !panel.hidden ? box.left : window.innerWidth;
+        const bottom = !wide && !panel.hidden ? box.top : window.innerHeight;
+        const map = svg.getBoundingClientRect();
+        vp.scrollLeft += (map.left + at.x * zoom - (left + right) / 2) * 0.2;
+        vp.scrollTop += (map.top + at.y * zoom - bottom / 2) * 0.2;
+      }
+
       window.addEventListener('pointerup', () => {
         drag = null;
         vp.classList.remove('dragging');
@@ -605,6 +638,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
       let trains: Train[] = [];
       let loadedFor: boolean | null = null;
       let selectedTrain: Train | null = null;
+      let following: Train | null = null; // the train the map is riding along with
       let focus: number | null = null;
       const timetabled = new Set<number>(); // lines whose trains follow a timetable
       const DWELL = 1 / 3; // minutes a train is assumed to wait at each stop
@@ -750,7 +784,9 @@ const fetchedOn = dateFmt.format(new Date(fetched));
           }
           train.el.classList.toggle('dim', focus !== null && focus !== train.line);
           const { i, f } = progress(train, minutes);
-          put(train.el, locate(train.line, train.stops[i], train.stops[i + 1], f));
+          const at = locate(train.line, train.stops[i], train.stops[i + 1], f);
+          put(train.el, at);
+          if (train === following) follow(at);
         }
         if (trains.length) {
           runningEl.textContent = count ? `${count} trains running` : 'No trains are running. Service resumes around 04:30.';
@@ -784,6 +820,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
       function closePanel() {
         panel.hidden = true;
         selectedTrain = null;
+        following = null;
         svg.querySelectorAll('.selected').forEach((el) => el.classList.remove('selected'));
       }
       document.getElementById('panel-close')!.addEventListener('click', () => {
@@ -808,6 +845,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
       function showStation(id: number) {
         const node = data.nodes[id];
         selectedTrain = null;
+        following = null;
         svg.querySelectorAll('.selected').forEach((el) => el.classList.remove('selected'));
         svg.querySelector(`.station[data-node="${id}"]`)?.classList.add('selected');
         history.replaceState(null, '', `#${encodeURIComponent(node.en)}`);
@@ -886,7 +924,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
         shown = data.photos[id] ?? [];
         const places = [...new Set(shown.map((p) => p.place))];
         const photosHtml = shown.length
-          ? `<h3>Pictures taken near here</h3>${places
+          ? `<h3>Pictures I took here</h3>${places
               .map(
                 (place) =>
                   `<p class="place">${esc(place)}</p><div class="shots">${shown
@@ -915,12 +953,27 @@ const fetchedOn = dateFmt.format(new Date(fetched));
         const { i } = progress(train, minutes);
         const line = data.lines[train.line];
         const next = data.nodes[line.nodes[train.stops[i + 1]]];
+        const wait = Math.max(0, train.times[i + 1] - minutes);
+        const due = wait < 1 ? `in ${Math.round(wait * 60)} s` : `in ${Math.floor(wait)} min`;
+        const riding =
+          following === train
+            ? 'Following this train. Drag the map to let go.'
+            : '<button type="button" class="follow" data-follow>Follow this train</button>';
         if (!refresh) {
           svg.querySelectorAll('.selected').forEach((el) => el.classList.remove('selected'));
           train.el?.classList.add('selected');
           selectedTrain = train;
+          following = train;
         } else if (panelBody.dataset.next === `${i}`) {
-          return; // nothing has changed since the last update
+          // Same stretch as before: only the countdown and the follow note change.
+          const dueEl = document.getElementById('next-in');
+          const noteEl = document.getElementById('riding');
+          if (dueEl) dueEl.textContent = due;
+          if (noteEl && noteEl.dataset.on !== String(following === train)) {
+            noteEl.dataset.on = String(following === train);
+            noteEl.innerHTML = riding;
+          }
+          return;
         }
         panelBody.dataset.next = `${i}`;
         const calls = train.stops
@@ -932,7 +985,8 @@ const fetchedOn = dateFmt.format(new Date(fetched));
           <h2>${esc(line.name)}</h2>
           <p class="ja">${train.dest.includes(' loop') ? esc(train.dest) : `for ${esc(train.dest)}`}</p>
           <h3>Next stop</h3>
-          <p class="next">${esc(next.en)} <small>${hhmm(train.times[i + 1])}</small></p>
+          <p class="next">${esc(next.en)} <small>${hhmm(train.times[i + 1])} · <span id="next-in">${due}</span></small></p>
+          <p class="quiet small" id="riding" data-on="true">Following this train. Drag the map to let go.</p>
           <h3>Calling at</h3>
           <ol class="calls">${calls}</ol>
         `);
@@ -973,6 +1027,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
       }
 
       panelBody.addEventListener('click', (e) => {
+        if ((e.target as HTMLElement).closest('[data-follow]')) following = selectedTrain;
         const button = (e.target as HTMLElement).closest<HTMLElement>('[data-shot]');
         if (button) showPhoto(Number(button.dataset.shot));
       });
@@ -1235,6 +1290,38 @@ const fetchedOn = dateFmt.format(new Date(fetched));
       transform: scale(1.5);
       opacity: 0;
     }
+  }
+
+  /* A small photograph beside a station that has some: shown when you point
+     at the station, or all the time once zoomed in. */
+  .peek {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  .station:hover .peek,
+  .station:focus-visible .peek,
+  .station.selected .peek,
+  #map.zoomed-in .peek {
+    opacity: 1;
+  }
+
+  .peek rect {
+    fill: var(--card);
+    stroke: var(--mine);
+    stroke-width: 2;
+  }
+
+  .peek circle {
+    fill: var(--mine);
+  }
+
+  .station .peek text {
+    font-size: 10px;
+    font-weight: 700;
+    fill: #fff;
+    stroke: none;
   }
 
   /* Stations with photographs wear a pink ring. */
@@ -1647,6 +1734,17 @@ const fetchedOn = dateFmt.format(new Date(fetched));
 
   .quiet.gap {
     margin-top: 1rem;
+  }
+
+  .follow {
+    padding: 0.25rem 0.6rem;
+    background: none;
+    border: 1px solid var(--mine);
+    border-radius: 99px;
+    color: var(--mine);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
   }
 
   .departures em {
