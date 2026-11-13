@@ -7,6 +7,8 @@
 // `home` and the name board shows that station's signs and a link to the map.
 import '../styles/global.css';
 import { stops } from '../data/stops';
+import { places } from '../data/places';
+import pictures from '../data/pictures.json';
 import { nodes, lines } from '../lib/metro-layout';
 
 interface Props {
@@ -25,14 +27,14 @@ const {
   home,
 } = Astro.props;
 
+// The same links as the bar on the map, each with where it is on the map,
+// plus the way back to the map itself.
+const count = (names: string[]) => `${new Set(names).size} stations`;
 const nav = [
-  { href: '/', text: 'Map' },
-  { href: '/resume', text: 'Résumé' },
-  { href: '/thoughts', text: 'Thoughts' },
-  { href: '/projects', text: 'Projects' },
-  { href: '/work', text: 'Work' },
-  { href: '/pictures', text: 'Pictures' },
-  { href: '/places', text: 'Places' },
+  { href: '/', text: 'Map', at: 'Home' },
+  ...Object.entries(stops).map(([station, page]) => ({ href: page.href, text: page.title, at: station })),
+  { href: '/pictures', text: 'Pictures', at: count((pictures as { photos: { station: string }[] }).photos.map((p) => p.station)) },
+  { href: '/places', text: 'Places', at: count(places.flatMap((p) => p.stations)) },
 ];
 const here = Astro.url.pathname.replace(/\/$/, '') || '/';
 const current = (href: string) => (href === '/' ? here === '/' : here.startsWith(href));
@@ -80,17 +82,32 @@ const stripe = station ? [...new Set(station.lines.map((l) => lines[l].color))] 
   </head>
   <body>
     <header class="bar">
-      <a class="bar-name" href="/">Nicholas Cole Davis</a>
-      <nav aria-label="Sections">
+      <a class="bar-id" href="/">
+        <span class="bar-name">Nicholas Cole Davis</span>
+        <span class="bar-what">Vulnerability management and security engineer in Tokyo</span>
+      </a>
+      <button type="button" class="bar-menu" id="bar-menu" aria-expanded="false" aria-controls="bar-nav">Menu</button>
+      <nav id="bar-nav" aria-label="Pages">
         {
           nav.map((item) => (
             <a href={item.href} aria-current={current(item.href) ? 'page' : undefined}>
-              {item.text}
+              <span class="bar-page">{item.text}</span>
+              <span class="bar-at">{item.at}</span>
             </a>
           ))
         }
       </nav>
     </header>
+    <script is:inline>
+      // On a narrow screen the page links fold away behind the Menu button.
+      (function () {
+        var menu = document.getElementById('bar-menu');
+        menu.addEventListener('click', function () {
+          var open = menu.parentElement.classList.toggle('open');
+          menu.setAttribute('aria-expanded', String(open));
+        });
+      })();
+    </script>
 
     <main class="page">
       <header class="board">
