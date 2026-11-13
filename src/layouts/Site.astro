@@ -32,6 +32,7 @@ const nav = [
   { href: '/projects', text: 'Projects' },
   { href: '/work', text: 'Work' },
   { href: '/pictures', text: 'Pictures' },
+  { href: '/places', text: 'Places' },
 ];
 const here = Astro.url.pathname.replace(/\/$/, '') || '/';
 const current = (href: string) => (href === '/' ? here === '/' : here.startsWith(href));

@@ -11,6 +11,7 @@ import { getCollection } from 'astro:content';
 import { projects, work } from '../data/site';
 import { roles } from '../data/resume';
 import { stops } from '../data/stops';
+import { places } from '../data/places';
 import pictures from '../data/pictures.json';
 import { lines, nodes, geo, width, height, lineWidth, labelSize, labelLine2, fetched } from '../lib/metro-layout';
 
@@ -64,6 +65,20 @@ for (const photo of (pictures as { photos: Photo[] }).photos) {
   (photos[node.id] ??= []).push(photo);
 }
 const photoStations = Object.keys(photos).map((id) => nodes[Number(id)]);
+
+// Favourite places, grouped by station (a place can be at several).
+const liked: Record<number, { name: string; ja?: string; kind: string; note?: string; link?: string }[]> = {};
+for (const { stations, ...place } of places) {
+  for (const station of stations) {
+    const node = byName.get(station.toLowerCase());
+    if (!node) {
+      console.warn(`[map] "${place.name}" is filed under "${station}", which is not a station on the map.`);
+      continue;
+    }
+    (liked[node.id] ??= []).push(place);
+  }
+}
+const likedStations = Object.keys(liked).map((id) => nodes[Number(id)]);
 const photoCount = Object.values(photos).reduce((sum, list) => sum + list.length, 0);
 
 // Station timetables from outside ODPT, one file per station, in
@@ -126,6 +141,7 @@ const data = {
   geo,
   sections,
   photos,
+  places: liked,
   boards,
 };
 
@@ -168,14 +184,17 @@ const fetchedOn = dateFmt.format(new Date(fetched));
               nodes.map((n) => {
                 const section = sections[n.id];
                 const shots = photos[n.id]?.length ?? 0;
-                const says = [section && `${section.title} page`, shots && `${shots} photographs`].filter(Boolean).join(', ');
+                const favs = liked[n.id]?.length ?? 0;
+                const says = [section && `${section.title} page`, shots && `${shots} photographs`, favs && `${favs} favourite places`]
+                  .filter(Boolean)
+                  .join(', ');
                 return (
                   <g
-                    class:list={['station', { interchange: n.interchange, section, shots }]}
+                    class:list={['station', { interchange: n.interchange, section, shots, liked: favs }]}
                     data-node={n.id}
                     data-lines={n.lines.join(' ')}
                     role="button"
-                    tabindex={section || shots ? 0 : -1}
+                    tabindex={section || shots || favs ? 0 : -1}
                     aria-label={`${n.en} station${says ? `: ${says}` : ''}`}
                     transform={`translate(${n.x} ${n.y})`}
                   >
@@ -183,6 +202,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
                       {section && <circle class="halo" r="16" />}
                       {shots > 0 && <circle class="frame" r={n.interchange ? 11.5 : 9} />}
                       <circle class="dot" r={n.interchange ? 7 : 4.5} stroke={n.interchange ? undefined : lines[n.lines[0]].color} />
+                      {favs > 0 && <path class="fav" d="M11 -21 l7.5 7.5 -7.5 7.5 -7.5 -7.5z" />}
                       <text class="name" x={(n.label.x - n.x).toFixed(1)} y={(n.label.y - n.y).toFixed(1)} text-anchor={n.label.anchor}>
                         {n.en}
                       </text>
@@ -247,6 +267,10 @@ const fetchedOn = dateFmt.format(new Date(fetched));
           <span class="top-page">Pictures</span>
           <span class="top-at">{photoStations.length} stations</span>
         </a>
+        <a href="/places">
+          <span class="top-page">Places</span>
+          <span class="top-at">{likedStations.length} stations</span>
+        </a>
       </nav>
     </header>
 
@@ -273,6 +297,24 @@ const fetchedOn = dateFmt.format(new Date(fetched));
                   <button type="button" data-goto={n.id}>
                     <span class="stop-name plain">{n.en}</span>
                     <span class="stop-what">{[...new Set(photos[n.id].map((p) => p.place))].join(' · ')}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </details>
+        )
+      }
+
+      {
+        likedStations.length > 0 && (
+          <details class="fold">
+            <summary>Places I like near...</summary>
+            <ul class="stops compact">
+              {likedStations.map((n) => (
+                <li>
+                  <button type="button" data-goto={n.id}>
+                    <span class="stop-name plain">{n.en}</span>
+                    <span class="stop-what">{liked[n.id].map((p) => p.name).join(' · ')}</span>
                   </button>
                 </li>
               ))}
@@ -399,6 +441,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
         };
         sections: Record<string, Section>;
         photos: Record<string, Photo[]>;
+        places: Record<string, { name: string; ja?: string; kind: string; note?: string; link?: string }[]>;
         boards: Record<string, { line: string; source: string; fetched: string; names: string[]; days: Record<string, { name: string; rows: number[][] }[]> }>;
       };
 
@@ -1032,6 +1075,16 @@ const fetchedOn = dateFmt.format(new Date(fetched));
               .join('')}</ul><p class="more"><a href="${esc(section.href)}">All of ${esc(section.title)} →</a></p>`
           : '';
 
+        const likedHere = data.places[id] ?? [];
+        const placesHtml = likedHere.length
+          ? `<h3>Places I like here</h3><ul class="found">${likedHere
+              .map((place) => {
+                const inner = `<strong>${esc(place.name)}${place.ja ? ` <small lang="ja">${esc(place.ja)}</small>` : ''}</strong><span>${esc(place.kind)}${place.note ? ` · ${esc(place.note)}` : ''}</span>`;
+                return `<li>${place.link ? `<a href="${esc(place.link)}">${inner}</a>` : `<div>${inner}</div>`}</li>`;
+              })
+              .join('')}</ul>`
+          : '';
+
         shown = data.photos[id] ?? [];
         const places = [...new Set(shown.map((p) => p.place))];
         const photosHtml = shown.length
@@ -1054,6 +1107,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
           <h2>${esc(node.en)}</h2>
           <p class="ja" lang="ja">${esc(node.ja)}</p>
           ${sectionHtml}
+          ${placesHtml}
           ${departuresHtml}${roughly}
           ${photosHtml}
         `);
@@ -1341,7 +1395,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
     stroke-dasharray: none;
   }
 
-  #map.far .station:not(.section):not(.shots) .mark,
+  #map.far .station:not(.section):not(.shots):not(.liked) .mark,
   #map.far #trains {
     display: none;
   }
@@ -1527,6 +1581,19 @@ const fetchedOn = dateFmt.format(new Date(fetched));
     font-weight: 700;
     fill: #fff;
     stroke: none;
+  }
+
+  /* Stations with a favourite place carry a small pink diamond. */
+  #map .station .fav {
+    fill: var(--mine);
+    stroke: var(--card);
+    stroke-width: 1.5;
+  }
+
+  .found small {
+    margin-left: 0.4em;
+    font-weight: 400;
+    color: var(--muted);
   }
 
   /* Stations with photographs wear a pink ring. */
