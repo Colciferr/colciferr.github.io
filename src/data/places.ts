@@ -10,6 +10,14 @@ export interface Place {
   stations: string[];
   note?: string; // a line or two on why
   link?: string; // its website or map page
+  // A picture, kept in public/places/. If it is someone else's photograph it
+  // must be freely licensed, and `credit` and `source` say whose it is.
+  photo?: {
+    src: string;
+    alt: string;
+    credit?: string; // e.g. 'Syced, CC0' (leave out for your own photos)
+    source?: string; // the page the photograph came from
+  };
 }
 
 export const places: Place[] = [
@@ -19,5 +27,25 @@ export const places: Place[] = [
     kind: 'Eat',
     stations: ['Tachikawa', 'Seibu-Shinjuku'],
     note: 'An izakaya chain, and one of my favorite places to eat.',
+    photo: {
+      src: '/places/sekai-no-yamachan.jpg',
+      alt: 'The sign over a Sekai no Yamachan',
+      credit: 'Kanda-Jimbocho branch, by 運転太郎, CC BY 3.0',
+      source: 'https://commons.wikimedia.org/wiki/File:%E4%B8%96%E7%95%8C%E3%81%AE%E5%B1%B1%E3%81%A1%E3%82%83%E3%82%93_%E7%A5%9E%E7%94%B0%E7%A5%9E%E4%BF%9D%E7%94%BA%E5%BA%97_-_panoramio.jpg',
+    },
+  },
+  {
+    name: 'Coucagno',
+    ja: 'クーカーニョ',
+    kind: 'Eat',
+    stations: ['Shibuya'],
+    note: 'A French restaurant on the 40th floor of the Cerulean Tower.',
+    link: 'https://www.tokyuhotels.co.jp/en/cerulean-h/restaurant/coucagno/index.html',
+    photo: {
+      src: '/places/coucagno.jpg',
+      alt: 'The lit sign of the Cerulean Tower Tokyu Hotel',
+      credit: 'Syced, CC0',
+      source: 'https://commons.wikimedia.org/wiki/File:Cerulean_Tower_Tokyu_Hotel.jpg',
+    },
   },
 ];

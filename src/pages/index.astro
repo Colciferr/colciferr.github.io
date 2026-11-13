@@ -67,7 +67,7 @@ for (const photo of (pictures as { photos: Photo[] }).photos) {
 const photoStations = Object.keys(photos).map((id) => nodes[Number(id)]);
 
 // Favourite places, grouped by station (a place can be at several).
-const liked: Record<number, { name: string; ja?: string; kind: string; note?: string; link?: string }[]> = {};
+const liked: Record<number, { name: string; ja?: string; kind: string; note?: string; link?: string; photo?: { src: string; alt: string; credit?: string; source?: string } }[]> = {};
 for (const { stations, ...place } of places) {
   for (const station of stations) {
     const node = byName.get(station.toLowerCase());
@@ -441,7 +441,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
         };
         sections: Record<string, Section>;
         photos: Record<string, Photo[]>;
-        places: Record<string, { name: string; ja?: string; kind: string; note?: string; link?: string }[]>;
+        places: Record<string, { name: string; ja?: string; kind: string; note?: string; link?: string; photo?: { src: string; alt: string; credit?: string; source?: string } }[]>;
         boards: Record<string, { line: string; source: string; fetched: string; names: string[]; days: Record<string, { name: string; rows: number[][] }[]> }>;
       };
 
@@ -1079,8 +1079,15 @@ const fetchedOn = dateFmt.format(new Date(fetched));
         const placesHtml = likedHere.length
           ? `<h3>Places I like here</h3><ul class="found">${likedHere
               .map((place) => {
-                const inner = `<strong>${esc(place.name)}${place.ja ? ` <small lang="ja">${esc(place.ja)}</small>` : ''}</strong><span>${esc(place.kind)}${place.note ? ` · ${esc(place.note)}` : ''}</span>`;
-                return `<li>${place.link ? `<a href="${esc(place.link)}">${inner}</a>` : `<div>${inner}</div>`}</li>`;
+                const words = `<strong>${esc(place.name)}${place.ja ? ` <small lang="ja">${esc(place.ja)}</small>` : ''}</strong><span>${esc(place.kind)}${place.note ? ` · ${esc(place.note)}` : ''}</span>`;
+                // With a picture, it sits to the left of the words.
+                const pic = place.photo;
+                const inner = pic ? `<img src="${esc(pic.src)}" alt="${esc(pic.alt)}" loading="lazy" /><p class="words">${words}</p>` : words;
+                const cls = pic ? ' class="pictured"' : '';
+                const credit = pic?.credit
+                  ? `<p class="credit">Photo: ${pic.source ? `<a href="${esc(pic.source)}">${esc(pic.credit)}</a>` : esc(pic.credit)}</p>`
+                  : '';
+                return `<li>${place.link ? `<a${cls} href="${esc(place.link)}">${inner}</a>` : `<div${cls}>${inner}</div>`}${credit}</li>`;
               })
               .join('')}</ul>`
           : '';
@@ -1594,6 +1601,45 @@ const fetchedOn = dateFmt.format(new Date(fetched));
     margin-left: 0.4em;
     font-weight: 400;
     color: var(--muted);
+  }
+
+  /* A favourite place with a picture: the picture on the left. */
+  .found .pictured {
+    grid-template-columns: 5.5rem 1fr;
+    gap: 0.8rem;
+    align-items: center;
+    padding: 0.5rem;
+  }
+
+  .found .pictured img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+
+  .found .words {
+    display: grid;
+    gap: 0.1rem;
+    margin: 0;
+  }
+
+  .found .credit {
+    margin: 0.25rem 0 0;
+    font-size: 0.68rem;
+    color: var(--muted);
+  }
+
+  .found .credit a {
+    display: inline;
+    padding: 0;
+    border: 0;
+    text-decoration: underline;
+  }
+
+  .found .credit a:hover {
+    background: none;
+    color: var(--mine);
   }
 
   /* Stations with photographs wear a pink ring. */

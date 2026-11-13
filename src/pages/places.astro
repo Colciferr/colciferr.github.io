@@ -20,7 +20,8 @@ const stations = [...new Set(places.flatMap((p) => p.stations))].map((station) =
         <ul class="rows">
           {places.map((place) => (
             <li>
-              <div class="row">
+              <div class:list={['row', { pictured: place.photo }]}>
+                {place.photo && <img src={place.photo.src} alt={place.photo.alt} loading="lazy" />}
                 <span class="label">{place.kind}</span>
                 <span class="row-title">
                   {place.link ? <a href={place.link}>{place.name}</a> : place.name}
@@ -31,6 +32,11 @@ const stations = [...new Set(places.flatMap((p) => p.stations))].map((station) =
                   )}
                 </span>
                 {place.note && <span class="row-note">{place.note}</span>}
+                {place.photo?.credit && (
+                  <span class="row-note credit">
+                    Photo: {place.photo.source ? <a href={place.photo.source}>{place.photo.credit}</a> : place.photo.credit}
+                  </span>
+                )}
               </div>
             </li>
           ))}
@@ -60,6 +66,42 @@ const stations = [...new Set(places.flatMap((p) => p.stations))].map((station) =
   h2 a::after {
     content: ' →';
     color: var(--mine);
+  }
+
+  /* A place with a picture: the picture down the left, the words beside it. */
+  .pictured {
+    grid-template-columns: 9rem 1fr;
+    align-items: start;
+  }
+
+  .pictured img {
+    grid-row: 1 / span 4;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+
+  .pictured > :not(img) {
+    grid-column: 2;
+  }
+
+  .credit {
+    font-size: 0.72rem;
+  }
+
+  @media (max-width: 540px) {
+    .pictured {
+      grid-template-columns: 1fr;
+    }
+
+    .pictured img {
+      grid-row: auto;
+    }
+
+    .pictured > :not(img) {
+      grid-column: 1;
+    }
   }
 
   .ja {
