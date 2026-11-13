@@ -157,6 +157,57 @@ export const OME: [string, string][] = [
   ['Oku-Tama', '奥多摩'],
 ];
 
+// JR Yokosuka Line, from Tokyo through Yokohama and Kamakura to Kurihama
+// (JO19 at Tokyo, counting down to JO01).
+export const YOKOSUKA: [string, string][] = [
+  ['Tokyo', '東京'],
+  ['Shimbashi', '新橋'],
+  ['Shinagawa', '品川'],
+  ['Nishi-Oi', '西大井'],
+  ['Musashi-Kosugi', '武蔵小杉'],
+  ['Shin-Kawasaki', '新川崎'],
+  ['Yokohama', '横浜'],
+  ['Hodogaya', '保土ケ谷'],
+  ['Higashi-Totsuka', '東戸塚'],
+  ['Totsuka', '戸塚'],
+  ['Ofuna', '大船'],
+  ['Kita-Kamakura', '北鎌倉'],
+  ['Kamakura', '鎌倉'],
+  ['Zushi', '逗子'],
+  ['Higashi-Zushi', '東逗子'],
+  ['Taura', '田浦'],
+  ['Yokosuka', '横須賀'],
+  ['Kinugasa', '衣笠'],
+  ['Kurihama', '久里浜'],
+];
+
+// JR Yokohama Line, from Yokohama through Shin-Yokohama to Hachioji. The line
+// proper begins at Higashi-Kanagawa (JH13 to JH32); its trains run through to
+// Yokohama, so it is drawn from there.
+export const YOKOHAMA_LINE: [string, string][] = [
+  ['Yokohama', '横浜'],
+  ['Higashi-Kanagawa', '東神奈川'],
+  ['Oguchi', '大口'],
+  ['Kikuna', '菊名'],
+  ['Shin-Yokohama', '新横浜'],
+  ['Kozukue', '小机'],
+  ['Kamoi', '鴨居'],
+  ['Nakayama', '中山'],
+  ['Tokaichiba', '十日市場'],
+  ['Nagatsuta', '長津田'],
+  ['Naruse', '成瀬'],
+  ['Machida', '町田'],
+  ['Kobuchi', '古淵'],
+  ['Fuchinobe', '淵野辺'],
+  ['Yabe', '矢部'],
+  ['Sagamihara', '相模原'],
+  ['Hashimoto', '橋本'],
+  ['Aihara', '相原'],
+  ['Hachiojiminamino', '八王子みなみ野'],
+  ['Katakura', '片倉'],
+  ['Hachioji', '八王子'],
+];
+
 // Tokaido Shinkansen from Tokyo to Kyoto, with approximate coordinates.
 // Only drawn on the physical map.
 export const TOKAIDO_SHINKANSEN: LoopStation[] = [
@@ -181,6 +232,6 @@ export const TOKAIDO_SHINKANSEN: LoopStation[] = [
 // Places reached by a long ride off the edge of the map. Each is drawn as a
 // short dashed spur from the station you would leave from.
 export const EXCURSIONS = [
-  { from: 'Shinagawa', en: 'Kyoto', ja: '京都', by: 'Shinkansen' },
+  { from: 'Shin-Yokohama', en: 'Kyoto', ja: '京都', by: 'Shinkansen' },
   { from: 'Takao', en: 'Takaosanguchi', ja: '高尾山口', by: 'Keio Takao Line' },
 ];

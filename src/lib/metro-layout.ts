@@ -9,7 +9,7 @@
 //
 // The numbers under "Tuning" control the overall look.
 import network from '../data/metro/network.json';
-import { YAMANOTE, SEIBU_SHINJUKU, SEIBU_HAIJIMA, SEIBU_SHINJUKU_KM, SEIBU_HAIJIMA_KM, CHUO_RAPID, OME, EXCURSIONS, TOKAIDO_SHINKANSEN } from '../data/metro/other-lines';
+import { YAMANOTE, SEIBU_SHINJUKU, SEIBU_HAIJIMA, SEIBU_SHINJUKU_KM, SEIBU_HAIJIMA_KM, CHUO_RAPID, OME, YOKOSUKA, YOKOHAMA_LINE, EXCURSIONS, TOKAIDO_SHINKANSEN } from '../data/metro/other-lines';
 import otherStations from '../data/metro/other-stations.json';
 import landData from '../data/metro/land.json';
 import { stops } from '../data/stops';
@@ -219,7 +219,9 @@ const SHINJUKU_LINE = METRO + 1;
 const HAIJIMA_LINE = METRO + 2;
 const CHUO_LINE = METRO + 3;
 const OME_LINE = METRO + 4;
-const EXCURSION_LINE = METRO + 5;
+const YOKOSUKA_LINE = METRO + 5;
+const YOKOHAMA_LINE_NO = METRO + 6;
+const EXCURSION_LINE = METRO + 7;
 
 // ------------------------------------------------------------------ Anchors
 // Interchanges and line ends are pinned to the grid first. Everything
@@ -530,9 +532,40 @@ const ome: Placed[] = [{ node: place(...OME[0], OME_LINE, '', tachikawa) }];
   ome.push(...stretch(OME_LINE, at('Haijima'), beyond, [haijima, bend, [bend[0] - Math.max(run, 0), bend[1]]]));
 }
 
+// JR Yokosuka Line: from Tokyo round the inside of the loop to Shinagawa,
+// then south to Yokohama, south-west to Ofuna, down to Kamakura and out
+// along the peninsula to Kurihama.
+const yokosuka: Placed[] = [{ node: place(...YOKOSUKA[0], YOKOSUKA_LINE, 'JO19', at('Tokyo').pos!) }];
+{
+  const stops = YOKOSUKA.map(([en, ja], i) => [en, ja, `JO${String(19 - i).padStart(2, '0')}`] as [string, string, string]);
+  const push = (from: string, a: number, b: number, route: Pt[]) => yokosuka.push(...stretch(YOKOSUKA_LINE, at(from), stops.slice(a, b + 1), route));
+  push('Tokyo', 1, 1, chooseRoute(at('Tokyo'), at('Shimbashi'), []));
+  push('Shimbashi', 2, 2, chooseRoute(at('Shimbashi'), at('Shinagawa'), []));
+  const s = at('Shinagawa').pos!;
+  const yokohama: Pt = [s[0], s[1] + 4 * SEIBU_SPACING];
+  const ofuna: Pt = [yokohama[0] - 5, yokohama[1] + 5];
+  const kamakura: Pt = [ofuna[0], ofuna[1] + 2 * SEIBU_SPACING];
+  push('Shinagawa', 3, 6, [s, yokohama]);
+  push('Yokohama', 7, 10, [yokohama, ofuna]);
+  push('Ofuna', 11, 12, [ofuna, kamakura]);
+  push('Kamakura', 13, 18, [kamakura, [kamakura[0] + 7.5, kamakura[1] + 7.5]]);
+}
+
+// JR Yokohama Line: west from Yokohama through Shin-Yokohama, then north-west
+// up to Hachioji on the Chuo Line.
+const yokohamaLine: Placed[] = [{ node: place(...YOKOHAMA_LINE[0], YOKOHAMA_LINE_NO, '', at('Yokohama').pos!) }];
+yokohamaLine.push(
+  ...stretch(
+    YOKOHAMA_LINE_NO,
+    at('Yokohama'),
+    YOKOHAMA_LINE.slice(1).map(([en, ja], i) => [en, ja, `JH${13 + i}`] as [string, string, string]),
+    levelFirst(at('Yokohama').pos!, at('Hachioji').pos!),
+  ),
+);
+
 // Long-distance spurs.
 const spurShapes: Record<string, { via: Pt[]; to: Pt }> = {
-  Kyoto: { via: [[0, 2]], to: [-3.5, 5.5] },
+  Kyoto: { via: [], to: [-3, 3] },
   Takaosanguchi: { via: [], to: [-2, 2] },
 };
 const excursions = EXCURSIONS.map((e, i) => {
@@ -685,6 +718,8 @@ export const lines: MetroLine[] = [
   handPlaced('SeibuHaijima', 'Seibu Haijima Line', '西武拝島線', 'SS', '#0b9ad6', 'seibu', seibuHaijima, { headway: 10, hops: gaps(SEIBU_HAIJIMA_KM) }),
   handPlaced('ChuoRapid', 'Chuo Line', '中央線', 'JC', '#f15a22', 'rail', chuo),
   handPlaced('Ome', 'Ome Line', '青梅線', 'JC', '#f15a22', 'rail', ome),
+  handPlaced('Yokosuka', 'Yokosuka Line', '横須賀線', 'JO', '#007ac1', 'rail', yokosuka),
+  handPlaced('YokohamaLine', 'Yokohama Line', '横浜線', 'JH', '#5fa83a', 'rail', yokohamaLine),
   ...excursions.map((e) => handPlaced(`To${e.en}`, `${e.by} to ${e.en}`, e.ja, '', e.en === 'Kyoto' ? '#1153af' : '#8a93a6', 'excursion', e.stations)),
 ];
 
@@ -833,10 +868,11 @@ const KEIO_NAMED = ['Meidaimae', 'Chofu', 'Fuchu', 'Seiseki-sakuragaoka', 'Takah
 const geoLines = lines.map((line) => {
   const pts = line.nodes.map((id) => realPx[id]);
   if (line.id === 'ToKyoto') {
-    // The spur to Kyoto becomes the whole Shinkansen route, stop by stop.
-    const stops = TOKAIDO_SHINKANSEN.slice(2, -1).map((st) => gpx(km(st.lat, st.lon)));
+    // The spur to Kyoto becomes the whole Shinkansen route, stop by stop:
+    // Tokyo, Shinagawa and Shin-Yokohama are stations on the map already.
+    const stops = TOKAIDO_SHINKANSEN.slice(3, -1).map((st) => gpx(km(st.lat, st.lon)));
     const route = [pts[0], ...stops, pts[pts.length - 1]];
-    return { segs: [route], path: rounded([realPx[at('Tokyo').id], ...route]) };
+    return { segs: [route], path: rounded([realPx[at('Tokyo').id], realPx[at('Shinagawa').id], ...route]) };
   }
   if (line.id === 'ToTakaosanguchi') {
     // The spur to Mt. Takao becomes the Keio line all the way from Shinjuku.
@@ -926,7 +962,7 @@ export const geo = {
   // Stops on the long-distance routes, shown only on this map: the Shinkansen
   // between Shinagawa and Kyoto, and the main stops of the Keio line.
   stops: [
-    ...TOKAIDO_SHINKANSEN.slice(2, -1).map((st) => ({ ...st, color: '#1153af' })),
+    ...TOKAIDO_SHINKANSEN.slice(3, -1).map((st) => ({ ...st, color: '#1153af' })),
     ...keioWay.filter((st) => KEIO_NAMED.includes(st.en)).map((st) => ({ ...st, color: '#8a93a6' })),
   ].map((st) => {
     const p = gpx(km(st.lat, st.lon));

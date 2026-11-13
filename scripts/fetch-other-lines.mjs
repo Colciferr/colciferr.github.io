@@ -17,7 +17,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { YAMANOTE, SEIBU_SHINJUKU, SEIBU_HAIJIMA, CHUO_RAPID, OME } from '../src/data/metro/other-lines.ts';
+import { YAMANOTE, SEIBU_SHINJUKU, SEIBU_HAIJIMA, CHUO_RAPID, OME, YOKOSUKA, YOKOHAMA_LINE } from '../src/data/metro/other-lines.ts';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const BASE = 'https://raw.githubusercontent.com/nagix/mini-tokyo-3d/master';
@@ -30,6 +30,8 @@ const LINES = [
   { id: 'SeibuHaijima', file: 'seibu-haijima.json', stations: ['Kodaira', ...SEIBU_HAIJIMA.map((s) => s[0])] },
   { id: 'ChuoRapid', file: 'jreast-chuorapid.json', stations: CHUO_RAPID.map((s) => s[0]) },
   { id: 'Ome', file: 'jreast-ome.json', stations: OME.map((s) => s[0]) },
+  { id: 'Yokosuka', file: 'jreast-yokosuka.json', stations: YOKOSUKA.map((s) => s[0]) },
+  { id: 'YokohamaLine', file: 'jreast-yokohama.json', stations: YOKOHAMA_LINE.map((s) => s[0]) },
 ];
 
 const squash = (name) => name.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -117,7 +119,7 @@ for (const [calendar, file] of [
 
 // Where each of these stations really is, for the physical map.
 {
-  const railways = ['JR-East.Yamanote', 'JR-East.ChuoRapid', 'JR-East.Ome', 'Seibu.Shinjuku', 'Seibu.Haijima', 'Keio.Takao'];
+  const railways = ['JR-East.Yamanote', 'JR-East.ChuoRapid', 'JR-East.Ome', 'JR-East.Yokosuka', 'JR-East.Yokohama', 'Seibu.Shinjuku', 'Seibu.Haijima', 'Keio.Takao'];
   const everything = JSON.parse(await download('data/stations.json'));
   const all = everything.filter((s) => railways.includes(s.railway) && s.coord);
   const stations = {};
