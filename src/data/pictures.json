@@ -309,6 +309,15 @@
   {
    "station": "Nishi-Tachikawa",
    "place": "Showa Kinen Park in summer",
+   "src": "/pictures/nishi-tachikawa/showa-kinen-park-in-summer-img-0700.jpg",
+   "thumb": "/pictures/nishi-tachikawa/showa-kinen-park-in-summer-img-0700-thumb.jpg",
+   "w": 1800,
+   "h": 1200,
+   "date": "Aug 2026"
+  },
+  {
+   "station": "Nishi-Tachikawa",
+   "place": "Showa Kinen Park in summer",
    "src": "/pictures/nishi-tachikawa/showa-kinen-park-in-summer-img-0709.jpg",
    "thumb": "/pictures/nishi-tachikawa/showa-kinen-park-in-summer-img-0709-thumb.jpg",
    "w": 1800,
@@ -339,7 +348,8 @@
    "src": "/pictures/nishi-tachikawa/showa-kinen-park-in-summer-img-0716.jpg",
    "thumb": "/pictures/nishi-tachikawa/showa-kinen-park-in-summer-img-0716-thumb.jpg",
    "w": 1800,
-   "h": 864
+   "h": 1200,
+   "date": "Aug 2026"
   },
   {
    "station": "Oku-Tama",
