@@ -79,6 +79,9 @@ for (const { stations, ...place } of places) {
   }
 }
 const likedStations = Object.keys(liked).map((id) => nodes[Number(id)]);
+
+// How many stations have anything at them: a page, pictures or a favourite place.
+const withSomething = nodes.filter((n) => sections[n.id] || photos[n.id] || liked[n.id]).length;
 const photoCount = Object.values(photos).reduce((sum, list) => sum + list.length, 0);
 
 // Station timetables from outside ODPT, one file per station, in
@@ -190,7 +193,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
                   .join(', ');
                 return (
                   <g
-                    class:list={['station', { interchange: n.interchange, section, shots, liked: favs }]}
+                    class:list={['station', { interchange: n.interchange, section, shots, liked: favs, has: section || shots || favs }]}
                     data-node={n.id}
                     data-lines={n.lines.join(' ')}
                     role="button"
@@ -286,6 +289,10 @@ const fetchedOn = dateFmt.format(new Date(fetched));
         <button type="button" data-view="diagram" aria-pressed="true">Logical</button>
         <button type="button" data-view="geo" aria-pressed="false">Physical</button>
       </div>
+      <p class="tally">
+        <i aria-hidden="true" />
+        Something at <b>{withSomething}</b> of {nodes.length} stations
+      </p>
 
       {
         photoStations.length > 0 && (
@@ -1486,6 +1493,12 @@ const fetchedOn = dateFmt.format(new Date(fetched));
     stroke: var(--ink);
   }
 
+  /* Stations with anything at them (a page, pictures, a favourite place)
+     have their dot filled in; the rest are hollow. */
+  .station.has .dot {
+    fill: var(--mine);
+  }
+
   .station .hit {
     fill: transparent;
   }
@@ -1817,6 +1830,28 @@ const fetchedOn = dateFmt.format(new Date(fetched));
   .views button[aria-pressed='true'] {
     background: var(--ink);
     color: var(--paper);
+  }
+
+  /* The count of stations with something at them, with a sample dot. */
+  .tally {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 1rem 0.1rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .tally i {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--mine);
+    border: 2px solid var(--ink);
+  }
+
+  .tally b {
+    color: var(--ink);
   }
 
   .fold summary {
