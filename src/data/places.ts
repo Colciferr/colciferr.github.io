@@ -48,4 +48,11 @@ export const places: Place[] = [
       source: 'https://commons.wikimedia.org/wiki/File:Cerulean_Tower_Tokyu_Hotel.jpg',
     },
   },
+  {
+    name: 'Woodberry Coffee',
+    kind: 'Drink',
+    stations: ['Ogikubo', 'Shibuya'],
+    note: 'A chain of cafes.',
+    link: 'https://www.woodberrycoffee.com/',
+  },
 ];
