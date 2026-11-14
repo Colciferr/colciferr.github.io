@@ -13,7 +13,8 @@
     "metro:fetch": "node scripts/fetch-odpt.mjs",
     "pictures": "node scripts/build-pictures.mjs",
     "lines:fetch": "node scripts/fetch-other-lines.mjs",
-    "land:fetch": "node scripts/fetch-land.mjs"
+    "land:fetch": "node scripts/fetch-land.mjs",
+    "kansai:fetch": "node scripts/fetch-kansai.mjs"
   },
   "dependencies": {
     "astro": "^6.4.4"

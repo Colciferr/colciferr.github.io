@@ -2,6 +2,7 @@
 // Every photograph, grouped by the station it was taken near.
 // The list is built by `npm run pictures` (see scripts/build-pictures.mjs).
 import Site from '../layouts/Site.astro';
+import { mapLink } from '../lib/which-map';
 import pictures from '../data/pictures.json';
 
 interface Photo {
@@ -33,7 +34,7 @@ const stations = [...new Set(photos.map((p) => p.station))].map((station) => {
     stations.map(({ station, places }) => (
       <section class="station">
         <h2>
-          <a href={`/#${encodeURIComponent(station)}`}>{station}</a>
+          <a href={mapLink(station)}>{station}</a>
         </h2>
         {places.map(({ place, date, shots }) => (
           <div class="outing">

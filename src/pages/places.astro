@@ -1,6 +1,7 @@
 ---
 // Favourite places, grouped by station. The list lives in src/data/places.ts.
 import Site from '../layouts/Site.astro';
+import { mapLink } from '../lib/which-map';
 import { places } from '../data/places';
 
 const stations = [...new Set(places.flatMap((p) => p.stations))].map((station) => ({
@@ -15,7 +16,7 @@ const stations = [...new Set(places.flatMap((p) => p.stations))].map((station) =
     stations.map(({ station, places }) => (
       <section class="station">
         <h2>
-          <a href={`/#${encodeURIComponent(station)}`}>{station}</a>
+          <a href={mapLink(station)}>{station}</a>
         </h2>
         <ul class="rows">
           {places.map((place) => (

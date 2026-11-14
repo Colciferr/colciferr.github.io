@@ -1,0 +1,2531 @@
+---
+// The map itself, used by both map pages: Tokyo (src/pages/index.astro, the
+// home page) and Kansai (src/pages/kansai.astro, Osaka and Kyoto).
+//
+// Tokyo: the Yamanote loop in the middle, the Tokyo Metro woven through it,
+// the Seibu lines heading west, and trains running on all of it.
+// Kansai: the Osaka Loop and Osaka Metro, the Kyoto subway, and the three
+// lines between the two cities. Its stations come from OpenStreetMap
+// (`npm run kansai:fetch`) and its shape from src/lib/kansai-layout.ts.
+//
+// - Which page lives at which station: src/data/stops.ts
+// - Photographs, by the station they were taken near: `npm run pictures`
+// - Metro network and timetables come from ODPT: `npm run metro:fetch`
+// - JR and Seibu timetables come from Mini Tokyo 3D: `npm run lines:fetch`
+// - The shape of the map is worked out in src/lib/metro-layout.ts
+import { getCollection } from 'astro:content';
+import { projects, work } from '../data/site';
+import { roles } from '../data/resume';
+import { stops } from '../data/stops';
+import { places } from '../data/places';
+import pictures from '../data/pictures.json';
+import kansaiNetwork from '../data/kansai/network.json';
+
+interface Props {
+  map?: 'tokyo' | 'kansai';
+}
+const { map = 'tokyo' } = Astro.props;
+const kansai = map === 'kansai';
+
+// Each map has its own layout module; both produce the same things.
+const layout = kansai ? await import('../lib/kansai-layout') : await import('../lib/metro-layout');
+const { lines, nodes, geo, width, height, lineWidth, labelSize, labelLine2, fetched } = layout;
+
+// Stations that lead straight to the other map instead of opening a panel.
+const portals: Record<string, { title: string; href: string }> = kansai
+  ? { 'Shin-Osaka': { title: 'Tokyo map', href: '/' } }
+  : { Kyoto: { title: 'Kansai map', href: '/kansai' } };
+// Timetable files, where the map has them. Kansai has none: its trains run
+// to typical frequencies and journey times instead (see kansai-layout.ts).
+const trainFiles = kansai ? [] : ['/metro/trains-', '/metro/trains-other-'];
+// Stations on the other map, so things filed there are not reported as lost.
+const elsewhere = new Set(kansai ? [] : kansaiNetwork.lines.flatMap((l) => l.stations.map((st) => st.en.toLowerCase())));
+
+interface Photo {
+  station: string;
+  place: string;
+  src: string;
+  thumb: string;
+  w: number;
+  h: number;
+  date?: string;
+}
+
+const posts = (await getCollection('thoughts', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const dateFmt = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+
+const byName = new Map(nodes.map((n) => [n.en.toLowerCase(), n]));
+
+// The pages of the site, each at its station.
+const pageItems: Record<string, { title: string; note?: string; href?: string }[]> = {
+  '/thoughts': posts.map((p) => ({ title: p.data.title, note: dateFmt.format(p.data.date), href: `/thoughts/${p.id}` })),
+  '/projects': projects.map((p) => ({ title: p.name, note: p.about })),
+  '/work': work.map((w) => ({ title: w.name, note: w.about })),
+  '/resume': roles.map((r) => ({ title: r.title, note: `${r.where} · ${r.when}` })),
+};
+const sections: Record<number, { title: string; href: string; go?: boolean; items: { title: string; note?: string; href?: string }[] }> = {};
+for (const [station, page] of Object.entries(portals)) {
+  const node = byName.get(station.toLowerCase());
+  if (node) sections[node.id] = { ...page, go: true, items: [] };
+}
+// The site's pages live at stations on the Tokyo map.
+for (const [station, page] of Object.entries(kansai ? {} : stops)) {
+  const node = byName.get(station.toLowerCase());
+  if (!node) {
+    console.warn(`[map] "${page.title}" is set to "${station}", which is not a station on the map.`);
+    continue;
+  }
+  sections[node.id] = { ...page, items: pageItems[page.href] ?? [] };
+}
+// The same pages in the order they are listed in stops.ts, for the top bar.
+const pageLinks = Object.entries(stops).map(([station, page]) => ({ ...page, station }));
+
+// Photographs, grouped by station.
+const photos: Record<number, Photo[]> = {};
+for (const photo of (pictures as { photos: Photo[] }).photos) {
+  const node = byName.get(photo.station.toLowerCase());
+  if (!node) {
+    if (!kansai && !elsewhere.has(photo.station.toLowerCase())) console.warn(`[map] A photo is filed under "${photo.station}", which is not a station on either map.`);
+    continue;
+  }
+  // A station that leads to the other map shows its photographs there.
+  if (sections[node.id]?.go) continue;
+  (photos[node.id] ??= []).push(photo);
+}
+const photoStations = Object.keys(photos).map((id) => nodes[Number(id)]);
+
+// Favourite places, grouped by station (a place can be at several).
+const liked: Record<number, { name: string; ja?: string; kind: string; note?: string; link?: string; photo?: { src: string; alt: string; credit?: string; source?: string } }[]> = {};
+for (const { stations, ...place } of places) {
+  for (const station of stations) {
+    const node = byName.get(station.toLowerCase());
+    if (!node) {
+      if (!kansai && !elsewhere.has(station.toLowerCase())) console.warn(`[map] "${place.name}" is filed under "${station}", which is not a station on either map.`);
+      continue;
+    }
+    if (sections[node.id]?.go) continue;
+    (liked[node.id] ??= []).push(place);
+  }
+}
+const likedStations = Object.keys(liked).map((id) => nodes[Number(id)]);
+
+// The top bar counts stations across both maps.
+const everyPhotoStation = new Set((pictures as { photos: Photo[] }).photos.map((p) => p.station)).size;
+const everyLikedStation = new Set(places.flatMap((p) => p.stations)).size;
+
+// How many stations have anything at them: a page, pictures or a favourite place.
+const withSomething = nodes.filter((n) => sections[n.id] || photos[n.id] || liked[n.id]).length;
+const photoCount = Object.values(photos).reduce((sum, list) => sum + list.length, 0);
+
+// Station timetables from outside ODPT, one file per station, in
+// src/data/station-timetables/ (see the note in that folder).
+interface Snapshot {
+  station: { en: string; ja: string };
+  line: string;
+  source: string;
+  scrapedAt: string;
+  dayTypes: Record<string, { directions: { name: string; departures: { time: string; destinationEn: string; trainType: string }[] }[] }>;
+}
+const snapshots = import.meta.glob<Snapshot>('../data/station-timetables/*.json', { eager: true, import: 'default' });
+const boards: Record<number, { line: string; source: string; fetched: string; names: string[]; days: Record<string, { name: string; rows: number[][] }[]> }> = {};
+for (const snapshot of Object.values(snapshots)) {
+  const node = byName.get(snapshot.station.en.toLowerCase());
+  if (!node) {
+    console.warn(`[map] There is a timetable for "${snapshot.station.en}", which is not a station on the map.`);
+    continue;
+  }
+  // Destinations and train types are stored once and referred to by number.
+  const names: string[] = [];
+  const ref = (name: string) => (names.includes(name) ? names.indexOf(name) : names.push(name) - 1);
+  const days: Record<string, { name: string; rows: number[][] }[]> = {};
+  for (const [day, { directions }] of Object.entries(snapshot.dayTypes)) {
+    days[day] = directions.map((d) => ({
+      name: d.name,
+      rows: d.departures.map((t) => {
+        const [h, m] = t.time.split(':').map(Number);
+        return [h * 60 + m, ref(t.destinationEn), ref(t.trainType)];
+      }),
+    }));
+  }
+  boards[node.id] = { line: snapshot.line, source: snapshot.source, fetched: dateFmt.format(new Date(snapshot.scrapedAt)), names, days };
+}
+
+const loop = lines.find((l) => l.loop)!;
+const loopNodes = loop.nodes.map((id) => nodes[id]);
+const start = {
+  x: loopNodes.reduce((s, n) => s + n.x, 0) / loopNodes.length,
+  y: loopNodes.reduce((s, n) => s + n.y, 0) / loopNodes.length,
+};
+
+// Everything the browser needs to move trains and fill in the side panel.
+const data = {
+  start,
+  trainFiles,
+  // The station the opening animation pulls back from.
+  origin: kansai ? 'Osaka' : 'Tokyo',
+  lines: lines.map((l) => ({ id: l.id, name: l.name, ja: l.ja, code: l.code, color: l.color, kind: l.kind, loop: l.loop, sim: l.sim, nodes: l.nodes, segs: l.segs })),
+  nodes: nodes.map((n) => ({
+    id: n.id,
+    en: n.en,
+    ja: n.ja,
+    x: n.x,
+    y: n.y,
+    // Where the label sits relative to the station, and which way it reads.
+    l: [Math.round((n.label.x - n.x) * 10) / 10, Math.round((n.label.y - n.y) * 10) / 10, n.label.anchor],
+    lines: n.lines,
+    codes: n.codes,
+  })),
+  line2: labelLine2,
+  // The same stations and lines laid out where they really are.
+  geo,
+  sections,
+  photos,
+  places: liked,
+  boards,
+};
+
+const legend = lines.map((l, i) => ({ ...l, index: i })).filter((l) => l.kind !== 'excursion');
+const fetchedOn = dateFmt.format(new Date(fetched));
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Cyber systems, writing, photography, and other preoccupations, by train." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+    />
+    <title>{kansai ? 'Kansai map · Nicholas Cole Davis' : 'Nicholas Cole Davis'}</title>
+  </head>
+  <body>
+    <div class="viewport" id="viewport">
+      <div class="world" style={`width:${width}px;height:${height}px`}>
+        <svg id="map" viewBox={`0 0 ${width} ${height}`} width={width} height={height} style={`--lw:${lineWidth}px;--label:${labelSize}px`}>
+          <!-- Sea, land and lakes: only on the physical map. -->
+          <g class="geo-only backdrop">
+            <rect class="sea" width={geo.width} height={geo.height} />
+            {geo.land.map((d) => <path class="land" d={d} />)}
+            {geo.water.map((d) => <path class="lake" d={d} />)}
+          </g>
+          <g class="lines">
+            {lines.map((l, i) => <path class:list={['casing', l.kind]} d={l.path} data-line={i} />)}
+            {lines.map((l, i) => <path class:list={['line', l.kind]} d={l.path} stroke={l.color} data-line={i} />)}
+          </g>
+          <g id="trains"></g>
+          <g class="stations">
+            {
+              nodes.map((n) => {
+                const section = sections[n.id];
+                const shots = photos[n.id]?.length ?? 0;
+                const favs = liked[n.id]?.length ?? 0;
+                const says = [section && `${section.title} page`, shots && `${shots} photographs`, favs && `${favs} favourite places`]
+                  .filter(Boolean)
+                  .join(', ');
+                return (
+                  <g
+                    class:list={['station', { interchange: n.interchange, section, shots, liked: favs, has: section || shots || favs }]}
+                    data-node={n.id}
+                    data-lines={n.lines.join(' ')}
+                    role="button"
+                    tabindex={section || shots || favs ? 0 : -1}
+                    aria-label={`${n.en} station${says ? `: ${says}` : ''}`}
+                    transform={`translate(${n.x} ${n.y})`}
+                  >
+                    <g class="mark">
+                      {section && <circle class="halo" r="16" />}
+                      {shots > 0 && <circle class="frame" r={n.interchange ? 11.5 : 9} />}
+                      <circle class="dot" r={n.interchange ? 7 : 4.5} stroke={n.interchange ? undefined : lines[n.lines[0]].color} />
+                      {favs > 0 && <path class="fav" d="M11 -21 l7.5 7.5 -7.5 7.5 -7.5 -7.5z" />}
+                      <text class="name" x={(n.label.x - n.x).toFixed(1)} y={(n.label.y - n.y).toFixed(1)} text-anchor={n.label.anchor}>
+                        {n.en}
+                      </text>
+                      {section && (
+                        <text class="page" x={(n.label.x - n.x).toFixed(1)} y={(n.label.y - n.y + labelLine2).toFixed(1)} text-anchor={n.label.anchor}>
+                          {section.title} →
+                        </text>
+                      )}
+                      {shots > 0 && (
+                        <g class="peek" transform={`translate(-34 ${n.label.anchor === 'middle' && n.label.y < n.y ? 16 : -66})`}>
+                          <rect width="68" height="48" rx="5" />
+                          <image href={photos[n.id][0].thumb} x="3" y="3" width="62" height="42" preserveAspectRatio="xMidYMid slice" />
+                          <circle cx="66" cy="2" r="9" />
+                          <text x="66" y="5.5" text-anchor="middle">
+                            {shots}
+                          </text>
+                        </g>
+                      )}
+                      <circle class="hit" r="13" />
+                    </g>
+                  </g>
+                );
+              })
+            }
+          </g>
+          <!-- Stops on the way to Kyoto and to Mt. Takao: only on the physical map. -->
+          <g class="geo-only">
+            {
+              geo.stops.map((stop) => (
+                <g transform={`translate(${stop.x} ${stop.y})`}>
+                  <g class="mark">
+                    <circle class="way" r="4" stroke={stop.color} />
+                    <text class="name" x="10" y="4">
+                      {stop.en}
+                    </text>
+                  </g>
+                </g>
+              ))
+            }
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <!-- The bar across the top: who this is, and every page one click away. -->
+    <header class="top">
+      <div class="top-id">
+        <h1>Nicholas Cole Davis</h1>
+        <p>Vulnerability management and security engineer in Tokyo</p>
+      </div>
+      <button type="button" class="top-menu" id="top-menu" aria-expanded="false" aria-controls="top-nav">Menu</button>
+      <nav class="top-nav" id="top-nav" aria-label="Pages">
+        {
+          pageLinks.map((page) => (
+            <a href={page.href}>
+              <span class="top-page">{page.title}</span>
+              <span class="top-at">{page.station}</span>
+            </a>
+          ))
+        }
+        <a href="/pictures">
+          <span class="top-page">Pictures</span>
+          <span class="top-at">{everyPhotoStation} stations</span>
+        </a>
+        <a href="/places">
+          <span class="top-page">Places</span>
+          <span class="top-at">{everyLikedStation} stations</span>
+        </a>
+      </nav>
+    </header>
+
+    <!-- The right-hand column: the map's own controls, and under them the
+         panel for whichever station or train is open. -->
+    <div class="side">
+    <section class="sign" aria-label="Map controls">
+      <p class="clock">
+        <span id="clock">--:--:--</span>
+        <span id="running">Loading the timetable…</span>
+      </p>
+      <div class="views maps" role="group" aria-label="Which map">
+        <a href="/" aria-current={kansai ? undefined : 'page'}>Tokyo</a>
+        <a href="/kansai" aria-current={kansai ? 'page' : undefined}>Osaka &amp; Kyoto</a>
+      </div>
+      <div class="views" role="group" aria-label="Map style">
+        <button type="button" data-view="diagram" aria-pressed="true">Logical</button>
+        <button type="button" data-view="geo" aria-pressed="false">Physical</button>
+      </div>
+      <p class="tally">
+        <i aria-hidden="true" />
+        Something at <b>{withSomething}</b> of {nodes.length} stations
+      </p>
+
+      {
+        photoStations.length > 0 && (
+          <details class="fold">
+            <summary>Pictures taken near...</summary>
+            <ul class="stops compact">
+              {photoStations.map((n) => (
+                <li>
+                  <button type="button" data-goto={n.id}>
+                    <span class="stop-name plain">{n.en}</span>
+                    <span class="stop-what">{[...new Set(photos[n.id].map((p) => p.place))].join(' · ')}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </details>
+        )
+      }
+
+      {
+        likedStations.length > 0 && (
+          <details class="fold">
+            <summary>Places I like near...</summary>
+            <ul class="stops compact">
+              {likedStations.map((n) => (
+                <li>
+                  <button type="button" data-goto={n.id}>
+                    <span class="stop-name plain">{n.en}</span>
+                    <span class="stop-what">{liked[n.id].map((p) => p.name).join(' · ')}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </details>
+        )
+      }
+
+      <details class="fold lines-fold">
+        <summary>Lines</summary>
+        <ul class="legend">
+          {
+            legend.map((l) => (
+              <li>
+                <button type="button" data-line={l.index} aria-pressed="false">
+                  <span class:list={['ring', { square: l.kind !== 'metro' }]} style={`--c:${l.color}`}>
+                    {l.code}
+                  </span>
+                  {l.name.replace(' Line', '')}
+                </button>
+              </li>
+            ))
+          }
+        </ul>
+      </details>
+
+    </section>
+
+    <aside class="panel" id="panel" hidden aria-live="polite">
+      <button type="button" class="close" id="panel-close" aria-label="Close">×</button>
+      <div id="panel-body"></div>
+    </aside>
+    </div>
+
+    <details class="about">
+      <summary>About this map</summary>
+      <div class="about-note">
+        {
+          kansai ? (
+            <p>
+              Stations and their positions are from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>
+              contributors. The trains here do not follow a timetable: they run at typical frequencies and journey times
+              for each line, so they show roughly where trains are, not exact departures.
+            </p>
+          ) : (
+            <>
+              <p class="about-why">
+                I like systems. The Tokyo Metro system is one of my favorites, which is why I based this website on it. I
+                like looking at it and thinking about all the logistics and considerations that went into designing,
+                constructing, and improving it over time. I find stuff like this beautiful.
+              </p>
+              <p>
+                Tokyo Metro data is from the Public Transportation Open Data Center. JR and Seibu timetables are from <a href="https://github.com/nagix/mini-tokyo-3d">Mini Tokyo 3D</a> by
+                Akihiko Kusanagi, used under the <a href="/metro/NOTICE-mini-tokyo-3d.txt">MIT licence</a>. They may lag
+                behind the latest timetable revision.
+              </p>
+            </>
+          )
+        }
+      </div>
+    </details>
+
+    <div class="zoom" role="group" aria-label="Zoom">
+      <button type="button" id="zoom-in" aria-label="Zoom in" title="Zoom in (Ctrl + scroll)">+</button>
+      <button type="button" id="zoom-out" aria-label="Zoom out" title="Zoom out (Ctrl + scroll)">−</button>
+      <button type="button" id="zoom-fit" aria-label="Show the whole map" title="Show the whole map">⤢</button>
+    </div>
+
+    <dialog class="lightbox" id="lightbox" aria-label="Photograph">
+      <img id="lightbox-img" alt="" />
+      <p id="lightbox-caption"></p>
+      <button type="button" class="lb-prev" id="lightbox-prev" aria-label="Previous photograph">‹</button>
+      <button type="button" class="lb-next" id="lightbox-next" aria-label="Next photograph">›</button>
+      <button type="button" class="lb-close" id="lightbox-close" aria-label="Close">×</button>
+    </dialog>
+
+    <script type="application/json" id="metro-data" set:html={JSON.stringify(data)} />
+
+    <script>
+      type Pt = [number, number];
+      interface Line {
+        id: string;
+        name: string;
+        ja: string;
+        code: string;
+        color: string;
+        kind: string;
+        loop: boolean;
+        sim?: { headway: number; hops: number[]; rush?: number; quiet?: number };
+        nodes: number[];
+        segs: Pt[][];
+      }
+      interface Node {
+        id: number;
+        en: string;
+        ja: string;
+        x: number;
+        y: number;
+        l: [number, number, string];
+        lines: number[];
+        codes: { code: string; line: number }[];
+      }
+      interface Section {
+        title: string;
+        href: string;
+        go?: boolean; // leads straight to the other map
+        items: { title: string; note?: string; href?: string }[];
+      }
+      interface Photo {
+        place: string;
+        src: string;
+        thumb: string;
+        w: number;
+        h: number;
+        date?: string;
+      }
+      interface Train {
+        line: number;
+        dest: string;
+        stops: number[];
+        times: number[];
+        el?: SVGGElement;
+      }
+
+      const data = JSON.parse(document.getElementById('metro-data')!.textContent!) as {
+        start: { x: number; y: number };
+        lines: Line[];
+        nodes: Node[];
+        line2: number;
+        geo: {
+          width: number;
+          height: number;
+          zoom: number;
+          start: { x: number; y: number };
+          nodes: [number, number, number, number, string][];
+          lines: { segs: Pt[][]; path: string }[];
+        };
+        trainFiles: string[];
+        origin: string;
+        sections: Record<string, Section>;
+        photos: Record<string, Photo[]>;
+        places: Record<string, { name: string; ja?: string; kind: string; note?: string; link?: string; photo?: { src: string; alt: string; credit?: string; source?: string } }[]>;
+        boards: Record<string, { line: string; source: string; fetched: string; names: string[]; days: Record<string, { name: string; rows: number[][] }[]> }>;
+      };
+
+      const vp = document.getElementById('viewport')!;
+      const svg = document.getElementById('map')!;
+      const trainLayer = document.getElementById('trains')!;
+      const panel = document.getElementById('panel')!;
+      const panelBody = document.getElementById('panel-body')!;
+      const clockEl = document.getElementById('clock')!;
+      const runningEl = document.getElementById('running')!;
+      const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const NS = 'http://www.w3.org/2000/svg';
+
+      const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+      const hhmm = (minutes: number) => {
+        const m = Math.floor(minutes) % 1440;
+        return `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+      };
+
+      // ------------------------------------------------------------ Panning
+      // --------------------------------------------------------------- Zoom
+      // Ctrl + scroll (or a trackpad pinch) zooms the map instead of the whole
+      // page, keeping whatever is under the pointer where it is.
+      const world = document.querySelector<HTMLElement>('.world')!;
+      const full = (svg as unknown as SVGSVGElement).viewBox.baseVal;
+      let zoom = 1;
+      let view: 'diagram' | 'geo' = 'diagram';
+      // How far out is far enough to see the whole map, and how far in is useful.
+      // Nothing covers the side of the map any more: the bar is above it and
+      // the controls sit in a corner.
+      const signWidth = () => 0;
+      const fitZoom = () => Math.min((vp.clientWidth - signWidth()) / full.width, vp.clientHeight / full.height) * 0.92;
+      const zoomLimits = () => (view === 'geo' ? [Math.min(fitZoom(), 1), 60000 / full.width] : [Math.min(fitZoom(), 0.3), 2.5]);
+      function setZoom(next: number, cx?: number, cy?: number, force = false) {
+        const [least, most] = zoomLimits();
+        next = Math.min(most, Math.max(least, next));
+        if (next === zoom && !force) return;
+        const frame = vp.getBoundingClientRect();
+        cx ??= frame.left + frame.width / 2;
+        cy ??= frame.top + frame.height / 2;
+        const before = svg.getBoundingClientRect();
+        const mx = (cx - before.left) / zoom;
+        const my = (cy - before.top) / zoom;
+        zoom = next;
+        // Zoomed in far enough, stations with photographs show one of them.
+        svg.classList.toggle('zoomed-in', zoom >= (view === 'geo' ? data.geo.zoom * 0.8 : 1.4));
+        // On the physical map, markers and labels stay the same size on screen.
+        svg.style.setProperty('--z', String(zoom));
+        // Pulled far back, only the stations that hold something are marked.
+        svg.classList.toggle('far', view === 'geo' && zoom < data.geo.zoom * 0.5);
+        for (const el of [svg as HTMLElement, world]) {
+          el.style.width = `${full.width * zoom}px`;
+          el.style.height = `${full.height * zoom}px`;
+        }
+        const after = svg.getBoundingClientRect();
+        vp.scrollLeft += after.left + mx * zoom - cx;
+        vp.scrollTop += after.top + my * zoom - cy;
+      }
+      vp.addEventListener(
+        'wheel',
+        (e) => {
+          if (!e.ctrlKey && !e.metaKey) return;
+          e.preventDefault();
+          setZoom(zoom * Math.exp(-e.deltaY * 0.002), e.clientX, e.clientY);
+        },
+        { passive: false },
+      );
+      document.getElementById('zoom-in')!.addEventListener('click', () => setZoom(zoom * 1.3));
+      document.getElementById('zoom-out')!.addEventListener('click', () => setZoom(zoom / 1.3));
+      document.getElementById('zoom-fit')!.addEventListener('click', () => {
+        setZoom(fitZoom());
+        centerOn(full.width / 2 - signWidth() / 2 / zoom, full.height / 2, false);
+      });
+
+      function centerOn(x: number, y: number, smooth = true) {
+        // The map sits inside some empty space, so that its edges can be
+        // scrolled out from under the sign and the panel.
+        const frame = vp.getBoundingClientRect();
+        const map = svg.getBoundingClientRect();
+        vp.scrollTo({
+          left: map.left - frame.left + vp.scrollLeft + x * zoom - vp.clientWidth / 2,
+          top: map.top - frame.top + vp.scrollTop + y * zoom - vp.clientHeight / 2,
+          behavior: smooth && !still ? 'smooth' : 'auto',
+        });
+      }
+      {
+        // The resting view: the loop in the middle of the space the sign leaves free.
+        const covered = 0;
+        const homeX = () => data.start.x - covered / 2 / zoom;
+
+        // The opening: start close in on Tokyo, draw every line while pulling
+        // back, then bring the stations and trains in together. It plays once
+        // per visit (add ?intro to the address to see it again), and not at all
+        // if the address points at a station or the visitor prefers less motion.
+        let seen = false;
+        try {
+          seen = sessionStorage.getItem('intro') === '1';
+          sessionStorage.setItem('intro', '1');
+        } catch {
+          // Storage can be unavailable; the opening then simply plays each time.
+        }
+        const replay = new URLSearchParams(location.search).has('intro');
+        const wantGeo = new URLSearchParams(location.search).get('view') === 'physical';
+        if (still || location.hash || wantGeo || (seen && !replay)) {
+          centerOn(homeX(), data.start.y, false);
+        } else {
+          const START = 1.7; // how far zoomed in the opening begins
+          const DRAW = 1000; // milliseconds to draw one line
+          const STAGGER = 80; // delay between one line starting and the next
+          const tokyo = data.nodes.find((n) => n.en === data.origin) ?? { x: data.start.x, y: data.start.y };
+          const drawn = Array.from(svg.querySelectorAll<SVGPathElement>('path.line:not(.excursion)'))
+            .map((path) => {
+              const from = path.getPointAtLength(0);
+              return { path, length: path.getTotalLength(), far: Math.hypot(from.x - tokyo.x, from.y - tokyo.y) };
+            })
+            .sort((a, b) => a.far - b.far); // lines that begin nearest Tokyo go first
+          const total = DRAW + STAGGER * (drawn.length - 1);
+
+          svg.classList.add('intro');
+          // Hide each line by making it one long dash, pushed back by its own length...
+          drawn.forEach(({ path, length }) => {
+            path.style.transition = 'none';
+            path.style.strokeDasharray = `${length}`;
+            path.style.strokeDashoffset = `${length}`;
+          });
+          setZoom(START);
+          centerOn(tokyo.x, tokyo.y, false);
+          svg.getBoundingClientRect(); // make the browser take that in before anything moves
+          // ...then slide the dash forward, one line after another.
+          drawn.forEach(({ path }, i) => {
+            path.style.transition = `stroke-dashoffset ${DRAW}ms ease-in-out ${i * STAGGER}ms`;
+            path.style.strokeDashoffset = '0';
+          });
+
+          const began = performance.now();
+          const step = (now: number) => {
+            const t = Math.min(1, (now - began) / total);
+            const e = t * t * (3 - 2 * t);
+            setZoom(START + (1 - START) * e);
+            centerOn(tokyo.x + (homeX() - tokyo.x) * e, tokyo.y + (data.start.y - tokyo.y) * e, false);
+            if (t < 1) {
+              requestAnimationFrame(step);
+              return;
+            }
+            svg.classList.remove('intro');
+            drawn.forEach(({ path }) => {
+              path.style.strokeDasharray = '';
+              path.style.strokeDashoffset = '';
+              path.style.transition = '';
+            });
+          };
+          requestAnimationFrame(step);
+        }
+      }
+
+      let drag: { x: number; y: number; left: number; top: number } | null = null;
+      let dragged = false;
+      vp.addEventListener('pointerdown', (e) => {
+        if (e.pointerType !== 'mouse' || e.button !== 0) return;
+        drag = { x: e.clientX, y: e.clientY, left: vp.scrollLeft, top: vp.scrollTop };
+        following = null; // taking hold of the map lets go of the train
+        dragged = false;
+      });
+      window.addEventListener('pointermove', (e) => {
+        if (!drag) return;
+        const dx = e.clientX - drag.x;
+        const dy = e.clientY - drag.y;
+        if (!dragged && Math.hypot(dx, dy) < 5) return;
+        dragged = true;
+        vp.classList.add('dragging');
+        vp.scrollLeft = drag.left - dx;
+        vp.scrollTop = drag.top - dy;
+      });
+      // So does scrolling it by wheel or by touch.
+      vp.addEventListener('wheel', (e) => !e.ctrlKey && !e.metaKey && (following = null), { passive: true });
+      vp.addEventListener('touchmove', () => (following = null), { passive: true });
+
+      // Keep a train in the middle of the space the sign and the panel leave
+      // free, closing a fifth of the gap each time so the map glides.
+      function follow(at: { x: number; y: number }) {
+        const wide = window.innerWidth > 640;
+        const box = panel.getBoundingClientRect();
+        // The station panel opens on the right, under the controls.
+        const left = 0;
+        const top = vp.getBoundingClientRect().top;
+        const right = wide && !panel.hidden ? box.left : window.innerWidth;
+        const bottom = !wide && !panel.hidden ? box.top : window.innerHeight;
+        const map = svg.getBoundingClientRect();
+        vp.scrollLeft += (map.left + at.x * zoom - (left + right) / 2) * 0.2;
+        vp.scrollTop += (map.top + at.y * zoom - (top + bottom) / 2) * 0.2;
+      }
+
+      window.addEventListener('pointerup', () => {
+        drag = null;
+        vp.classList.remove('dragging');
+      });
+
+      // -------------------------------------------------------- Tokyo time
+      // Trains run on a "service day" that starts around 03:00, so 00:30 is
+      // treated as 24:30 on the previous day's timetable.
+      function tokyoNow() {
+        const t = new Date(Date.now() + 9 * 3600 * 1000);
+        let minutes = t.getUTCHours() * 60 + t.getUTCMinutes() + t.getUTCSeconds() / 60 + t.getUTCMilliseconds() / 60000;
+        let day = t.getUTCDay();
+        if (minutes < 180) {
+          minutes += 1440;
+          day = (day + 6) % 7;
+        }
+        const clock = `${String(t.getUTCHours()).padStart(2, '0')}:${String(t.getUTCMinutes()).padStart(2, '0')}:${String(t.getUTCSeconds()).padStart(2, '0')}`;
+        // Some lines run a different timetable on Saturdays than on Sundays.
+        const dayType = day === 6 ? 'saturday' : day === 0 ? 'holiday' : 'weekday';
+        return { minutes, holiday: day === 0 || day === 6, dayType, clock };
+      }
+
+      // ---------------------------------------------------------- Geometry
+      const measure = () =>
+        data.lines.map((line) =>
+          line.segs.map((seg) => seg.slice(1).reduce((sum, p, i) => sum + Math.hypot(p[0] - seg[i][0], p[1] - seg[i][1]), 0)),
+        );
+      let segLength = measure();
+
+      // -------------------------------------------------------------- Views
+      // The diagram and the physical map share every station, line and train;
+      // switching just moves them all to the other set of positions.
+      const stationEls = Array.from(svg.querySelectorAll<SVGGElement>('.station'));
+      const linePaths = data.lines.map((_, i) => Array.from(svg.querySelectorAll<SVGPathElement>(`path[data-line="${i}"]`)));
+      const diagram = {
+        width: full.width,
+        height: full.height,
+        zoom: 1,
+        start: { ...data.start },
+        nodes: data.nodes.map((n) => [n.x, n.y, n.l[0], n.l[1], n.l[2]] as [number, number, number, number, string]),
+        lines: data.lines.map((line, i) => ({ segs: line.segs, path: linePaths[i][0].getAttribute('d')! })),
+      };
+      function applyView(next: 'diagram' | 'geo') {
+        const layout = next === 'geo' ? data.geo : diagram;
+        view = next;
+        svg.classList.toggle('geo', next === 'geo');
+        svg.setAttribute('viewBox', `0 0 ${layout.width} ${layout.height}`);
+        layout.lines.forEach((line, i) => {
+          linePaths[i].forEach((path) => path.setAttribute('d', line.path));
+          data.lines[i].segs = line.segs;
+        });
+        segLength = measure();
+        layout.nodes.forEach(([x, y, dx, dy, anchor], i) => {
+          data.nodes[i].x = x;
+          data.nodes[i].y = y;
+          const el = stationEls[i];
+          el.setAttribute('transform', `translate(${x} ${y})`);
+          el.querySelectorAll<SVGTextElement>('text.name, text.page').forEach((text) => {
+            text.setAttribute('x', String(dx));
+            text.setAttribute('y', String(text.classList.contains('page') ? dy + data.line2 : dy));
+            text.setAttribute('text-anchor', anchor);
+          });
+          el.querySelector('.peek')?.setAttribute('transform', `translate(-34 ${anchor === 'middle' && dy < 0 ? 16 : -66})`);
+        });
+        data.start = { ...layout.start };
+        following = null;
+        setZoom(layout.zoom, undefined, undefined, true);
+        const covered = 0;
+        centerOn(layout.start.x - covered / 2 / zoom, layout.start.y, false);
+        document.querySelectorAll<HTMLButtonElement>('[data-view]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.view === next)));
+      }
+      document.querySelectorAll<HTMLButtonElement>('[data-view]').forEach((button) => {
+        button.addEventListener('click', () => button.dataset.view !== view && applyView(button.dataset.view as 'diagram' | 'geo'));
+      });
+
+      // A point some distance along one station-to-station piece of a line.
+      function onSeg(line: number, index: number, distance: number, forward: boolean) {
+        const seg = data.lines[line].segs[index];
+        let left = distance;
+        for (let k = 0; k < seg.length - 1; k++) {
+          const dx = seg[k + 1][0] - seg[k][0];
+          const dy = seg[k + 1][1] - seg[k][1];
+          const l = Math.hypot(dx, dy);
+          if (left <= l || k === seg.length - 2) {
+            const t = l ? Math.min(1, left / l) : 0;
+            return { x: seg[k][0] + dx * t, y: seg[k][1] + dy * t, angle: (Math.atan2(dy, dx) * 180) / Math.PI + (forward ? 0 : 180) };
+          }
+          left -= l;
+        }
+        return { x: seg[0][0], y: seg[0][1], angle: 0 };
+      }
+
+      // Where a train is, `f` of the way from stop `a` to stop `b` on a line.
+      function locate(line: number, a: number, b: number, f: number) {
+        if (data.lines[line].loop) {
+          // On the loop, neighbours wrap round: the piece after the last station leads back to the first.
+          const n = data.lines[line].nodes.length;
+          const onward = b === (a + 1) % n;
+          const index = onward ? a : b;
+          return onSeg(line, index, segLength[line][index] * (onward ? f : 1 - f), onward);
+        }
+        const forward = b > a;
+        const from = Math.min(a, b);
+        const to = Math.max(a, b);
+        let total = 0;
+        for (let i = from; i < to; i++) total += segLength[line][i];
+        let left = total * (forward ? f : 1 - f);
+        for (let i = from; i < to; i++) {
+          if (left > segLength[line][i] && i < to - 1) {
+            left -= segLength[line][i];
+            continue;
+          }
+          return onSeg(line, i, left, forward);
+        }
+        return onSeg(line, from, 0, forward);
+      }
+
+      // For lines run on typical journey times: which hop a train is on, and
+      // how far through it, `t` minutes after setting off. Each hop ends with
+      // a short wait at the platform, and trains ease away and back in.
+      const WAIT = 0.4;
+      function alongHops(hops: number[], t: number) {
+        let i = 0;
+        while (i < hops.length - 1 && t >= hops[i]) {
+          t -= hops[i];
+          i++;
+        }
+        const moving = Math.max(hops[i] - WAIT, hops[i] * 0.5);
+        const u = Math.max(0, Math.min(1, t / moving));
+        return { i, f: u * u * (3 - 2 * u) };
+      }
+
+      function makeTrain(line: number, illustrative: boolean) {
+        const g = document.createElementNS(NS, 'g') as SVGGElement;
+        g.setAttribute('class', illustrative ? 'train sim' : 'train real');
+        g.dataset.line = String(line);
+        const body = document.createElementNS(NS, 'rect');
+        body.setAttribute('x', '-8');
+        body.setAttribute('y', '-4.5');
+        body.setAttribute('width', '16');
+        body.setAttribute('height', '9');
+        body.setAttribute('rx', '3');
+        g.append(body);
+        trainLayer.append(g);
+        return g;
+      }
+
+      // On the physical map trains, like stations, keep their size on screen.
+      const put = (el: SVGGElement, at: { x: number; y: number; angle: number }) =>
+        el.setAttribute(
+          'transform',
+          `translate(${at.x.toFixed(1)} ${at.y.toFixed(1)}) rotate(${at.angle.toFixed(0)})${view === 'geo' ? ` scale(${(1 / zoom).toFixed(3)})` : ''}`,
+        );
+
+      // ------------------------------------------- Timetabled trains (Metro)
+      let trains: Train[] = [];
+      let loadedFor: boolean | null = null;
+      let selectedTrain: Train | null = null;
+      let following: Train | null = null; // the train the map is riding along with
+      let focus: number | null = null;
+      const timetabled = new Set<number>(); // lines whose trains follow a timetable
+      const DWELL = 1 / 3; // minutes a train is assumed to wait at each stop
+
+      async function load(holiday: boolean) {
+        loadedFor = holiday;
+        try {
+          const day = holiday ? 'holiday' : 'weekday';
+          // Tokyo Metro (from ODPT) and the other lines (from Mini Tokyo 3D) come as separate files.
+          const files = await Promise.all(
+            data.trainFiles.map((file) => `${file}${day}.json`).map((url) =>
+              fetch(url)
+                .then((res) => (res.ok ? (res.json() as Promise<{ lines?: string[]; dests: string[]; trains: number[][] }>) : null))
+                .catch(() => null),
+            ),
+          );
+          if (data.trainFiles.length && !files[0]) throw new Error('no timetable');
+          trains.forEach((t) => t.el?.remove());
+          trains = [];
+          timetabled.clear();
+          for (const file of files) {
+            if (!file) continue;
+            // The Metro file numbers lines as the map does; the other file names them.
+            const lineOf = (n: number) => (file.lines ? data.lines.findIndex((l) => l.id === file.lines![n]) : n);
+            for (const r of file.trains) {
+              const line = lineOf(r[0]);
+              if (line < 0) continue;
+              const stops = [r[2]];
+              const times = [r[3]];
+              for (let i = 4; i < r.length; i += 2) {
+                stops.push(r[i]);
+                times.push(times[times.length - 1] + r[i + 1]);
+              }
+              timetabled.add(line);
+              trains.push({ line, dest: file.dests[r[1]].replace(/<.*?>/g, ''), stops, times });
+            }
+          }
+          // Lines that now have a real timetable no longer need stand-in trains.
+          simPools.forEach((pool, line) => timetabled.has(line) && pool.forEach((el) => (el.style.display = 'none')));
+          openFromAddress();
+        } catch {
+          runningEl.textContent = 'The timetable could not be loaded.';
+        }
+      }
+
+      function progress(train: Train, now: number) {
+        let i = 0;
+        while (i < train.times.length - 2 && now >= train.times[i + 1]) i++;
+        const span = train.times[i + 1] - train.times[i];
+        const moving = Math.max(span - DWELL, span * 0.5, 0.05);
+        const f = Math.max(0, Math.min(1, (now - train.times[i]) / moving));
+        return { i, f: f * f * (3 - 2 * f) };
+      }
+
+      // ---------------------------------------- Illustrative trains (others)
+      // Run on typical journey times; the same for everyone, and derived from the clock.
+      const simPools = new Map<number, SVGGElement[]>();
+      function drawSim(minutes: number, holiday: boolean) {
+        // These lines shut overnight, roughly 01:00 to 04:45.
+        const closed = minutes > 1440 + 60 || minutes < 285;
+        // Trains come more often at weekday rush hours and less often early and late.
+        const hour = minutes / 60;
+        const rushHour = !holiday && ((hour >= 7 && hour < 9.5) || (hour >= 17 && hour < 20));
+        const quietHour = hour < 6.5 || hour >= 22.5;
+        let shown = 0;
+        data.lines.forEach((line, li) => {
+          if (!line.sim || timetabled.has(li)) return;
+          const pool = simPools.get(li) ?? [];
+          simPools.set(li, pool);
+          let used = 0;
+          const show = (index: number, distanceFraction: number, forward: boolean) => {
+            const el = (pool[used] ??= makeTrain(li, true));
+            used++;
+            el.style.display = '';
+            el.classList.toggle('dim', focus !== null && focus !== li);
+            put(el, onSeg(li, index, segLength[li][index] * distanceFraction, forward));
+          };
+          const { hops } = line.sim;
+          const headway = (rushHour ? line.sim.rush : quietHour ? line.sim.quiet : undefined) ?? line.sim.headway;
+          const back = [...hops].reverse();
+          const total = hops.reduce((sum, h) => sum + h, 0);
+          const last = hops.length - 1;
+          if (!closed && line.loop) {
+            // Trains spaced evenly round the loop, in both directions.
+            const count = Math.max(1, Math.round(total / headway));
+            for (let k = 0; k < count; k++) {
+              const inner = alongHops(hops, (minutes + (k * total) / count) % total);
+              show(inner.i, inner.f, true);
+              const outer = alongHops(back, (minutes + ((k + 0.5) * total) / count) % total);
+              show(last - outer.i, 1 - outer.f, false);
+            }
+          } else if (!closed) {
+            // A train sets off from each end every `headway` minutes.
+            for (const outbound of [true, false]) {
+              const lag = outbound ? 0 : headway / 2;
+              for (let k = Math.ceil((minutes - lag - total) / headway); k * headway + lag <= minutes; k++) {
+                const at = alongHops(outbound ? hops : back, Math.min(total - 1e-6, minutes - lag - k * headway));
+                if (outbound) show(at.i, at.f, true);
+                else show(last - at.i, 1 - at.f, false);
+              }
+            }
+          }
+          for (let i = used; i < pool.length; i++) pool[i].style.display = 'none';
+          shown += used;
+        });
+        return shown;
+      }
+
+      // ------------------------------------------------------- Day and night
+      // The map goes dark between sunset and sunrise in Tokyo. The hours are
+      // rough monthly averages. Add ?theme=day or ?theme=night to the address
+      // to hold it one way.
+      const SUNRISE = [6.8, 6.5, 5.9, 5.2, 4.7, 4.4, 4.6, 5.0, 5.3, 5.7, 6.2, 6.7];
+      const SUNSET = [16.8, 17.3, 17.8, 18.2, 18.6, 19.0, 18.9, 18.5, 17.8, 17.1, 16.6, 16.5];
+      const held = new URLSearchParams(location.search).get('theme');
+      function applyDaylight() {
+        const t = new Date(Date.now() + 9 * 3600 * 1000);
+        const hour = t.getUTCHours() + t.getUTCMinutes() / 60;
+        const dark = held ? held === 'night' : hour < SUNRISE[t.getUTCMonth()] || hour >= SUNSET[t.getUTCMonth()];
+        document.documentElement.classList.toggle('night', dark);
+      }
+      applyDaylight();
+
+      function draw() {
+        applyDaylight();
+        const { minutes, holiday, clock } = tokyoNow();
+        clockEl.textContent = clock;
+        const standIns = drawSim(minutes, holiday);
+        if (loadedFor !== holiday) {
+          load(holiday);
+          return;
+        }
+        let count = standIns;
+        for (const train of trains) {
+          const active = minutes >= train.times[0] && minutes <= train.times[train.times.length - 1];
+          if (!active) {
+            if (train.el) {
+              train.el.remove();
+              train.el = undefined;
+              if (selectedTrain === train) closePanel();
+            }
+            continue;
+          }
+          count++;
+          if (!train.el) {
+            train.el = makeTrain(train.line, false);
+            train.el.addEventListener('click', (e) => {
+              e.stopPropagation();
+              if (!dragged) showTrain(train);
+            });
+          }
+          train.el.classList.toggle('dim', focus !== null && focus !== train.line);
+          const { i, f } = progress(train, minutes);
+          const at = locate(train.line, train.stops[i], train.stops[i + 1], f);
+          put(train.el, at);
+          if (train === following) follow(at);
+        }
+        if (trains.length || !data.trainFiles.length) {
+          runningEl.textContent = count ? `${count} trains running` : 'No trains are running. Service resumes around 04:30.';
+        }
+        if (selectedTrain) showTrain(selectedTrain, true);
+      }
+
+      // Smooth when the tab is visible, and cheap: about twelve updates a second.
+      let lastDraw = 0;
+      function frame(time: number) {
+        if (time - lastDraw > (still ? 1000 : 80)) {
+          lastDraw = time;
+          draw();
+        }
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+
+      // ------------------------------------------------------------- Panel
+      const ring = (code: string, line: Line) => {
+        const letters = code.replace(/\d+/g, '');
+        const number = code.replace(/\D+/g, '');
+        return `<span class="code${line.kind === 'metro' ? '' : ' square'}" style="--c:${line.color}"><b>${esc(letters)}</b>${number ? `<i>${number}</i>` : ''}</span>`;
+      };
+
+      function openPanel(html: string) {
+        panelBody.innerHTML = html;
+        panel.hidden = false;
+      }
+
+      function closePanel() {
+        panel.hidden = true;
+        selectedTrain = null;
+        following = null;
+        svg.querySelectorAll('.selected').forEach((el) => el.classList.remove('selected'));
+      }
+      document.getElementById('panel-close')!.addEventListener('click', () => {
+        closePanel();
+        history.replaceState(null, '', location.pathname);
+      });
+
+      // An address ending in #Shibuya opens the map on that station.
+      let opened = false;
+      function openFromAddress() {
+        if (opened) return;
+        opened = true;
+        const name = decodeURIComponent(location.hash.slice(1)).toLowerCase();
+        const node = name && data.nodes.find((n) => n.en.toLowerCase() === name);
+        if (!node) return;
+        centerOn(node.x, node.y, false);
+        showStation(node.id);
+      }
+
+      let shown: Photo[] = [];
+
+      function showStation(id: number) {
+        // Some stations are the way to the other map.
+        if (data.sections[id]?.go) {
+          location.href = data.sections[id].href;
+          return;
+        }
+        const node = data.nodes[id];
+        selectedTrain = null;
+        following = null;
+        svg.querySelectorAll('.selected').forEach((el) => el.classList.remove('selected'));
+        svg.querySelector(`.station[data-node="${id}"]`)?.classList.add('selected');
+        history.replaceState(null, '', `#${encodeURIComponent(node.en)}`);
+
+        const { minutes, dayType } = tokyoNow();
+        // The next few trains calling here, grouped by line and direction.
+        const groups = new Map<string, { line: number; rows: { time: number; dest: string }[] }>();
+        for (const train of trains) {
+          if (train.times[train.times.length - 1] < minutes) continue;
+          const stations = data.lines[train.line].nodes;
+          for (let k = 0; k < train.stops.length - 1; k++) {
+            if (stations[train.stops[k]] !== id || train.times[k] < minutes) continue;
+            const size = stations.length;
+            const onward = data.lines[train.line].loop ? train.stops[k + 1] === (train.stops[k] + 1) % size : train.stops[k + 1] > train.stops[k];
+            const key = `${train.line}:${onward}`;
+            const group = groups.get(key) ?? { line: train.line, rows: [] };
+            if (group.rows.length < 3) group.rows.push({ time: train.times[k], dest: train.dest });
+            groups.set(key, group);
+            break;
+          }
+        }
+
+        const codes = node.codes.map((c) => ring(c.code, data.lines[c.line])).join('');
+        const departures = [...groups.values()]
+          .sort((a, b) => a.line - b.line)
+          .map((group) => {
+            const line = data.lines[group.line];
+            const first = group.rows[0];
+            const rest = group.rows.slice(1).map((r) => hhmm(r.time)).join(', ');
+            const where = first.dest.includes(' loop') ? esc(first.dest) : `for ${esc(first.dest)}`;
+            return `<li><span class="ring${line.kind === 'metro' ? '' : ' square'}" style="--c:${line.color}">${esc(line.code)}</span><span><strong>${hhmm(first.time)}</strong> ${where}${rest ? `<small>then ${rest}</small>` : ''}</span></li>`;
+          })
+          .join('');
+        // Departures for lines outside ODPT, from a saved station timetable.
+        const board = data.boards[id];
+        let boardHtml = '';
+        if (board) {
+          const line = data.lines.find((l) => l.name.includes(board.line)) ?? data.lines[node.lines[0]];
+          const rows = (board.days[dayType] ?? board.days.weekday ?? [])
+            .map((direction) => {
+              const next = direction.rows.filter((r) => r[0] >= minutes).slice(0, 3);
+              if (!next.length) return '';
+              const [first, ...rest] = next;
+              const type = board.names[first[2]];
+              return `<li><span class="ring square" style="--c:${line.color}">${esc(line.code)}</span><span><strong>${hhmm(first[0])}</strong> for ${esc(board.names[first[1]])}${type && type !== 'Local' ? ` <em>${esc(type)}</em>` : ''}${rest.length ? `<small>then ${rest.map((r) => hhmm(r[0])).join(', ')}</small>` : ''}</span></li>`;
+            })
+            .join('');
+          boardHtml = rows
+            ? `<ul class="departures">${rows}</ul><p class="quiet small">${esc(board.line)} times from ${esc(board.source)}, saved ${esc(board.fetched)}.</p>`
+            : '<p class="quiet">Nothing more is timetabled today.</p>';
+        }
+
+        // Only lines with a timetable can have run out of departures for the day.
+        const onMetro = data.trainFiles.length > 0 && node.lines.some((l) => data.lines[l].kind === 'metro' || timetabled.has(l));
+        const timetable = departures ? `<ul class="departures">${departures}</ul>` : onMetro && !board ? '<p class="quiet">Nothing more is timetabled today.</p>' : '';
+        const hasTimes = Boolean(timetable || boardHtml);
+        const departuresHtml = hasTimes
+          ? `<h3>Next departures</h3>${timetable}${boardHtml}`
+          : '';
+        // Lines without a timetable: say how often trains come, roughly.
+        const roughly = node.lines
+          .map((l) => data.lines[l])
+          .filter((l) => l.sim && !timetabled.has(data.lines.indexOf(l)))
+          .map((l) => `<p class="quiet gap">${esc(l.name)}: a train about every ${l.sim!.headway} minutes.</p>`)
+          .join('');
+
+        const section = data.sections[id];
+        const sectionHtml = section
+          ? `<h3>${esc(section.title)}</h3><ul class="found">${section.items
+              .map((item) => {
+                const inner = `<strong>${esc(item.title)}</strong>${item.note ? `<span>${esc(item.note)}</span>` : ''}`;
+                return `<li>${item.href ? `<a href="${esc(item.href)}">${inner}</a>` : `<div>${inner}</div>`}</li>`;
+              })
+              .join('')}</ul><p class="more"><a href="${esc(section.href)}">All of ${esc(section.title)} →</a></p>`
+          : '';
+
+        const likedHere = data.places[id] ?? [];
+        const placesHtml = likedHere.length
+          ? `<h3>Places I like here</h3><ul class="found">${likedHere
+              .map((place) => {
+                const words = `<strong>${esc(place.name)}${place.ja ? ` <small lang="ja">${esc(place.ja)}</small>` : ''}</strong><span>${esc(place.kind)}${place.note ? ` · ${esc(place.note)}` : ''}</span>`;
+                // With a picture, it sits to the left of the words.
+                const pic = place.photo;
+                const inner = pic ? `<img src="${esc(pic.src)}" alt="${esc(pic.alt)}" loading="lazy" /><p class="words">${words}</p>` : words;
+                const cls = pic ? ' class="pictured"' : '';
+                const credit = pic?.credit
+                  ? `<p class="credit">Photo: ${pic.source ? `<a href="${esc(pic.source)}">${esc(pic.credit)}</a>` : esc(pic.credit)}</p>`
+                  : '';
+                return `<li>${place.link ? `<a${cls} href="${esc(place.link)}">${inner}</a>` : `<div${cls}>${inner}</div>`}${credit}</li>`;
+              })
+              .join('')}</ul>`
+          : '';
+
+        shown = data.photos[id] ?? [];
+        const places = [...new Set(shown.map((p) => p.place))];
+        const photosHtml = shown.length
+          ? `<h3>Pictures I took here</h3>${places
+              .map(
+                (place) =>
+                  `<p class="place">${esc(place)}</p><div class="shots">${shown
+                    .map((p, i) =>
+                      p.place === place
+                        ? `<button type="button" data-shot="${i}" style="aspect-ratio:${p.w}/${p.h}"><img src="${esc(p.thumb)}" alt="${esc(place)}" loading="lazy" /></button>`
+                        : '',
+                    )
+                    .join('')}</div>`,
+              )
+              .join('')}`
+          : '';
+
+        openPanel(`
+          <div class="codes">${codes}</div>
+          <h2>${esc(node.en)}</h2>
+          <p class="ja" lang="ja">${esc(node.ja)}</p>
+          ${sectionHtml}
+          ${placesHtml}
+          ${departuresHtml}${roughly}
+          ${photosHtml}
+        `);
+      }
+
+      function showTrain(train: Train, refresh = false) {
+        const { minutes } = tokyoNow();
+        const { i } = progress(train, minutes);
+        const line = data.lines[train.line];
+        const next = data.nodes[line.nodes[train.stops[i + 1]]];
+        const wait = Math.max(0, train.times[i + 1] - minutes);
+        const due = wait < 1 ? `in ${Math.round(wait * 60)} s` : `in ${Math.floor(wait)} min`;
+        const riding =
+          following === train
+            ? 'Following this train. Drag the map to let go.'
+            : '<button type="button" class="follow" data-follow>Follow this train</button>';
+        if (!refresh) {
+          svg.querySelectorAll('.selected').forEach((el) => el.classList.remove('selected'));
+          train.el?.classList.add('selected');
+          selectedTrain = train;
+          following = train;
+        } else if (panelBody.dataset.next === `${i}`) {
+          // Same stretch as before: only the countdown and the follow note change.
+          const dueEl = document.getElementById('next-in');
+          const noteEl = document.getElementById('riding');
+          if (dueEl) dueEl.textContent = due;
+          if (noteEl && noteEl.dataset.on !== String(following === train)) {
+            noteEl.dataset.on = String(following === train);
+            noteEl.innerHTML = riding;
+          }
+          return;
+        }
+        panelBody.dataset.next = `${i}`;
+        const calls = train.stops
+          .slice(i + 1)
+          .map((s, k) => `<li><span>${hhmm(train.times[i + 1 + k])}</span>${esc(data.nodes[line.nodes[s]].en)}</li>`)
+          .join('');
+        openPanel(`
+          <div class="codes"><span class="ring big${line.kind === 'metro' ? '' : ' square'}" style="--c:${line.color}">${esc(line.code)}</span></div>
+          <h2>${esc(line.name)}</h2>
+          <p class="ja">${train.dest.includes(' loop') ? esc(train.dest) : `for ${esc(train.dest)}`}</p>
+          <h3>Next stop</h3>
+          <p class="next">${esc(next.en)} <small>${hhmm(train.times[i + 1])} · <span id="next-in">${due}</span></small></p>
+          <p class="quiet small" id="riding" data-on="true">Following this train. Drag the map to let go.</p>
+          <h3>Calling at</h3>
+          <ol class="calls">${calls}</ol>
+        `);
+      }
+
+      svg.querySelectorAll<SVGGElement>('.station').forEach((el) => {
+        el.addEventListener('click', () => !dragged && showStation(Number(el.dataset.node)));
+        el.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            showStation(Number(el.dataset.node));
+          }
+        });
+      });
+
+      // On a narrow screen the page links fold away behind the Menu button.
+      const menu = document.getElementById('top-menu')!;
+      menu.addEventListener('click', () => {
+        const open = document.querySelector('.top')!.classList.toggle('open');
+        menu.setAttribute('aria-expanded', String(open));
+      });
+
+      document.querySelectorAll<HTMLButtonElement>('[data-goto]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const node = data.nodes[Number(button.dataset.goto)];
+          centerOn(node.x, node.y);
+          showStation(node.id);
+        });
+      });
+
+      // ---------------------------------------------------------- Lightbox
+      const lightbox = document.getElementById('lightbox') as HTMLDialogElement;
+      const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+      const lightboxCaption = document.getElementById('lightbox-caption')!;
+      let current = 0;
+
+      function showPhoto(index: number) {
+        if (!shown.length) return;
+        current = (index + shown.length) % shown.length;
+        const photo = shown[current];
+        lightboxImg.src = photo.src;
+        lightboxImg.alt = photo.place;
+        lightboxCaption.textContent = [photo.place, photo.date, `${current + 1} of ${shown.length}`].filter(Boolean).join(' · ');
+        if (!lightbox.open) lightbox.showModal();
+      }
+
+      panelBody.addEventListener('click', (e) => {
+        if ((e.target as HTMLElement).closest('[data-follow]')) following = selectedTrain;
+        const button = (e.target as HTMLElement).closest<HTMLElement>('[data-shot]');
+        if (button) showPhoto(Number(button.dataset.shot));
+      });
+      document.getElementById('lightbox-prev')!.addEventListener('click', () => showPhoto(current - 1));
+      document.getElementById('lightbox-next')!.addEventListener('click', () => showPhoto(current + 1));
+      document.getElementById('lightbox-close')!.addEventListener('click', () => lightbox.close());
+      lightbox.addEventListener('click', (e) => e.target === lightbox && lightbox.close());
+      lightbox.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') showPhoto(current - 1);
+        if (e.key === 'ArrowRight') showPhoto(current + 1);
+      });
+
+      // ------------------------------------------------------------ Legend
+      // Choosing a line fades out all the others.
+      const legendButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.legend button'));
+      legendButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const on = button.getAttribute('aria-pressed') !== 'true';
+          legendButtons.forEach((b) => b.setAttribute('aria-pressed', String(on && b === button)));
+          focus = on ? Number(button.dataset.line) : null;
+          const chosen = focus === null ? null : String(focus);
+          svg.querySelectorAll<SVGElement>('path[data-line]').forEach((el) => el.classList.toggle('dim', chosen !== null && el.dataset.line !== chosen));
+          svg.querySelectorAll<SVGElement>('.station').forEach((el) =>
+            el.classList.toggle('dim', chosen !== null && !el.dataset.lines!.split(' ').includes(chosen)),
+          );
+        });
+      });
+
+      // An address with ?view=physical opens on the physical map.
+      if (new URLSearchParams(location.search).get('view') === 'physical') applyView('geo');
+
+      // On small screens the sign starts folded so the map is visible.
+      if (window.matchMedia('(max-width: 640px)').matches) {
+        document.querySelectorAll<HTMLDetailsElement>('.fold').forEach((d) => (d.open = false));
+      }
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --paper: #f8f8f5;
+    --card: #ffffff;
+    --ink: #14213d;
+    --muted: #68718a;
+    --rule: #d9dce4;
+    --mine: #e6007e;
+    --head: #14213d;
+    --hover: #f0f2f7;
+    --sea: #dce8ee;
+    --coast: #b4c6d1;
+    --sans: 'IBM Plex Sans', 'Hiragino Sans', 'Yu Gothic UI', 'Yu Gothic', 'Noto Sans JP', system-ui, sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+  }
+
+  /* After dark in Tokyo. */
+  :root.night {
+    --paper: #0d1220;
+    --card: #171f33;
+    --ink: #e9ecf3;
+    --muted: #98a2b8;
+    --rule: #2a3450;
+    --mine: #ff4fa8;
+    --head: #080c17;
+    --hover: #222c46;
+    --sea: #070a13;
+    --coast: #26324d;
+    color-scheme: dark;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    overflow: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  p,
+  ul,
+  ol {
+    margin: 0;
+    padding: 0;
+  }
+
+  ul,
+  ol {
+    list-style: none;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+  }
+
+  /* ---------------------------------------------------------------- Map */
+  :root {
+    --bar: 4.5rem;
+  }
+
+  .viewport {
+    position: fixed;
+    inset: var(--bar) 0 0 0;
+    overflow: auto;
+    cursor: grab;
+    scrollbar-width: none;
+    overscroll-behavior: contain;
+  }
+
+  .viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .viewport.dragging {
+    cursor: grabbing;
+  }
+
+  /* Empty space either side, as wide as the sign and the panel, so the ends
+     of the map can be scrolled clear of them. */
+  .world {
+    /* When the whole map is smaller than the window, sit it in the middle. */
+    display: grid;
+    align-content: center;
+    justify-content: center;
+    min-height: calc(100dvh - var(--bar));
+    box-sizing: content-box;
+    padding: 0 24rem 0 6rem;
+    background: var(--paper);
+    user-select: none;
+  }
+
+  #map {
+    display: block;
+  }
+
+  #map path {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: opacity 0.2s;
+  }
+
+  .casing {
+    stroke: var(--paper);
+    stroke-width: calc(var(--lw) + 3px);
+  }
+
+  .line {
+    stroke-width: var(--lw);
+  }
+
+  /* The Yamanote loop is the backbone, so it is drawn heavier. */
+  .line.jr {
+    stroke-width: calc(var(--lw) + 5px);
+  }
+
+  .casing.jr {
+    stroke-width: calc(var(--lw) + 9px);
+  }
+
+  .line.excursion {
+    stroke-width: 4px;
+    stroke-dasharray: 2 9;
+  }
+
+  .casing.excursion {
+    stroke-width: 0;
+  }
+
+  .dim {
+    opacity: 0.12;
+  }
+
+  /* ---- The physical map: lines keep their thickness and markers their size
+     on screen at any zoom, so the whole route to Kyoto stays readable. */
+  #map.geo .line,
+  #map.geo .casing {
+    vector-effect: non-scaling-stroke;
+  }
+
+  #map.geo .mark {
+    transform: scale(calc(1 / var(--z, 1)));
+  }
+
+  #map.geo .line.excursion {
+    stroke-width: var(--lw);
+    stroke-dasharray: none;
+  }
+
+  #map.far .station:not(.section):not(.shots):not(.liked) .mark,
+  #map.far #trains {
+    display: none;
+  }
+
+  .geo-only {
+    display: none;
+  }
+
+  /* Let the land carry on past the edge of the map, so it never looks cut off. */
+  #map.geo {
+    overflow: visible;
+  }
+
+  .backdrop .sea,
+  #map .backdrop .lake {
+    fill: var(--sea);
+  }
+
+  #map .backdrop .land {
+    fill: var(--paper);
+  }
+
+  #map .backdrop .land,
+  #map .backdrop .lake {
+    stroke: var(--coast);
+    stroke-width: 1.5px;
+    vector-effect: non-scaling-stroke;
+  }
+
+  /* The margin around the physical map is sea too. */
+  .viewport:has(#map.geo),
+  .viewport:has(#map.geo) .world {
+    background: var(--sea);
+  }
+
+  #map.geo .geo-only {
+    display: inline;
+  }
+
+  .geo-only .way {
+    fill: var(--card);
+    stroke-width: 2.5;
+  }
+
+  .geo-only text {
+    font-family: var(--sans);
+    font-size: var(--label);
+    font-weight: 500;
+    fill: var(--ink);
+    paint-order: stroke;
+    stroke: var(--paper);
+    stroke-width: 3px;
+    stroke-linejoin: round;
+  }
+
+  /* During the opening, only the lines being drawn are visible. */
+  #map .stations,
+  #map #trains {
+    transition: opacity 0.45s;
+  }
+
+  #map.intro .stations,
+  #map.intro #trains,
+  #map.intro .casing,
+  #map.intro .line.excursion {
+    opacity: 0;
+  }
+
+  .station {
+    cursor: pointer;
+    outline: none;
+    transition: opacity 0.2s;
+  }
+
+  .station .dot {
+    fill: var(--card);
+    stroke-width: 2.5;
+  }
+
+  .station.interchange .dot {
+    stroke: var(--ink);
+  }
+
+  /* Stations with anything at them (a page, pictures, a favourite place)
+     have their dot filled in; the rest are hollow. */
+  .station.has .dot {
+    fill: var(--mine);
+  }
+
+  .station .hit {
+    fill: transparent;
+  }
+
+  .station text {
+    font-family: var(--sans);
+    font-size: var(--label);
+    font-weight: 500;
+    fill: var(--ink);
+    paint-order: stroke;
+    stroke: var(--paper);
+    stroke-width: 3px;
+    stroke-linejoin: round;
+  }
+
+  .station.interchange text {
+    font-weight: 700;
+  }
+
+  .station:hover text,
+  .station:focus-visible text,
+  .station.selected text {
+    fill: var(--mine);
+  }
+
+  .station:hover .dot,
+  .station:focus-visible .dot,
+  .station.selected .dot {
+    stroke: var(--mine);
+    stroke-width: 3.5;
+  }
+
+  /* Stations where a page of the site lives. */
+  .station.section .dot {
+    fill: var(--mine);
+    stroke: var(--card);
+    stroke-width: 2.5;
+    r: 8px;
+  }
+
+  .station.section text {
+    font-size: calc(var(--label) + 2.5px);
+    font-weight: 700;
+  }
+
+  .station text.page {
+    font-size: calc(var(--label) - 1.5px);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    fill: var(--mine);
+  }
+
+  .halo {
+    fill: none;
+    stroke: var(--mine);
+    stroke-width: 2;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: halo 2.6s ease-out infinite;
+  }
+
+  @keyframes halo {
+    from {
+      transform: scale(0.55);
+      opacity: 0.9;
+    }
+    to {
+      transform: scale(1.5);
+      opacity: 0;
+    }
+  }
+
+  /* A small photograph beside a station that has some: shown when you point
+     at the station, or all the time once zoomed in. */
+  .peek {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  .station:hover .peek,
+  .station:focus-visible .peek,
+  .station.selected .peek,
+  #map.zoomed-in .peek {
+    opacity: 1;
+  }
+
+  .peek rect {
+    fill: var(--card);
+    stroke: var(--mine);
+    stroke-width: 2;
+  }
+
+  .peek circle {
+    fill: var(--mine);
+  }
+
+  .station .peek text {
+    font-size: 10px;
+    font-weight: 700;
+    fill: #fff;
+    stroke: none;
+  }
+
+  /* Stations with a favourite place carry a small pink diamond. */
+  #map .station .fav {
+    fill: var(--mine);
+    stroke: var(--card);
+    stroke-width: 1.5;
+  }
+
+  .found small {
+    margin-left: 0.4em;
+    font-weight: 400;
+    color: var(--muted);
+  }
+
+  /* A favourite place with a picture: the picture on the left. */
+  .found .pictured {
+    grid-template-columns: 5.5rem 1fr;
+    gap: 0.8rem;
+    align-items: center;
+    padding: 0.5rem;
+  }
+
+  .found .pictured img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+
+  .found .words {
+    display: grid;
+    gap: 0.1rem;
+    margin: 0;
+  }
+
+  .found .credit {
+    margin: 0.25rem 0 0;
+    font-size: 0.68rem;
+    color: var(--muted);
+  }
+
+  .found .credit a {
+    display: inline;
+    padding: 0;
+    border: 0;
+    text-decoration: underline;
+  }
+
+  .found .credit a:hover {
+    background: none;
+    color: var(--mine);
+  }
+
+  /* Stations with photographs wear a pink ring. */
+  .frame {
+    fill: none;
+    stroke: var(--mine);
+    stroke-width: 2.5;
+  }
+
+  .train {
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .train rect {
+    fill: var(--ink);
+    stroke: var(--card);
+    stroke-width: 1.5;
+  }
+
+  .train:hover rect,
+  .train.selected rect {
+    fill: var(--mine);
+  }
+
+  /* Stand-in trains, run to typical journey times, have nothing to open. */
+  .train.sim {
+    pointer-events: none;
+  }
+
+  /* --------------------------------------------------------------- Sign */
+  .sign,
+  .panel {
+    position: fixed;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    box-shadow: 0 6px 24px rgb(20 33 61 / 0.12);
+  }
+
+  .sign {
+    top: calc(var(--bar) + 1rem);
+    right: 1rem;
+    width: min(17rem, calc(100vw - 2rem));
+    max-height: calc(100dvh - var(--bar) - 2rem);
+    overflow: auto;
+    padding: 0 0 0.5rem;
+  }
+
+  /* ------------------------------------------------------------ Top bar */
+  .top {
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: var(--bar);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 0 clamp(1rem, 2.5vw, 2rem);
+    background: var(--head);
+    color: #fff;
+    box-shadow: 0 2px 14px rgb(8 12 23 / 0.25);
+  }
+
+  .top h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+
+  .top-id p {
+    margin-top: 0.2rem;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    opacity: 0.75;
+    white-space: nowrap;
+  }
+
+  .top-nav {
+    display: flex;
+    align-self: stretch;
+  }
+
+  .top-nav a {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 1.1rem;
+    color: #fff;
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+  }
+
+  .top-nav a:hover,
+  .top-nav a:focus-visible {
+    background: rgb(255 255 255 / 0.09);
+    border-bottom-color: var(--mine);
+  }
+
+  .top-page {
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .top-at {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    opacity: 0.65;
+    white-space: nowrap;
+  }
+
+  .top-menu {
+    display: none;
+    padding: 0.45rem 0.9rem;
+    background: none;
+    border: 1.5px solid rgb(255 255 255 / 0.6);
+    border-radius: 7px;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  @media (max-width: 900px) {
+    .top-id p {
+      display: none;
+    }
+  }
+
+  .clock {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.1rem 0.6rem;
+    padding: 0.75rem 1rem 0.7rem;
+    font-size: 0.78rem;
+    background: var(--head);
+    color: rgb(255 255 255 / 0.75);
+    border-radius: 9px 9px 0 0;
+  }
+
+  #clock {
+    font-family: var(--mono);
+    font-size: 1.7rem;
+    line-height: 1;
+    font-weight: 500;
+    color: #fff;
+  }
+
+  .views {
+    display: flex;
+    margin: 0.7rem 1rem 0.2rem;
+    border: 1px solid var(--rule);
+    border-radius: 7px;
+    overflow: hidden;
+  }
+
+  .views a {
+    flex: 1;
+    padding: 0.35rem 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    color: var(--muted);
+  }
+
+  .views a + a {
+    border-left: 1px solid var(--rule);
+  }
+
+  .views a[aria-current] {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .views.maps + .views {
+    margin-top: 0.4rem;
+  }
+
+  .views button {
+    flex: 1;
+    padding: 0.35rem 0.5rem;
+    background: none;
+    border: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+  }
+
+  .views button + button {
+    border-left: 1px solid var(--rule);
+  }
+
+  .views button[aria-pressed='true'] {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  /* The count of stations with something at them, with a sample dot. */
+  .tally {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 1rem 0.1rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .tally i {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--mine);
+    border: 2px solid var(--ink);
+  }
+
+  .tally b {
+    color: var(--ink);
+  }
+
+  .fold summary {
+    padding: 0.7rem 1rem 0.3rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+  }
+
+  .stops button,
+  .stops a,
+  .legend button {
+    display: flex;
+    width: 100%;
+    background: none;
+    border: 0;
+    text-align: left;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 0.35rem 1rem;
+  }
+
+  .stops button,
+  .stops a {
+    flex-direction: column;
+  }
+
+  .stops.compact button {
+    padding-block: 0.25rem;
+  }
+
+  .stops button:hover,
+  .stops a:hover,
+  .legend button:hover,
+  .legend button[aria-pressed='true'] {
+    background: var(--hover);
+  }
+
+  .stop-name {
+    font-weight: 700;
+    color: var(--mine);
+  }
+
+  .stop-name.plain {
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+
+  .stop-what {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .legend {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .legend button {
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    padding: 0.3rem 0.4rem 0.3rem 1rem;
+  }
+
+  /* The line symbol: a coloured ring around the line's letter. */
+  .ring {
+    flex: none;
+    display: inline-grid;
+    place-items: center;
+    width: 1.45rem;
+    height: 1.45rem;
+    border: 0.26rem solid var(--c);
+    border-radius: 50%;
+    background: #fff;
+    color: #111;
+    font-size: 0.62rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .ring.square,
+  .code.square {
+    border-radius: 0.3rem;
+  }
+
+  .ring.big {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.5rem;
+    font-size: 1.4rem;
+  }
+
+  /* The credits: a small link by the zoom buttons that opens a note. */
+  .about {
+    position: fixed;
+    left: 4.2rem;
+    bottom: 1rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  .about summary {
+    list-style: none;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    cursor: pointer;
+  }
+
+  .about summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .about summary:hover {
+    color: var(--mine);
+  }
+
+  .about a {
+    color: inherit;
+  }
+
+  .about-why {
+    margin-bottom: 0.7rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.88rem;
+    color: var(--ink);
+  }
+
+  .about-note {
+    position: absolute;
+    left: 0;
+    bottom: 1.6rem;
+    width: min(21rem, calc(100vw - 6rem));
+    padding: 0.7rem 0.9rem;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    box-shadow: 0 6px 24px rgb(20 33 61 / 0.12);
+    font-size: 0.78rem;
+    line-height: 1.45;
+  }
+
+  .zoom {
+    position: fixed;
+    left: 1rem;
+    bottom: 1rem;
+    display: grid;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgb(20 33 61 / 0.12);
+    overflow: hidden;
+  }
+
+  .zoom button {
+    width: 2.4rem;
+    height: 2.4rem;
+    background: none;
+    border: 0;
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .zoom button + button {
+    border-top: 1px solid var(--rule);
+  }
+
+  .zoom button:hover {
+    background: var(--hover);
+  }
+
+  /* -------------------------------------------------------------- Panel */
+  .panel {
+    top: calc(var(--bar) + 1rem);
+    left: 1rem;
+    width: min(22rem, calc(100vw - 2rem));
+    max-height: calc(100dvh - var(--bar) - 2rem);
+    overflow: auto;
+    padding: 1.1rem 1.2rem 1.3rem;
+  }
+
+  .panel[hidden] {
+    display: none;
+  }
+
+  .close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.6rem;
+    width: 2rem;
+    height: 2rem;
+    background: none;
+    border: 0;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--muted);
+    cursor: pointer;
+  }
+
+  .codes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.7rem;
+    padding-right: 2rem;
+  }
+
+  /* The station number sign: ring, line letter, station number. */
+  .code {
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    width: 3rem;
+    height: 3rem;
+    border: 0.42rem solid var(--c);
+    border-radius: 50%;
+    background: #fff;
+    color: #111;
+    line-height: 0.95;
+  }
+
+  .code b {
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .code i {
+    font-style: normal;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .panel h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  .panel .ja {
+    margin-top: 0.15rem;
+    color: var(--muted);
+  }
+
+  .panel h3 {
+    margin: 1.2rem 0 0.4rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .found a,
+  .found div {
+    display: grid;
+    gap: 0.1rem;
+    padding: 0.6rem 0.8rem;
+    border: 1.5px solid var(--mine);
+    border-radius: 8px;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .found li + li {
+    margin-top: 0.4rem;
+  }
+
+  .found a:hover {
+    background: color-mix(in srgb, var(--mine) 10%, var(--card));
+  }
+
+  .found span {
+    font-size: 0.86rem;
+    color: var(--muted);
+  }
+
+  .more {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .more a {
+    color: var(--mine);
+    font-weight: 600;
+    text-underline-offset: 0.2em;
+  }
+
+  .departures li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.35rem 0;
+    font-size: 0.92rem;
+  }
+
+  .departures strong {
+    font-family: var(--mono);
+    font-weight: 500;
+  }
+
+  .departures small {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  .next {
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+
+  .next small,
+  .calls span {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--muted);
+  }
+
+  .calls li {
+    display: flex;
+    gap: 0.7rem;
+    align-items: baseline;
+    padding: 0.15rem 0;
+    font-size: 0.92rem;
+  }
+
+  .quiet {
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.4;
+  }
+
+  .quiet.small {
+    font-size: 0.72rem;
+    margin-top: 0.3rem;
+  }
+
+  .quiet.gap {
+    margin-top: 1rem;
+  }
+
+  .follow {
+    padding: 0.25rem 0.6rem;
+    background: none;
+    border: 1px solid var(--mine);
+    border-radius: 99px;
+    color: var(--mine);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .departures em {
+    font-style: normal;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  .place {
+    margin: 0.6rem 0 0.35rem;
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+
+  .shots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .shots button {
+    flex: 1 1 auto;
+    height: 5.4rem;
+    max-width: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--hover);
+    cursor: zoom-in;
+  }
+
+  .shots img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .shots button:hover img,
+  .shots button:focus-visible img {
+    opacity: 0.85;
+  }
+
+  /* ----------------------------------------------------------- Lightbox */
+  .lightbox {
+    width: 100vw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 2.5rem 3.5rem 3rem;
+    border: 0;
+    background: rgb(10 14 24 / 0.94);
+    color: #fff;
+  }
+
+  .lightbox[open] {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    place-items: center;
+    gap: 0.75rem;
+  }
+
+  .lightbox::backdrop {
+    background: transparent;
+  }
+
+  .lightbox img {
+    max-width: 100%;
+    max-height: 100%;
+    min-height: 0;
+    object-fit: contain;
+  }
+
+  .lightbox p {
+    font-size: 0.85rem;
+    opacity: 0.8;
+  }
+
+  .lightbox button {
+    position: absolute;
+    background: none;
+    border: 0;
+    color: #fff;
+    font-size: 2.4rem;
+    line-height: 1;
+    padding: 0.5rem 0.9rem;
+    cursor: pointer;
+    opacity: 0.75;
+  }
+
+  .lightbox button:hover {
+    opacity: 1;
+  }
+
+  .lb-prev {
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .lb-next {
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .lb-close {
+    top: 0;
+    right: 0;
+  }
+
+  /* On a wide screen the controls and the station panel stack in one column
+     down the right-hand side, the panel always under the controls. */
+  @media (min-width: 641px) {
+    .side {
+      position: fixed;
+      top: calc(var(--bar) + 1rem);
+      right: 1rem;
+      bottom: 1rem;
+      width: min(21rem, calc(100vw - 2rem));
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      pointer-events: none;
+    }
+
+    .side .sign,
+    .side .panel {
+      position: relative;
+      inset: auto;
+      width: auto;
+      pointer-events: auto;
+    }
+
+    .side .sign {
+      flex: 0 0 auto;
+      max-height: 55%;
+    }
+
+    .side .panel {
+      flex: 0 1 auto;
+      min-height: 0;
+      max-height: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    :root {
+      --bar: 3.5rem;
+    }
+
+    .world {
+      padding: 1rem 1rem 60dvh;
+    }
+
+    .sign {
+      width: 14rem;
+      top: calc(var(--bar) + 0.75rem);
+      right: 0.75rem;
+    }
+
+    #clock {
+      font-size: 1.35rem;
+    }
+
+    .top h1 {
+      font-size: 1.25rem;
+    }
+
+    .top-menu {
+      display: block;
+    }
+
+    /* The page links drop down from the bar when Menu is pressed. */
+    .top-nav {
+      display: none;
+      position: absolute;
+      top: var(--bar);
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      background: var(--head);
+      border-top: 1px solid rgb(255 255 255 / 0.15);
+      box-shadow: 0 10px 20px rgb(8 12 23 / 0.3);
+    }
+
+    .top.open .top-nav {
+      display: flex;
+    }
+
+    .top-nav a {
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid rgb(255 255 255 / 0.1);
+    }
+
+    .panel {
+      top: auto;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: auto;
+      max-height: 60dvh;
+      border-radius: 14px 14px 0 0;
+    }
+
+    .lightbox {
+      padding: 2.5rem 0.5rem 2.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .halo {
+      animation: none;
+      opacity: 0.6;
+    }
+  }
+</style>

@@ -1,0 +1,1994 @@
+{
+ "source": "OpenStreetMap contributors (ODbL), https://www.openstreetmap.org/copyright",
+ "fetched": "2026-11-14T04:29:18.877Z",
+ "lines": [
+  {
+   "id": "Midosuji",
+   "name": "Midosuji Line",
+   "ja": "御堂筋線",
+   "code": "M",
+   "color": "#e5171f",
+   "kind": "metro",
+   "loop": false,
+   "stations": [
+    {
+     "ja": "江坂",
+     "en": "Esaka",
+     "lat": 34.75886,
+     "lon": 135.49716,
+     "code": "M11"
+    },
+    {
+     "ja": "東三国",
+     "en": "Higashi-Mikuni",
+     "lat": 34.74115,
+     "lon": 135.49856,
+     "code": "M12"
+    },
+    {
+     "ja": "新大阪",
+     "en": "Shin-Osaka",
+     "lat": 34.7329,
+     "lon": 135.49862,
+     "code": "M13"
+    },
+    {
+     "ja": "西中島南方",
+     "en": "Nishinakajima-Minamigata",
+     "lat": 34.72664,
+     "lon": 135.49862,
+     "code": "M14"
+    },
+    {
+     "ja": "中津",
+     "en": "Nakatsu",
+     "lat": 34.71103,
+     "lon": 135.49685,
+     "code": "M15"
+    },
+    {
+     "ja": "梅田",
+     "en": "Umeda",
+     "lat": 34.70342,
+     "lon": 135.49761,
+     "code": "M16"
+    },
+    {
+     "ja": "淀屋橋",
+     "en": "Yodoyabashi",
+     "lat": 34.69164,
+     "lon": 135.50098,
+     "code": "M17"
+    },
+    {
+     "ja": "本町",
+     "en": "Hommachi",
+     "lat": 34.68354,
+     "lon": 135.50069,
+     "code": "M18"
+    },
+    {
+     "ja": "心斎橋",
+     "en": "Shinsaibashi",
+     "lat": 34.67452,
+     "lon": 135.50039,
+     "code": "M19"
+    },
+    {
+     "ja": "なんば",
+     "en": "Namba",
+     "lat": 34.66616,
+     "lon": 135.5003,
+     "code": "M20"
+    },
+    {
+     "ja": "大国町",
+     "en": "Daikokucho",
+     "lat": 34.65624,
+     "lon": 135.49796,
+     "code": "M21"
+    },
+    {
+     "ja": "動物園前",
+     "en": "Dobutsuen-mae",
+     "lat": 34.64881,
+     "lon": 135.50456,
+     "code": "M22"
+    },
+    {
+     "ja": "天王寺",
+     "en": "Tennoji",
+     "lat": 34.6461,
+     "lon": 135.51528,
+     "code": "M23"
+    },
+    {
+     "ja": "昭和町",
+     "en": "Showacho",
+     "lat": 34.63312,
+     "lon": 135.51695,
+     "code": "M24"
+    },
+    {
+     "ja": "西田辺",
+     "en": "Nishi-Tanabe",
+     "lat": 34.62155,
+     "lon": 135.51519,
+     "code": "M25"
+    },
+    {
+     "ja": "長居",
+     "en": "Nagai",
+     "lat": 34.60901,
+     "lon": 135.51372,
+     "code": "M26"
+    },
+    {
+     "ja": "あびこ",
+     "en": "Abiko",
+     "lat": 34.59908,
+     "lon": 135.51281,
+     "code": "M27"
+    },
+    {
+     "ja": "北花田",
+     "en": "Kita-Hanada",
+     "lat": 34.58228,
+     "lon": 135.51644,
+     "code": "M28"
+    },
+    {
+     "ja": "新金岡",
+     "en": "Shin-Kanaoka",
+     "lat": 34.56848,
+     "lon": 135.5154,
+     "code": "M29"
+    },
+    {
+     "ja": "なかもず",
+     "en": "Nakamozu",
+     "lat": 34.55629,
+     "lon": 135.50626,
+     "code": "M30"
+    }
+   ]
+  },
+  {
+   "id": "Tanimachi",
+   "name": "Tanimachi Line",
+   "ja": "谷町線",
+   "code": "T",
+   "color": "#522886",
+   "kind": "metro",
+   "loop": false,
+   "stations": [
+    {
+     "ja": "大日",
+     "en": "Dainichi",
+     "lat": 34.74984,
+     "lon": 135.5788,
+     "code": "T11"
+    },
+    {
+     "ja": "守口",
+     "en": "Moriguchi",
+     "lat": 34.73845,
+     "lon": 135.5644,
+     "code": "T12"
+    },
+    {
+     "ja": "太子橋今市",
+     "en": "Taishibashi-Imaichi",
+     "lat": 34.73121,
+     "lon": 135.55472,
+     "code": "T13"
+    },
+    {
+     "ja": "千林大宮",
+     "en": "Sembayashi-Omiya",
+     "lat": 34.72422,
+     "lon": 135.54928,
+     "code": "T14"
+    },
+    {
+     "ja": "関目高殿",
+     "en": "Sekime-Takadono",
+     "lat": 34.71531,
+     "lon": 135.54584,
+     "code": "T15"
+    },
+    {
+     "ja": "野江内代",
+     "en": "Noe-Uchindai",
+     "lat": 34.70937,
+     "lon": 135.5386,
+     "code": "T16"
+    },
+    {
+     "ja": "都島",
+     "en": "Miyakojima",
+     "lat": 34.70895,
+     "lon": 135.52586,
+     "code": "T17"
+    },
+    {
+     "ja": "天神橋筋六丁目",
+     "en": "Tenjimbashisuji 6-chome",
+     "lat": 34.71063,
+     "lon": 135.51184,
+     "code": "T18"
+    },
+    {
+     "ja": "中崎町",
+     "en": "Nakazakicho",
+     "lat": 34.70721,
+     "lon": 135.50564,
+     "code": "T19"
+    },
+    {
+     "ja": "東梅田",
+     "en": "Higashi-Umeda",
+     "lat": 34.7006,
+     "lon": 135.49984,
+     "code": "T20"
+    },
+    {
+     "ja": "南森町",
+     "en": "Minami-morimachi",
+     "lat": 34.69764,
+     "lon": 135.51117,
+     "code": "T21"
+    },
+    {
+     "ja": "天満橋",
+     "en": "Temmabashi",
+     "lat": 34.68972,
+     "lon": 135.5173,
+     "code": "T22"
+    },
+    {
+     "ja": "谷町四丁目",
+     "en": "Tanimachi 4-chome",
+     "lat": 34.68236,
+     "lon": 135.51734,
+     "code": "T23"
+    },
+    {
+     "ja": "谷町六丁目",
+     "en": "Tanimachi 6-chome",
+     "lat": 34.6751,
+     "lon": 135.5171,
+     "code": "T24"
+    },
+    {
+     "ja": "谷町九丁目",
+     "en": "Tanimachi 9-chome",
+     "lat": 34.66708,
+     "lon": 135.51587,
+     "code": "T25"
+    },
+    {
+     "ja": "四天王寺前夕陽ヶ丘",
+     "en": "Shitennoji-mae Yuhigaoka",
+     "lat": 34.65881,
+     "lon": 135.51427,
+     "code": "T26"
+    },
+    {
+     "ja": "天王寺",
+     "en": "Tennoji",
+     "lat": 34.64943,
+     "lon": 135.51357,
+     "code": "T27"
+    },
+    {
+     "ja": "阿倍野",
+     "en": "Abeno",
+     "lat": 34.64248,
+     "lon": 135.51202,
+     "code": "T28"
+    },
+    {
+     "ja": "文の里",
+     "en": "Fuminosato",
+     "lat": 34.63617,
+     "lon": 135.51801,
+     "code": "T29"
+    },
+    {
+     "ja": "田辺",
+     "en": "Tanabe",
+     "lat": 34.6288,
+     "lon": 135.52503,
+     "code": "T30"
+    },
+    {
+     "ja": "駒川中野",
+     "en": "Komagawa-Nakano",
+     "lat": 34.62167,
+     "lon": 135.53251,
+     "code": "T31"
+    },
+    {
+     "ja": "平野",
+     "en": "Hirano",
+     "lat": 34.62128,
+     "lon": 135.5486,
+     "code": "T32"
+    },
+    {
+     "ja": "喜連瓜破",
+     "en": "Kire-Uriwari",
+     "lat": 34.60922,
+     "lon": 135.55136,
+     "code": "T33"
+    },
+    {
+     "ja": "出戸",
+     "en": "Deto",
+     "lat": 34.60905,
+     "lon": 135.56523,
+     "code": "T34"
+    },
+    {
+     "ja": "長原",
+     "en": "Nagahara",
+     "lat": 34.60291,
+     "lon": 135.5737,
+     "code": "T35"
+    },
+    {
+     "ja": "八尾南",
+     "en": "Yao-Minami",
+     "lat": 34.59738,
+     "lon": 135.58252,
+     "code": "T36"
+    }
+   ]
+  },
+  {
+   "id": "Yotsubashi",
+   "name": "Yotsubashi Line",
+   "ja": "四つ橋線",
+   "code": "Y",
+   "color": "#0078ba",
+   "kind": "metro",
+   "loop": false,
+   "stations": [
+    {
+     "ja": "西梅田",
+     "en": "Nishi-Umeda",
+     "lat": 34.69948,
+     "lon": 135.49562,
+     "code": "Y11"
+    },
+    {
+     "ja": "肥後橋",
+     "en": "Higobashi",
+     "lat": 34.6915,
+     "lon": 135.49631,
+     "code": "Y12"
+    },
+    {
+     "ja": "本町",
+     "en": "Hommachi",
+     "lat": 34.68277,
+     "lon": 135.49687,
+     "code": "Y13"
+    },
+    {
+     "ja": "四ツ橋",
+     "en": "Yotsubashi",
+     "lat": 34.67404,
+     "lon": 135.49673,
+     "code": "Y14"
+    },
+    {
+     "ja": "なんば",
+     "en": "Namba",
+     "lat": 34.66632,
+     "lon": 135.49757,
+     "code": "Y15"
+    },
+    {
+     "ja": "大国町",
+     "en": "Daikokucho",
+     "lat": 34.65624,
+     "lon": 135.49784,
+     "code": "Y16"
+    },
+    {
+     "ja": "花園町",
+     "en": "Hanazonocho",
+     "lat": 34.6443,
+     "lon": 135.49655,
+     "code": "Y17"
+    },
+    {
+     "ja": "岸里",
+     "en": "Kishinosato",
+     "lat": 34.63442,
+     "lon": 135.49384,
+     "code": "Y18"
+    },
+    {
+     "ja": "玉出",
+     "en": "Tamade",
+     "lat": 34.62378,
+     "lon": 135.49038,
+     "code": "Y19"
+    },
+    {
+     "ja": "北加賀屋",
+     "en": "Kitakagaya",
+     "lat": 34.62133,
+     "lon": 135.47941,
+     "code": "Y20"
+    },
+    {
+     "ja": "住之江公園",
+     "en": "Suminoekoen",
+     "lat": 34.60874,
+     "lon": 135.47308,
+     "code": "Y21"
+    }
+   ]
+  },
+  {
+   "id": "Chuo",
+   "name": "Chuo Line",
+   "ja": "中央線",
+   "code": "C",
+   "color": "#019a66",
+   "kind": "metro",
+   "loop": false,
+   "stations": [
+    {
+     "ja": "夢洲",
+     "en": "Yumeshima",
+     "lat": 34.65292,
+     "lon": 135.39059,
+     "code": "C09"
+    },
+    {
+     "ja": "コスモスクエア",
+     "en": "Cosmo Square",
+     "lat": 34.64267,
+     "lon": 135.41217,
+     "code": "C10"
+    },
+    {
+     "ja": "大阪港",
+     "en": "Osakako",
+     "lat": 34.65397,
+     "lon": 135.4344,
+     "code": "C11"
+    },
+    {
+     "ja": "朝潮橋",
+     "en": "Asashiobashi",
+     "lat": 34.66087,
+     "lon": 135.4488,
+     "code": "C12"
+    },
+    {
+     "ja": "弁天町",
+     "en": "Bentencho",
+     "lat": 34.66843,
+     "lon": 135.46209,
+     "code": "C13"
+    },
+    {
+     "ja": "九条",
+     "en": "Kujo",
+     "lat": 34.67532,
+     "lon": 135.47352,
+     "code": "C14"
+    },
+    {
+     "ja": "阿波座",
+     "en": "Awaza",
+     "lat": 34.68138,
+     "lon": 135.48809,
+     "code": "C15"
+    },
+    {
+     "ja": "本町",
+     "en": "Hommachi",
+     "lat": 34.68204,
+     "lon": 135.49872,
+     "code": "C16"
+    },
+    {
+     "ja": "堺筋本町",
+     "en": "Sakaisuji-Hommachi",
+     "lat": 34.6819,
+     "lon": 135.50693,
+     "code": "C17"
+    },
+    {
+     "ja": "谷町四丁目",
+     "en": "Tanimachi 4-chome",
+     "lat": 34.68147,
+     "lon": 135.51747,
+     "code": "C18"
+    },
+    {
+     "ja": "森ノ宮",
+     "en": "Morinomiya",
+     "lat": 34.6815,
+     "lon": 135.53203,
+     "code": "C19"
+    },
+    {
+     "ja": "緑橋",
+     "en": "Midoribashi",
+     "lat": 34.68068,
+     "lon": 135.54575,
+     "code": "C20"
+    },
+    {
+     "ja": "深江橋",
+     "en": "Fukaebashi",
+     "lat": 34.67913,
+     "lon": 135.55746,
+     "code": "C21"
+    },
+    {
+     "ja": "高井田",
+     "en": "Takaida",
+     "lat": 34.6784,
+     "lon": 135.57192,
+     "code": "C22"
+    },
+    {
+     "ja": "長田",
+     "en": "Nagata",
+     "lat": 34.67878,
+     "lon": 135.59106,
+     "code": "C23"
+    }
+   ]
+  },
+  {
+   "id": "Sennichimae",
+   "name": "Sennichimae Line",
+   "ja": "千日前線",
+   "code": "S",
+   "color": "#e44d93",
+   "kind": "metro",
+   "loop": false,
+   "stations": [
+    {
+     "ja": "野田阪神",
+     "en": "Nodahanshin",
+     "lat": 34.69437,
+     "lon": 135.4749,
+     "code": "S11"
+    },
+    {
+     "ja": "玉川",
+     "en": "Tamagawa",
+     "lat": 34.68956,
+     "lon": 135.47622,
+     "code": "S12"
+    },
+    {
+     "ja": "阿波座",
+     "en": "Awaza",
+     "lat": 34.68164,
+     "lon": 135.48628,
+     "code": "S13"
+    },
+    {
+     "ja": "西長堀",
+     "en": "Nishi-Nagahori",
+     "lat": 34.6739,
+     "lon": 135.48704,
+     "code": "S14"
+    },
+    {
+     "ja": "桜川",
+     "en": "Sakuragawa",
+     "lat": 34.66833,
+     "lon": 135.49027,
+     "code": "S15"
+    },
+    {
+     "ja": "なんば",
+     "en": "Namba",
+     "lat": 34.6673,
+     "lon": 135.49973,
+     "code": "S16"
+    },
+    {
+     "ja": "日本橋",
+     "en": "Nippombashi",
+     "lat": 34.66718,
+     "lon": 135.50642,
+     "code": "S17"
+    },
+    {
+     "ja": "谷町九丁目",
+     "en": "Tanimachi 9-chome",
+     "lat": 34.66663,
+     "lon": 135.51701,
+     "code": "S18"
+    },
+    {
+     "ja": "鶴橋",
+     "en": "Tsuruhashi",
+     "lat": 34.666,
+     "lon": 135.52906,
+     "code": "S19"
+    },
+    {
+     "ja": "今里",
+     "en": "Imazato",
+     "lat": 34.66874,
+     "lon": 135.54401,
+     "code": "S20"
+    },
+    {
+     "ja": "新深江",
+     "en": "Shin-Fukae",
+     "lat": 34.66821,
+     "lon": 135.55429,
+     "code": "S21"
+    },
+    {
+     "ja": "小路",
+     "en": "Shoji",
+     "lat": 34.66143,
+     "lon": 135.55631,
+     "code": "S22"
+    },
+    {
+     "ja": "北巽",
+     "en": "Kita-Tatsumi",
+     "lat": 34.6535,
+     "lon": 135.55507,
+     "code": "S23"
+    },
+    {
+     "ja": "南巽",
+     "en": "Minami-Tatsumi",
+     "lat": 34.64249,
+     "lon": 135.55314,
+     "code": "S24"
+    }
+   ]
+  },
+  {
+   "id": "Sakaisuji",
+   "name": "Sakaisuji Line",
+   "ja": "堺筋線",
+   "code": "K",
+   "color": "#814721",
+   "kind": "metro",
+   "loop": false,
+   "stations": [
+    {
+     "ja": "天神橋筋六丁目",
+     "en": "Tenjimbashisuji 6-chome",
+     "lat": 34.70981,
+     "lon": 135.51086,
+     "code": "K11"
+    },
+    {
+     "ja": "扇町",
+     "en": "Ogimachi",
+     "lat": 34.70447,
+     "lon": 135.51087,
+     "code": "K12"
+    },
+    {
+     "ja": "南森町",
+     "en": "Minami-morimachi",
+     "lat": 34.69758,
+     "lon": 135.51104,
+     "code": "K13"
+    },
+    {
+     "ja": "北浜",
+     "en": "Kitahama",
+     "lat": 34.69117,
+     "lon": 135.50661,
+     "code": "K14"
+    },
+    {
+     "ja": "堺筋本町",
+     "en": "Sakaisuji-Hommachi",
+     "lat": 34.68262,
+     "lon": 135.50649,
+     "code": "K15"
+    },
+    {
+     "ja": "長堀橋",
+     "en": "Nagahoribashi",
+     "lat": 34.67486,
+     "lon": 135.50635,
+     "code": "K16"
+    },
+    {
+     "ja": "日本橋",
+     "en": "Nippombashi",
+     "lat": 34.66672,
+     "lon": 135.50618,
+     "code": "K17"
+    },
+    {
+     "ja": "恵美須町",
+     "en": "Ebisucho",
+     "lat": 34.6556,
+     "lon": 135.50569,
+     "code": "K18"
+    },
+    {
+     "ja": "動物園前",
+     "en": "Dobutsuen-mae",
+     "lat": 34.64866,
+     "lon": 135.50358,
+     "code": "K19"
+    },
+    {
+     "ja": "天下茶屋",
+     "en": "Tengachaya",
+     "lat": 34.63767,
+     "lon": 135.49717,
+     "code": "K20"
+    }
+   ]
+  },
+  {
+   "id": "Nagahori",
+   "name": "Nagahori Tsurumi-ryokuchi Line",
+   "ja": "長堀鶴見緑地線",
+   "code": "N",
+   "color": "#a9cc51",
+   "kind": "metro",
+   "loop": false,
+   "stations": [
+    {
+     "ja": "大正",
+     "en": "Taisho",
+     "lat": 34.66553,
+     "lon": 135.47855,
+     "code": "N11"
+    },
+    {
+     "ja": "ドーム前千代崎",
+     "en": "Dome-mae Chiyozaki",
+     "lat": 34.67146,
+     "lon": 135.47947,
+     "code": "N12"
+    },
+    {
+     "ja": "西長堀",
+     "en": "Nishi-Nagahori",
+     "lat": 34.67573,
+     "lon": 135.48691,
+     "code": "N13"
+    },
+    {
+     "ja": "西大橋",
+     "en": "Nishiohashi",
+     "lat": 34.67552,
+     "lon": 135.49448,
+     "code": "N14"
+    },
+    {
+     "ja": "心斎橋",
+     "en": "Shinsaibashi",
+     "lat": 34.67538,
+     "lon": 135.4992,
+     "code": "N15"
+    },
+    {
+     "ja": "長堀橋",
+     "en": "Nagahoribashi",
+     "lat": 34.67532,
+     "lon": 135.50644,
+     "code": "N16"
+    },
+    {
+     "ja": "松屋町",
+     "en": "Matsuyamachi",
+     "lat": 34.67544,
+     "lon": 135.51222,
+     "code": "N17"
+    },
+    {
+     "ja": "谷町六丁目",
+     "en": "Tanimachi 6-chome",
+     "lat": 34.67605,
+     "lon": 135.51813,
+     "code": "N18"
+    },
+    {
+     "ja": "玉造",
+     "en": "Tamatsukuri",
+     "lat": 34.67464,
+     "lon": 135.53047,
+     "code": "N19"
+    },
+    {
+     "ja": "森ノ宮",
+     "en": "Morinomiya",
+     "lat": 34.68219,
+     "lon": 135.53335,
+     "code": "N20"
+    },
+    {
+     "ja": "大阪ビジネスパーク",
+     "en": "Osaka Business Park",
+     "lat": 34.6924,
+     "lon": 135.52945,
+     "code": "N21"
+    },
+    {
+     "ja": "京橋",
+     "en": "Kyobashi",
+     "lat": 34.69758,
+     "lon": 135.5305,
+     "code": "N22"
+    },
+    {
+     "ja": "蒲生四丁目",
+     "en": "Gamo 4-chome",
+     "lat": 34.70058,
+     "lon": 135.54848,
+     "code": "N23"
+    },
+    {
+     "ja": "今福鶴見",
+     "en": "Imafuku-Tsurumi",
+     "lat": 34.702,
+     "lon": 135.55989,
+     "code": "N24"
+    },
+    {
+     "ja": "横堤",
+     "en": "Yokozutsumi",
+     "lat": 34.70365,
+     "lon": 135.57341,
+     "code": "N25"
+    },
+    {
+     "ja": "鶴見緑地",
+     "en": "Tsurumi-ryokuchi",
+     "lat": 34.71096,
+     "lon": 135.58062,
+     "code": "N26"
+    },
+    {
+     "ja": "門真南",
+     "en": "Kadoma-Minami",
+     "lat": 34.71707,
+     "lon": 135.59308,
+     "code": "N27"
+    }
+   ]
+  },
+  {
+   "id": "Imazatosuji",
+   "name": "Imazatosuji Line",
+   "ja": "今里筋線",
+   "code": "I",
+   "color": "#ee7b1a",
+   "kind": "metro",
+   "loop": false,
+   "stations": [
+    {
+     "ja": "井高野",
+     "en": "Itakano",
+     "lat": 34.76,
+     "lon": 135.54728,
+     "code": "I11"
+    },
+    {
+     "ja": "瑞光四丁目",
+     "en": "Zuiko 4-chome",
+     "lat": 34.75221,
+     "lon": 135.54458,
+     "code": "I12"
+    },
+    {
+     "ja": "だいどう豊里",
+     "en": "Daido-Toyosato",
+     "lat": 34.74395,
+     "lon": 135.54456,
+     "code": "I13"
+    },
+    {
+     "ja": "太子橋今市",
+     "en": "Taishibashi-Imaichi",
+     "lat": 34.73131,
+     "lon": 135.55625,
+     "code": "I14"
+    },
+    {
+     "ja": "清水",
+     "en": "Shimizu",
+     "lat": 34.72227,
+     "lon": 135.56084,
+     "code": "I15"
+    },
+    {
+     "ja": "新森古市",
+     "en": "Shimmori-Furuichi",
+     "lat": 34.71524,
+     "lon": 135.5583,
+     "code": "I16"
+    },
+    {
+     "ja": "関目成育",
+     "en": "Sekime-Seiiku",
+     "lat": 34.7131,
+     "lon": 135.54648,
+     "code": "I17"
+    },
+    {
+     "ja": "蒲生四丁目",
+     "en": "Gamo 4-chome",
+     "lat": 34.70097,
+     "lon": 135.54632,
+     "code": "I18"
+    },
+    {
+     "ja": "鴫野",
+     "en": "Shigino",
+     "lat": 34.69302,
+     "lon": 135.5462,
+     "code": "I19"
+    },
+    {
+     "ja": "緑橋",
+     "en": "Midoribashi",
+     "lat": 34.68144,
+     "lon": 135.54464,
+     "code": "I20"
+    },
+    {
+     "ja": "今里",
+     "en": "Imazato",
+     "lat": 34.67016,
+     "lon": 135.54309,
+     "code": "I21"
+    }
+   ]
+  },
+  {
+   "id": "Karasuma",
+   "name": "Karasuma Line",
+   "ja": "烏丸線",
+   "code": "K",
+   "color": "#3fa535",
+   "kind": "metro",
+   "loop": false,
+   "stations": [
+    {
+     "ja": "国際会館",
+     "en": "Kokusaikaikan",
+     "lat": 35.06291,
+     "lon": 135.78523,
+     "code": "K01"
+    },
+    {
+     "ja": "松ヶ崎",
+     "en": "Matsugasaki",
+     "lat": 35.05156,
+     "lon": 135.77606,
+     "code": "K02"
+    },
+    {
+     "ja": "北山",
+     "en": "Kitayama",
+     "lat": 35.05119,
+     "lon": 135.76517,
+     "code": "K03"
+    },
+    {
+     "ja": "北大路",
+     "en": "Kitaoji",
+     "lat": 35.04457,
+     "lon": 135.75877,
+     "code": "K04"
+    },
+    {
+     "ja": "鞍馬口",
+     "en": "Kuramaguchi",
+     "lat": 35.03719,
+     "lon": 135.75936,
+     "code": "K05"
+    },
+    {
+     "ja": "今出川",
+     "en": "Imadegawa",
+     "lat": 35.02949,
+     "lon": 135.75942,
+     "code": "K06"
+    },
+    {
+     "ja": "丸太町",
+     "en": "Marutamachi",
+     "lat": 35.01629,
+     "lon": 135.7596,
+     "code": "K07"
+    },
+    {
+     "ja": "烏丸御池",
+     "en": "Karasuma Oike",
+     "lat": 35.00997,
+     "lon": 135.75967,
+     "code": "K08"
+    },
+    {
+     "ja": "四条",
+     "en": "Shijo",
+     "lat": 35.00252,
+     "lon": 135.75973,
+     "code": "K09"
+    },
+    {
+     "ja": "五条",
+     "en": "Gojo",
+     "lat": 34.99498,
+     "lon": 135.75978,
+     "code": "K10"
+    },
+    {
+     "ja": "京都",
+     "en": "Kyoto",
+     "lat": 34.98619,
+     "lon": 135.76012,
+     "code": "K11"
+    },
+    {
+     "ja": "九条",
+     "en": "Kujo",
+     "lat": 34.97917,
+     "lon": 135.75978,
+     "code": "K12"
+    },
+    {
+     "ja": "十条",
+     "en": "Jujo",
+     "lat": 34.97262,
+     "lon": 135.75976,
+     "code": "K13"
+    },
+    {
+     "ja": "くいな橋",
+     "en": "Kuinabashi",
+     "lat": 34.96224,
+     "lon": 135.75707,
+     "code": "K14"
+    },
+    {
+     "ja": "竹田",
+     "en": "Takeda",
+     "lat": 34.95632,
+     "lon": 135.75614,
+     "code": "K15"
+    }
+   ]
+  },
+  {
+   "id": "Tozai",
+   "name": "Tozai Line",
+   "ja": "東西線",
+   "code": "T",
+   "color": "#e8472b",
+   "kind": "metro",
+   "loop": false,
+   "stations": [
+    {
+     "ja": "六地蔵",
+     "en": "Rokujizo",
+     "lat": 34.934,
+     "lon": 135.79647,
+     "code": "T01"
+    },
+    {
+     "ja": "石田",
+     "en": "Ishida",
+     "lat": 34.94101,
+     "lon": 135.80438,
+     "code": "T02"
+    },
+    {
+     "ja": "醍醐",
+     "en": "Daigo",
+     "lat": 34.95113,
+     "lon": 135.81074,
+     "code": "T03"
+    },
+    {
+     "ja": "小野",
+     "en": "Ono",
+     "lat": 34.9616,
+     "lon": 135.81276,
+     "code": "T04"
+    },
+    {
+     "ja": "椥辻",
+     "en": "Nagitsuji",
+     "lat": 34.97314,
+     "lon": 135.81512,
+     "code": "T05"
+    },
+    {
+     "ja": "東野",
+     "en": "Higashino",
+     "lat": 34.98241,
+     "lon": 135.81676,
+     "code": "T06"
+    },
+    {
+     "ja": "山科",
+     "en": "Yamashina",
+     "lat": 34.99126,
+     "lon": 135.81726,
+     "code": "T07"
+    },
+    {
+     "ja": "御陵",
+     "en": "Misasagi",
+     "lat": 34.99628,
+     "lon": 135.80118,
+     "code": "T08"
+    },
+    {
+     "ja": "蹴上",
+     "en": "Keage",
+     "lat": 35.00798,
+     "lon": 135.79029,
+     "code": "T09"
+    },
+    {
+     "ja": "東山",
+     "en": "Higashiyama",
+     "lat": 35.00944,
+     "lon": 135.77923,
+     "code": "T10"
+    },
+    {
+     "ja": "三条京阪",
+     "en": "Sanjo Keihan",
+     "lat": 35.00919,
+     "lon": 135.77344,
+     "code": "T11"
+    },
+    {
+     "ja": "京都市役所前",
+     "en": "Kyoto Shiyakusho-mae",
+     "lat": 35.01081,
+     "lon": 135.76834,
+     "code": "T12"
+    },
+    {
+     "ja": "烏丸御池",
+     "en": "Karasuma Oike",
+     "lat": 35.01076,
+     "lon": 135.75908,
+     "code": "T13"
+    },
+    {
+     "ja": "二条城前",
+     "en": "Nijojo-mae",
+     "lat": 35.01187,
+     "lon": 135.74972,
+     "code": "T14"
+    },
+    {
+     "ja": "二条",
+     "en": "Nijo",
+     "lat": 35.01169,
+     "lon": 135.74112,
+     "code": "T15"
+    },
+    {
+     "ja": "西大路御池",
+     "en": "Nishioji-oike",
+     "lat": 35.01089,
+     "lon": 135.73007,
+     "code": "T16"
+    },
+    {
+     "ja": "太秦天神川",
+     "en": "Uzumasa-Tenjingawa",
+     "lat": 35.01078,
+     "lon": 135.7162,
+     "code": "T17"
+    }
+   ]
+  },
+  {
+   "id": "OsakaLoop",
+   "name": "Osaka Loop Line",
+   "ja": "大阪環状線",
+   "code": "O",
+   "color": "#d81f3f",
+   "kind": "jr",
+   "loop": true,
+   "stations": [
+    {
+     "ja": "天王寺",
+     "en": "Tennoji",
+     "lat": 34.64713,
+     "lon": 135.51431,
+     "code": "JR-O01"
+    },
+    {
+     "ja": "寺田町",
+     "en": "Teradacho",
+     "lat": 34.64775,
+     "lon": 135.52334,
+     "code": "JR-O02"
+    },
+    {
+     "ja": "桃谷",
+     "en": "Momodani",
+     "lat": 34.65875,
+     "lon": 135.52808,
+     "code": "JR-O03"
+    },
+    {
+     "ja": "鶴橋",
+     "en": "Tsuruhashi",
+     "lat": 34.6654,
+     "lon": 135.53023,
+     "code": "JR-O04"
+    },
+    {
+     "ja": "玉造",
+     "en": "Tamatsukuri",
+     "lat": 34.6732,
+     "lon": 135.53288,
+     "code": "JR-O05"
+    },
+    {
+     "ja": "森ノ宮",
+     "en": "Morinomiya",
+     "lat": 34.68045,
+     "lon": 135.53403,
+     "code": "JR-O06"
+    },
+    {
+     "ja": "大阪城公園",
+     "en": "Osakajokoen",
+     "lat": 34.68775,
+     "lon": 135.53443,
+     "code": "JR-O07"
+    },
+    {
+     "ja": "京橋",
+     "en": "Kyobashi",
+     "lat": 34.69673,
+     "lon": 135.53402,
+     "code": "JR-O08"
+    },
+    {
+     "ja": "桜ノ宮",
+     "en": "Sakuranomiya",
+     "lat": 34.70486,
+     "lon": 135.52028,
+     "code": "JR-O09"
+    },
+    {
+     "ja": "天満",
+     "en": "Temma",
+     "lat": 34.70496,
+     "lon": 135.51235,
+     "code": "JR-O10"
+    },
+    {
+     "ja": "大阪",
+     "en": "Osaka",
+     "lat": 34.702,
+     "lon": 135.49575,
+     "code": "JR-O11"
+    },
+    {
+     "ja": "福島",
+     "en": "Fukushima",
+     "lat": 34.69731,
+     "lon": 135.48681,
+     "code": "JR-O12"
+    },
+    {
+     "ja": "野田",
+     "en": "Noda",
+     "lat": 34.68913,
+     "lon": 135.47496,
+     "code": "JR-O13"
+    },
+    {
+     "ja": "西九条",
+     "en": "Nishikujo",
+     "lat": 34.68287,
+     "lon": 135.4668,
+     "code": "JR-O14"
+    },
+    {
+     "ja": "弁天町",
+     "en": "Bentencho",
+     "lat": 34.67028,
+     "lon": 135.46181,
+     "code": "JR-O15"
+    },
+    {
+     "ja": "大正",
+     "en": "Taisho",
+     "lat": 34.66542,
+     "lon": 135.48033,
+     "code": "JR-O16"
+    },
+    {
+     "ja": "芦原橋",
+     "en": "Ashiharabashi",
+     "lat": 34.65868,
+     "lon": 135.48915,
+     "code": "JR-O17"
+    },
+    {
+     "ja": "今宮",
+     "en": "Imamiya",
+     "lat": 34.65396,
+     "lon": 135.49289,
+     "code": "JR-O18"
+    },
+    {
+     "ja": "新今宮",
+     "en": "Shin-Imamiya",
+     "lat": 34.64974,
+     "lon": 135.50217,
+     "code": "JR-O19"
+    }
+   ]
+  },
+  {
+   "id": "JRKyoto",
+   "name": "JR Kyoto Line",
+   "ja": "JR京都線",
+   "code": "A",
+   "color": "#0072bc",
+   "kind": "rail",
+   "loop": false,
+   "stations": [
+    {
+     "ja": "京都",
+     "en": "Kyoto",
+     "lat": 34.9853,
+     "lon": 135.75876,
+     "code": "JR-A31"
+    },
+    {
+     "ja": "西大路",
+     "en": "Nishioji",
+     "lat": 34.98114,
+     "lon": 135.73214,
+     "code": "JR-A32"
+    },
+    {
+     "ja": "桂川",
+     "en": "Katsuragawa",
+     "lat": 34.96454,
+     "lon": 135.71046,
+     "code": "JR-A33"
+    },
+    {
+     "ja": "向日町",
+     "en": "Mukomachi",
+     "lat": 34.95488,
+     "lon": 135.70985,
+     "code": "JR-A34"
+    },
+    {
+     "ja": "長岡京",
+     "en": "Nagaokakyo",
+     "lat": 34.92349,
+     "lon": 135.70083,
+     "code": "JR-A35"
+    },
+    {
+     "ja": "山崎",
+     "en": "Yamazaki",
+     "lat": 34.89246,
+     "lon": 135.67979,
+     "code": "JR-A36"
+    },
+    {
+     "ja": "島本",
+     "en": "Shimamoto",
+     "lat": 34.88063,
+     "lon": 135.66275,
+     "code": "JR-A37"
+    },
+    {
+     "ja": "高槻",
+     "en": "Takatsuki",
+     "lat": 34.85171,
+     "lon": 135.61787,
+     "code": "JR-A38"
+    },
+    {
+     "ja": "摂津富田",
+     "en": "Settsu-Tonda",
+     "lat": 34.83761,
+     "lon": 135.59328,
+     "code": "JR-A39"
+    },
+    {
+     "ja": "JR総持寺",
+     "en": "JR-Sojiji",
+     "lat": 34.82837,
+     "lon": 135.57753,
+     "code": "JR-A40"
+    },
+    {
+     "ja": "茨木",
+     "en": "Ibaraki",
+     "lat": 34.8152,
+     "lon": 135.56215,
+     "code": "JR-A41"
+    },
+    {
+     "ja": "千里丘",
+     "en": "Senrioka",
+     "lat": 34.79164,
+     "lon": 135.55155,
+     "code": "JR-A42"
+    },
+    {
+     "ja": "岸辺",
+     "en": "Kishibe",
+     "lat": 34.77718,
+     "lon": 135.54165,
+     "code": "JR-A43"
+    },
+    {
+     "ja": "吹田",
+     "en": "Suita",
+     "lat": 34.76315,
+     "lon": 135.5236,
+     "code": "JR-A44"
+    },
+    {
+     "ja": "東淀川",
+     "en": "Higashi-Yodogawa",
+     "lat": 34.7394,
+     "lon": 135.50409,
+     "code": "JR-A45"
+    },
+    {
+     "ja": "新大阪",
+     "en": "Shin-Osaka",
+     "lat": 34.73397,
+     "lon": 135.50212,
+     "code": "JR-A46"
+    },
+    {
+     "ja": "大阪",
+     "en": "Osaka",
+     "lat": 34.70226,
+     "lon": 135.49554,
+     "code": "JR-A47"
+    }
+   ]
+  },
+  {
+   "id": "HankyuKyoto",
+   "name": "Hankyu Kyoto Line",
+   "ja": "阪急京都線",
+   "code": "HK",
+   "color": "#8b2346",
+   "kind": "seibu",
+   "loop": false,
+   "stations": [
+    {
+     "ja": "大阪梅田",
+     "en": "Osaka-umeda",
+     "lat": 34.70546,
+     "lon": 135.49862,
+     "code": "HK01"
+    },
+    {
+     "ja": "十三",
+     "en": "Juso",
+     "lat": 34.72052,
+     "lon": 135.48249,
+     "code": "HK03"
+    },
+    {
+     "ja": "南方",
+     "en": "Minamikata",
+     "lat": 34.72568,
+     "lon": 135.49971,
+     "code": "HK61"
+    },
+    {
+     "ja": "崇禅寺",
+     "en": "Sozenji",
+     "lat": 34.73099,
+     "lon": 135.51014,
+     "code": "HK62"
+    },
+    {
+     "ja": "淡路",
+     "en": "Awaji",
+     "lat": 34.73931,
+     "lon": 135.51679,
+     "code": "HK63"
+    },
+    {
+     "ja": "上新庄",
+     "en": "Kami-Shinjo",
+     "lat": 34.75027,
+     "lon": 135.53303,
+     "code": "HK64"
+    },
+    {
+     "ja": "相川",
+     "en": "Aikawa",
+     "lat": 34.75766,
+     "lon": 135.53349,
+     "code": "HK65"
+    },
+    {
+     "ja": "正雀",
+     "en": "Shojaku",
+     "lat": 34.77566,
+     "lon": 135.54565,
+     "code": "HK66"
+    },
+    {
+     "ja": "摂津市",
+     "en": "Settsu-shi",
+     "lat": 34.78676,
+     "lon": 135.55392,
+     "code": "HK67"
+    },
+    {
+     "ja": "南茨木",
+     "en": "Minami-Ibaraki",
+     "lat": 34.80237,
+     "lon": 135.56516,
+     "code": "HK68"
+    },
+    {
+     "ja": "茨木市",
+     "en": "Ibaraki-shi",
+     "lat": 34.81673,
+     "lon": 135.57573,
+     "code": "HK69"
+    },
+    {
+     "ja": "総持寺",
+     "en": "Sojiji",
+     "lat": 34.82699,
+     "lon": 135.5846,
+     "code": "HK70"
+    },
+    {
+     "ja": "富田",
+     "en": "Tonda",
+     "lat": 34.83516,
+     "lon": 135.59256,
+     "code": "HK71"
+    },
+    {
+     "ja": "高槻市",
+     "en": "Takatsuki-shi",
+     "lat": 34.84995,
+     "lon": 135.62319,
+     "code": "HK72"
+    },
+    {
+     "ja": "上牧",
+     "en": "Kammaki",
+     "lat": 34.87211,
+     "lon": 135.66173,
+     "code": "HK73"
+    },
+    {
+     "ja": "水無瀬",
+     "en": "Minase",
+     "lat": 34.87758,
+     "lon": 135.66756,
+     "code": "HK74"
+    },
+    {
+     "ja": "大山崎",
+     "en": "Oyamazaki",
+     "lat": 34.89145,
+     "lon": 135.6816,
+     "code": "HK75"
+    },
+    {
+     "ja": "西山天王山",
+     "en": "Nishiyama-Tennozan",
+     "lat": 34.91319,
+     "lon": 135.68856,
+     "code": "HK76"
+    },
+    {
+     "ja": "長岡天神",
+     "en": "Nagaoka-tenjin",
+     "lat": 34.9254,
+     "lon": 135.69259,
+     "code": "HK77"
+    },
+    {
+     "ja": "西向日",
+     "en": "Nishi-muko",
+     "lat": 34.94053,
+     "lon": 135.7032,
+     "code": "HK78"
+    },
+    {
+     "ja": "東向日",
+     "en": "Higashi-muko",
+     "lat": 34.95358,
+     "lon": 135.70471,
+     "code": "HK79"
+    },
+    {
+     "ja": "洛西口",
+     "en": "Rakusaiguchi",
+     "lat": 34.9638,
+     "lon": 135.70318,
+     "code": "HK80"
+    },
+    {
+     "ja": "桂",
+     "en": "Katsura",
+     "lat": 34.97943,
+     "lon": 135.70312,
+     "code": "HK81"
+    },
+    {
+     "ja": "西京極",
+     "en": "Nishikyogoku",
+     "lat": 34.99249,
+     "lon": 135.71836,
+     "code": "HK82"
+    },
+    {
+     "ja": "西院",
+     "en": "Saiin",
+     "lat": 35.00359,
+     "lon": 135.73177,
+     "code": "HK83"
+    },
+    {
+     "ja": "大宮",
+     "en": "Omiya",
+     "lat": 35.00366,
+     "lon": 135.74859,
+     "code": "HK84"
+    },
+    {
+     "ja": "烏丸",
+     "en": "Karasuma",
+     "lat": 35.00373,
+     "lon": 135.76045,
+     "code": "HK85"
+    },
+    {
+     "ja": "京都河原町",
+     "en": "Kyoto-kawaramachi",
+     "lat": 35.00381,
+     "lon": 135.76961,
+     "code": "HK86"
+    }
+   ]
+  },
+  {
+   "id": "Keihan",
+   "name": "Keihan Main Line",
+   "ja": "京阪本線",
+   "code": "KH",
+   "color": "#1a6f4a",
+   "kind": "seibu",
+   "loop": false,
+   "stations": [
+    {
+     "ja": "淀屋橋",
+     "en": "Yodoyabashi",
+     "lat": 34.69209,
+     "lon": 135.50172,
+     "code": "KH01"
+    },
+    {
+     "ja": "北浜",
+     "en": "Kitahama",
+     "lat": 34.69134,
+     "lon": 135.50708,
+     "code": "KH02"
+    },
+    {
+     "ja": "天満橋",
+     "en": "Temmabashi",
+     "lat": 34.6901,
+     "lon": 135.51674,
+     "code": "KH03"
+    },
+    {
+     "ja": "京橋",
+     "en": "Kyobashi",
+     "lat": 34.69687,
+     "lon": 135.53254,
+     "code": "KH04"
+    },
+    {
+     "ja": "野江",
+     "en": "Noe",
+     "lat": 34.70712,
+     "lon": 135.54326,
+     "code": "KH05"
+    },
+    {
+     "ja": "関目",
+     "en": "Sekime",
+     "lat": 34.7125,
+     "lon": 135.54694,
+     "code": "KH06"
+    },
+    {
+     "ja": "森小路",
+     "en": "Morishoji",
+     "lat": 34.71938,
+     "lon": 135.55163,
+     "code": "KH07"
+    },
+    {
+     "ja": "千林",
+     "en": "Sembayashi",
+     "lat": 34.72431,
+     "lon": 135.55501,
+     "code": "KH08"
+    },
+    {
+     "ja": "滝井",
+     "en": "Takii",
+     "lat": 34.72761,
+     "lon": 135.55727,
+     "code": "KH09"
+    },
+    {
+     "ja": "土居",
+     "en": "Doi",
+     "lat": 34.73071,
+     "lon": 135.55992,
+     "code": "KH10"
+    },
+    {
+     "ja": "守口市",
+     "en": "Moriguchishi",
+     "lat": 34.7353,
+     "lon": 135.5652,
+     "code": "KH11"
+    },
+    {
+     "ja": "西三荘",
+     "en": "Nishisanso",
+     "lat": 34.73734,
+     "lon": 135.57566,
+     "code": "KH12"
+    },
+    {
+     "ja": "門真市",
+     "en": "Kadomashi",
+     "lat": 34.73768,
+     "lon": 135.58275,
+     "code": "KH13"
+    },
+    {
+     "ja": "古川橋",
+     "en": "Furukawabashi",
+     "lat": 34.74007,
+     "lon": 135.59166,
+     "code": "KH14"
+    },
+    {
+     "ja": "大和田",
+     "en": "Owada",
+     "lat": 34.74301,
+     "lon": 135.60286,
+     "code": "KH15"
+    },
+    {
+     "ja": "萱島",
+     "en": "Kayashima",
+     "lat": 34.74734,
+     "lon": 135.61084,
+     "code": "KH16"
+    },
+    {
+     "ja": "寝屋川市",
+     "en": "Neyagawashi",
+     "lat": 34.76407,
+     "lon": 135.62084,
+     "code": "KH17"
+    },
+    {
+     "ja": "香里園",
+     "en": "Korien",
+     "lat": 34.78476,
+     "lon": 135.63099,
+     "code": "KH18"
+    },
+    {
+     "ja": "光善寺",
+     "en": "Kozenji",
+     "lat": 34.79787,
+     "lon": 135.6302,
+     "code": "KH19"
+    },
+    {
+     "ja": "枚方公園",
+     "en": "Hirakata-koen",
+     "lat": 34.8114,
+     "lon": 135.63939,
+     "code": "KH20"
+    },
+    {
+     "ja": "枚方市",
+     "en": "Hirakatashi",
+     "lat": 34.81613,
+     "lon": 135.64873,
+     "code": "KH21"
+    },
+    {
+     "ja": "御殿山",
+     "en": "Gotenyama",
+     "lat": 34.82917,
+     "lon": 135.65395,
+     "code": "KH22"
+    },
+    {
+     "ja": "牧野",
+     "en": "Makino",
+     "lat": 34.84386,
+     "lon": 135.66559,
+     "code": "KH23"
+    },
+    {
+     "ja": "樟葉",
+     "en": "Kuzuha",
+     "lat": 34.86195,
+     "lon": 135.67536,
+     "code": "KH24"
+    },
+    {
+     "ja": "橋本",
+     "en": "Hashimoto",
+     "lat": 34.88175,
+     "lon": 135.68404,
+     "code": "KH25"
+    },
+    {
+     "ja": "石清水八幡宮",
+     "en": "Iwashimizu-hachimangu",
+     "lat": 34.88463,
+     "lon": 135.70007,
+     "code": "KH26"
+    },
+    {
+     "ja": "淀",
+     "en": "Yodo",
+     "lat": 34.90652,
+     "lon": 135.72117,
+     "code": "KH27"
+    },
+    {
+     "ja": "中書島",
+     "en": "Chushojima",
+     "lat": 34.92672,
+     "lon": 135.76017,
+     "code": "KH28"
+    },
+    {
+     "ja": "伏見桃山",
+     "en": "Fushimi-momoyama",
+     "lat": 34.93281,
+     "lon": 135.76437,
+     "code": "KH29"
+    },
+    {
+     "ja": "丹波橋",
+     "en": "Tambabashi",
+     "lat": 34.93891,
+     "lon": 135.7654,
+     "code": "KH30"
+    },
+    {
+     "ja": "墨染",
+     "en": "Sumizome",
+     "lat": 34.94803,
+     "lon": 135.76902,
+     "code": "KH31"
+    },
+    {
+     "ja": "藤森",
+     "en": "Fujinomori",
+     "lat": 34.95681,
+     "lon": 135.77021,
+     "code": "KH32"
+    },
+    {
+     "ja": "龍谷大前深草",
+     "en": "Ryukokudai-mae-fukakusa",
+     "lat": 34.96436,
+     "lon": 135.77011,
+     "code": "KH33"
+    },
+    {
+     "ja": "伏見稲荷",
+     "en": "Fushimi-inari",
+     "lat": 34.96889,
+     "lon": 135.76926,
+     "code": "KH34"
+    },
+    {
+     "ja": "鳥羽街道",
+     "en": "Toba-kaido",
+     "lat": 34.97349,
+     "lon": 135.77004,
+     "code": "KH35"
+    },
+    {
+     "ja": "東福寺",
+     "en": "Tofukuji",
+     "lat": 34.98126,
+     "lon": 135.77002,
+     "code": "KH36"
+    },
+    {
+     "ja": "七条",
+     "en": "Shichijo",
+     "lat": 34.98907,
+     "lon": 135.76791,
+     "code": "KH37"
+    },
+    {
+     "ja": "清水五条",
+     "en": "Kiyomizu-gojo",
+     "lat": 34.99561,
+     "lon": 135.76845,
+     "code": "KH38"
+    },
+    {
+     "ja": "祇園四条",
+     "en": "Gion-shijo",
+     "lat": 35.00323,
+     "lon": 135.77193,
+     "code": "KH39"
+    },
+    {
+     "ja": "三条",
+     "en": "Sanjo",
+     "lat": 35.00902,
+     "lon": 135.77234,
+     "code": "KH40"
+    },
+    {
+     "ja": "神宮丸太町",
+     "en": "Jingu-marutamachi",
+     "lat": 35.01867,
+     "lon": 135.77225,
+     "code": "KH41"
+    },
+    {
+     "ja": "出町柳",
+     "en": "Demachiyanagi",
+     "lat": 35.03027,
+     "lon": 135.77268,
+     "code": "KH42"
+    }
+   ]
+  }
+ ]
+}

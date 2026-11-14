@@ -39,7 +39,9 @@ export interface MetroLine {
   // Lines with no open timetable run on typical journey times instead:
   // a train every `headway` minutes, taking `hops[i]` minutes (including the
   // stop) to get from station i to station i + 1.
-  sim?: { headway: number; hops: number[] };
+  // `rush` and `quiet`, where given, are the headways at rush hour and early
+  // or late in the day; `headway` then stands for the daytime.
+  sim?: { headway: number; hops: number[]; rush?: number; quiet?: number };
   nodes: number[]; // node id for each station, in line order
   segs: Pt[][]; // the drawn route from station i to station i + 1
   path: string; // the whole line as an SVG path
