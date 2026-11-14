@@ -55,4 +55,12 @@ export const places: Place[] = [
     note: 'A chain of cafes.',
     link: 'https://www.woodberrycoffee.com/',
   },
+  {
+    name: 'Ginza Lion',
+    ja: '銀座ライオン',
+    kind: 'Drink',
+    stations: ['Shinjuku', 'Akihabara'],
+    note: 'A beer hall.',
+    link: 'https://www.ginzalion.jp/',
+  },
 ];
