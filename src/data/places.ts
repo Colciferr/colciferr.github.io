@@ -62,5 +62,11 @@ export const places: Place[] = [
     stations: ['Shinjuku', 'Akihabara'],
     note: 'A beer hall.',
     link: 'https://www.ginzalion.jp/',
+    photo: {
+      src: '/places/ginza-lion.jpg',
+      alt: 'The front of a Ginza Lion',
+      credit: 'Shibuya Mark City branch, by 経済特区, CC BY-SA 4.0',
+      source: 'https://commons.wikimedia.org/wiki/File:%E9%8A%80%E5%BA%A7%E3%83%A9%E3%82%A4%E3%82%AA%E3%83%B3(%E6%B8%8B%E8%B0%B7%E3%83%9E%E3%83%BC%E3%82%AF%E3%82%B7%E3%83%86%E3%82%A3)_02.jpg',
+    },
   },
 ];
