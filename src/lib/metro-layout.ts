@@ -9,7 +9,7 @@
 //
 // The numbers under "Tuning" control the overall look.
 import network from '../data/metro/network.json';
-import { YAMANOTE, SEIBU_SHINJUKU, SEIBU_HAIJIMA, SEIBU_SHINJUKU_KM, SEIBU_HAIJIMA_KM, CHUO_RAPID, OME, YOKOSUKA, YOKOHAMA_LINE, EXCURSIONS, TOKAIDO_SHINKANSEN } from '../data/metro/other-lines';
+import { YAMANOTE, SEIBU_SHINJUKU, SEIBU_HAIJIMA, SEIBU_SHINJUKU_KM, SEIBU_HAIJIMA_KM, CHUO_RAPID, OME, YOKOSUKA, YOKOHAMA_LINE, EXCURSIONS, TOKAIDO_SHINKANSEN, NORTH_SHINKANSEN } from '../data/metro/other-lines';
 import otherStations from '../data/metro/other-stations.json';
 import landData from '../data/metro/land.json';
 import { stops } from '../data/stops';
@@ -568,6 +568,7 @@ yokohamaLine.push(
 // Long-distance spurs.
 const spurShapes: Record<string, { via: Pt[]; to: Pt }> = {
   Kyoto: { via: [], to: [-3, 3] },
+  Sapporo: { via: [[3, 0]], to: [5, -2] },
   Takaosanguchi: { via: [], to: [-2, 2] },
 };
 const excursions = EXCURSIONS.map((e, i) => {
@@ -713,6 +714,9 @@ function handPlaced(id: string, name: string, ja: string, code: string, color: s
   return { id, name, ja, code, color, kind, loop: false, sim, nodes: stations.map((s) => s.node), segs, path: rounded(joined(segs)) };
 }
 
+// The Shinkansen spurs take their line's colour; the others are grey.
+const SPUR_COLOUR: Record<string, string> = { Kyoto: '#1153af', Sapporo: '#12924c' };
+
 export const lines: MetroLine[] = [
   ...metroLines,
   yamanote,
@@ -722,7 +726,7 @@ export const lines: MetroLine[] = [
   handPlaced('Ome', 'Ome Line', '青梅線', 'JC', '#f15a22', 'rail', ome),
   handPlaced('Yokosuka', 'Yokosuka Line', '横須賀線', 'JO', '#007ac1', 'rail', yokosuka),
   handPlaced('YokohamaLine', 'Yokohama Line', '横浜線', 'JH', '#5fa83a', 'rail', yokohamaLine),
-  ...excursions.map((e) => handPlaced(`To${e.en}`, `${e.by} to ${e.en}`, e.ja, '', e.en === 'Kyoto' ? '#1153af' : '#8a93a6', 'excursion', e.stations)),
+  ...excursions.map((e) => handPlaced(`To${e.en}`, `${e.by} to ${e.en}`, e.ja, '', SPUR_COLOUR[e.en] ?? '#8a93a6', 'excursion', e.stations)),
 ];
 
 // ------------------------------------------------------------------- Labels
@@ -843,6 +847,7 @@ const otherWhere = new Map<string, Pt>([
   ...YAMANOTE.map((st) => [st.en.toLowerCase(), [st.lat, st.lon]] as [string, Pt]),
   ...Object.entries(otherStations.stations as Record<string, number[]>).map(([name, c]) => [name.toLowerCase(), [c[0], c[1]]] as [string, Pt]),
   ...TOKAIDO_SHINKANSEN.map((st) => [st.en.toLowerCase(), [st.lat, st.lon]] as [string, Pt]),
+  ...NORTH_SHINKANSEN.slice(2).map((st) => [st.en.toLowerCase(), [st.lat, st.lon]] as [string, Pt]),
 ]);
 const realKm = raw.map((n) => {
   const metro = metroWhere.get(n.en.toLowerCase());
@@ -852,7 +857,7 @@ const realKm = raw.map((n) => {
   if (!at) console.warn(`[map] No real-world position for ${n.en}; it is drawn at the centre of the physical map.`);
   return at ? km(at[0], at[1]) : ([0, 0] as Pt);
 });
-const bulletKm = TOKAIDO_SHINKANSEN.map((st) => km(st.lat, st.lon));
+const bulletKm = [...TOKAIDO_SHINKANSEN, ...NORTH_SHINKANSEN].map((st) => km(st.lat, st.lon));
 const everyKm = [...realKm, ...bulletKm];
 const west = Math.min(...everyKm.map((p) => p[0])) - GEO_MARGIN;
 const north = Math.min(...everyKm.map((p) => p[1])) - GEO_MARGIN;
@@ -875,6 +880,13 @@ const geoLines = lines.map((line) => {
     const stops = TOKAIDO_SHINKANSEN.slice(3, -1).map((st) => gpx(km(st.lat, st.lon)));
     const route = [pts[0], ...stops, pts[pts.length - 1]];
     return { segs: [route], path: rounded([realPx[at('Tokyo').id], realPx[at('Shinagawa').id], ...route]) };
+  }
+  if (line.id === 'ToSapporo') {
+    // The spur to Sapporo becomes the Shinkansen north, stop by stop: Tokyo
+    // and Ueno are stations on the map already.
+    const stops = NORTH_SHINKANSEN.slice(2, -1).map((st) => gpx(km(st.lat, st.lon)));
+    const route = [pts[0], ...stops, pts[pts.length - 1]];
+    return { segs: [route], path: rounded([realPx[at('Tokyo').id], ...route]) };
   }
   if (line.id === 'ToTakaosanguchi') {
     // The spur to Mt. Takao becomes the Keio line all the way from Shinjuku.
@@ -962,9 +974,11 @@ export const geo = {
   land: landPaths,
   water: lakePaths,
   // Stops on the long-distance routes, shown only on this map: the Shinkansen
-  // between Shinagawa and Kyoto, and the main stops of the Keio line.
+  // between Shinagawa and Kyoto and between Ueno and Sapporo, and the main
+  // stops of the Keio line.
   stops: [
     ...TOKAIDO_SHINKANSEN.slice(3, -1).map((st) => ({ ...st, color: '#1153af' })),
+    ...NORTH_SHINKANSEN.slice(2, -1).map((st) => ({ ...st, color: '#12924c' })),
     ...keioWay.filter((st) => KEIO_NAMED.includes(st.en)).map((st) => ({ ...st, color: '#8a93a6' })),
   ].map((st) => {
     const p = gpx(km(st.lat, st.lon));

@@ -18,7 +18,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const BASE = 'https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson';
 
 // Generously larger than the map, so the coast runs cleanly off every edge.
-const BOX = { west: 134.3, east: 141.6, south: 33.6, north: 37.0 };
+const BOX = { west: 134.3, east: 146.0, south: 33.6, north: 45.7 };
 
 async function download(file) {
   const res = await fetch(`${BASE}/${file}`);

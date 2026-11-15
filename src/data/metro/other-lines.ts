@@ -229,9 +229,49 @@ export const TOKAIDO_SHINKANSEN: LoopStation[] = [
   { en: 'Kyoto', ja: '京都', lat: 34.9858, lon: 135.7588 },
 ];
 
+// The Shinkansen north from Tokyo: the Tohoku line to Shin-Aomori, then the
+// Hokkaido line under the sea to Shin-Hakodate-Hokuto (the station for
+// Hakodate). From there to Sapporo the line is still being built; those
+// stations are where it is planned to stop, and the two that do not exist
+// yet (Shin-Yakumo, Shin-Otaru) are placed approximately.
+export const NORTH_SHINKANSEN: LoopStation[] = [
+  { en: 'Tokyo', ja: '東京', lat: 35.6812, lon: 139.7671 },
+  { en: 'Ueno', ja: '上野', lat: 35.7138, lon: 139.7773 },
+  { en: 'Omiya', ja: '大宮', lat: 35.9064, lon: 139.6239 },
+  { en: 'Oyama', ja: '小山', lat: 36.3128, lon: 139.8064 },
+  { en: 'Utsunomiya', ja: '宇都宮', lat: 36.559, lon: 139.8985 },
+  { en: 'Nasushiobara', ja: '那須塩原', lat: 36.9317, lon: 140.0206 },
+  { en: 'Shin-Shirakawa', ja: '新白河', lat: 37.1232, lon: 140.1887 },
+  { en: 'Koriyama', ja: '郡山', lat: 37.3983, lon: 140.3885 },
+  { en: 'Fukushima', ja: '福島', lat: 37.7543, lon: 140.4597 },
+  { en: 'Shiroishi-Zao', ja: '白石蔵王', lat: 37.995, lon: 140.637 },
+  { en: 'Sendai', ja: '仙台', lat: 38.2601, lon: 140.8824 },
+  { en: 'Furukawa', ja: '古川', lat: 38.5707, lon: 140.9676 },
+  { en: 'Kurikoma-Kogen', ja: 'くりこま高原', lat: 38.749, lon: 141.0717 },
+  { en: 'Ichinoseki', ja: '一ノ関', lat: 38.9263, lon: 141.1377 },
+  { en: 'Mizusawa-Esashi', ja: '水沢江刺', lat: 39.1447, lon: 141.189 },
+  { en: 'Kitakami', ja: '北上', lat: 39.2822, lon: 141.1222 },
+  { en: 'Shin-Hanamaki', ja: '新花巻', lat: 39.4069, lon: 141.1741 },
+  { en: 'Morioka', ja: '盛岡', lat: 39.7013, lon: 141.1363 },
+  { en: 'Iwate-Numakunai', ja: 'いわて沼宮内', lat: 39.9606, lon: 141.218 },
+  { en: 'Ninohe', ja: '二戸', lat: 40.26, lon: 141.287 },
+  { en: 'Hachinohe', ja: '八戸', lat: 40.5094, lon: 141.4312 },
+  { en: 'Shichinohe-Towada', ja: '七戸十和田', lat: 40.7195, lon: 141.154 },
+  { en: 'Shin-Aomori', ja: '新青森', lat: 40.8274, lon: 140.6934 },
+  { en: 'Okutsugaru-Imabetsu', ja: '奥津軽いまべつ', lat: 41.1449, lon: 140.515 },
+  { en: 'Kikonai', ja: '木古内', lat: 41.6776, lon: 140.434 },
+  { en: 'Shin-Hakodate-Hokuto', ja: '新函館北斗', lat: 41.9048, lon: 140.6464 },
+  { en: 'Shin-Yakumo', ja: '新八雲', lat: 42.25, lon: 140.22 },
+  { en: 'Oshamambe', ja: '長万部', lat: 42.513, lon: 140.376 },
+  { en: 'Kutchan', ja: '倶知安', lat: 42.901, lon: 140.756 },
+  { en: 'Shin-Otaru', ja: '新小樽', lat: 43.155, lon: 140.985 },
+  { en: 'Sapporo', ja: '札幌', lat: 43.0687, lon: 141.3508 },
+];
+
 // Places reached by a long ride off the edge of the map. Each is drawn as a
 // short dashed spur from the station you would leave from.
 export const EXCURSIONS = [
   { from: 'Shin-Yokohama', en: 'Kyoto', ja: '京都', by: 'Shinkansen' },
+  { from: 'Ueno', en: 'Sapporo', ja: '札幌', by: 'Shinkansen' },
   { from: 'Takao', en: 'Takaosanguchi', ja: '高尾山口', by: 'Keio Takao Line' },
 ];

@@ -1,0 +1,635 @@
+{
+ "source": "OpenStreetMap contributors (ODbL), https://www.openstreetmap.org/copyright",
+ "fetched": "2026-11-15T06:06:01.540Z",
+ "lines": [
+  {
+   "id": "Namboku",
+   "name": "Namboku Line",
+   "ja": "南北線",
+   "code": "N",
+   "color": "#0a9a4a",
+   "kind": "metro",
+   "loop": false,
+   "stations": [
+    {
+     "ja": "麻生",
+     "en": "Asabu",
+     "code": "N01",
+     "lat": 43.10835,
+     "lon": 141.33837
+    },
+    {
+     "ja": "北34条",
+     "en": "Kita-sanjuyo-jo",
+     "code": "N02",
+     "lat": 43.10021,
+     "lon": 141.34205
+    },
+    {
+     "ja": "北24条",
+     "en": "Kita-nijuyo-jo",
+     "code": "N03",
+     "lat": 43.08949,
+     "lon": 141.34476
+    },
+    {
+     "ja": "北18条",
+     "en": "Kita-juhachi-jo",
+     "code": "N04",
+     "lat": 43.08157,
+     "lon": 141.34678
+    },
+    {
+     "ja": "北12条",
+     "en": "Kita-juni-jo",
+     "code": "N05",
+     "lat": 43.07477,
+     "lon": 141.34847
+    },
+    {
+     "ja": "さっぽろ",
+     "en": "Sapporo",
+     "code": "N06",
+     "lat": 43.0661,
+     "lon": 141.3523
+    },
+    {
+     "ja": "大通",
+     "en": "Odori",
+     "code": "N07",
+     "lat": 43.06038,
+     "lon": 141.35315
+    },
+    {
+     "ja": "すすきの",
+     "en": "Susukino",
+     "code": "N08",
+     "lat": 43.05536,
+     "lon": 141.35338
+    },
+    {
+     "ja": "中島公園",
+     "en": "Nakajima-koen",
+     "code": "N09",
+     "lat": 43.04833,
+     "lon": 141.35512
+    },
+    {
+     "ja": "幌平橋",
+     "en": "Horohira-bashi",
+     "code": "N10",
+     "lat": 43.04019,
+     "lon": 141.35598
+    },
+    {
+     "ja": "中の島",
+     "en": "Nakanoshima",
+     "code": "N11",
+     "lat": 43.03753,
+     "lon": 141.36118
+    },
+    {
+     "ja": "平岸",
+     "en": "Hiragishi",
+     "code": "N12",
+     "lat": 43.03457,
+     "lon": 141.3683
+    },
+    {
+     "ja": "南平岸",
+     "en": "Minami-Hiragishi",
+     "code": "N13",
+     "lat": 43.02653,
+     "lon": 141.37126
+    },
+    {
+     "ja": "澄川",
+     "en": "Sumikawa",
+     "code": "N14",
+     "lat": 43.0172,
+     "lon": 141.36732
+    },
+    {
+     "ja": "自衛隊前",
+     "en": "Jieitai-mae",
+     "code": "N15",
+     "lat": 43.00633,
+     "lon": 141.36479
+    },
+    {
+     "ja": "真駒内",
+     "en": "Makomanai",
+     "code": "N16",
+     "lat": 42.99117,
+     "lon": 141.35843
+    }
+   ]
+  },
+  {
+   "id": "Tozai",
+   "name": "Tozai Line",
+   "ja": "東西線",
+   "code": "T",
+   "color": "#f08a00",
+   "kind": "metro",
+   "loop": false,
+   "stations": [
+    {
+     "ja": "宮の沢",
+     "en": "Miyanosawa",
+     "code": "T01",
+     "lat": 43.0895,
+     "lon": 141.27797
+    },
+    {
+     "ja": "発寒南",
+     "en": "Hassamu-minami",
+     "code": "T02",
+     "lat": 43.08161,
+     "lon": 141.29021
+    },
+    {
+     "ja": "琴似",
+     "en": "Kotoni",
+     "code": "T03",
+     "lat": 43.07546,
+     "lon": 141.30445
+    },
+    {
+     "ja": "二十四軒",
+     "en": "Nijuyon-ken",
+     "code": "T04",
+     "lat": 43.07048,
+     "lon": 141.31362
+    },
+    {
+     "ja": "西28丁目",
+     "en": "Nishi-nijuhatchome",
+     "code": "T05",
+     "lat": 43.061,
+     "lon": 141.31465
+    },
+    {
+     "ja": "円山公園",
+     "en": "Maruyama-koen",
+     "code": "T06",
+     "lat": 43.05576,
+     "lon": 141.31945
+    },
+    {
+     "ja": "西18丁目",
+     "en": "Nishi-juhatchome",
+     "code": "T07",
+     "lat": 43.05723,
+     "lon": 141.33035
+    },
+    {
+     "ja": "西11丁目",
+     "en": "Nishi-juitchome",
+     "code": "T08",
+     "lat": 43.05872,
+     "lon": 141.34139
+    },
+    {
+     "ja": "大通",
+     "en": "Odori",
+     "code": "T09",
+     "lat": 43.06038,
+     "lon": 141.35315
+    },
+    {
+     "ja": "バスセンター前",
+     "en": "Bus Center-mae",
+     "code": "T10",
+     "lat": 43.06156,
+     "lon": 141.36196
+    },
+    {
+     "ja": "菊水",
+     "en": "Kikusui",
+     "code": "T11",
+     "lat": 43.05736,
+     "lon": 141.3728
+    },
+    {
+     "ja": "東札幌",
+     "en": "Higashi-Sapporo",
+     "code": "T12",
+     "lat": 43.05186,
+     "lon": 141.38475
+    },
+    {
+     "ja": "白石",
+     "en": "Shiroishi",
+     "code": "T13",
+     "lat": 43.04644,
+     "lon": 141.39566
+    },
+    {
+     "ja": "南郷7丁目",
+     "en": "Nango-nana-chome",
+     "code": "T14",
+     "lat": 43.04037,
+     "lon": 141.411
+    },
+    {
+     "ja": "南郷13丁目",
+     "en": "Nango-jusan-chome",
+     "code": "T15",
+     "lat": 43.03579,
+     "lon": 141.42292
+    },
+    {
+     "ja": "南郷18丁目",
+     "en": "Nango-juhatchome",
+     "code": "T16",
+     "lat": 43.03036,
+     "lon": 141.43527
+    },
+    {
+     "ja": "大谷地",
+     "en": "Oyachi",
+     "code": "T17",
+     "lat": 43.02798,
+     "lon": 141.45316
+    },
+    {
+     "ja": "ひばりが丘",
+     "en": "Hibarigaoka",
+     "code": "T18",
+     "lat": 43.03227,
+     "lon": 141.4644
+    },
+    {
+     "ja": "新さっぽろ",
+     "en": "Shin-Sapporo",
+     "code": "T19",
+     "lat": 43.03886,
+     "lon": 141.47398
+    }
+   ]
+  },
+  {
+   "id": "Toho",
+   "name": "Toho Line",
+   "ja": "東豊線",
+   "code": "H",
+   "color": "#1c9ad6",
+   "kind": "metro",
+   "loop": false,
+   "stations": [
+    {
+     "ja": "栄町",
+     "en": "Sakaemachi",
+     "code": "H01",
+     "lat": 43.113,
+     "lon": 141.36713
+    },
+    {
+     "ja": "新道東",
+     "en": "Shindo-higashi",
+     "code": "H02",
+     "lat": 43.10474,
+     "lon": 141.36909
+    },
+    {
+     "ja": "元町",
+     "en": "Motomachi",
+     "code": "H03",
+     "lat": 43.09408,
+     "lon": 141.37171
+    },
+    {
+     "ja": "環状通東",
+     "en": "Kanjo-dori-higashi",
+     "code": "H04",
+     "lat": 43.08243,
+     "lon": 141.37447
+    },
+    {
+     "ja": "東区役所前",
+     "en": "Higashi-kuyakusho-mae",
+     "code": "H05",
+     "lat": 43.07826,
+     "lon": 141.36536
+    },
+    {
+     "ja": "北13条東",
+     "en": "Kita-jusan-jo-higashi",
+     "code": "H06",
+     "lat": 43.07685,
+     "lon": 141.35497
+    },
+    {
+     "ja": "さっぽろ",
+     "en": "Sapporo",
+     "code": "H07",
+     "lat": 43.0661,
+     "lon": 141.3523
+    },
+    {
+     "ja": "大通",
+     "en": "Odori",
+     "code": "H08",
+     "lat": 43.06038,
+     "lon": 141.35315
+    },
+    {
+     "ja": "豊水すすきの",
+     "en": "Hosui-Susukino",
+     "code": "H09",
+     "lat": 43.05416,
+     "lon": 141.35701
+    },
+    {
+     "ja": "学園前",
+     "en": "Gakuen-mae",
+     "code": "H10",
+     "lat": 43.04777,
+     "lon": 141.36897
+    },
+    {
+     "ja": "豊平公園",
+     "en": "Toyohira-koen",
+     "code": "H11",
+     "lat": 43.04212,
+     "lon": 141.37616
+    },
+    {
+     "ja": "美園",
+     "en": "Misono",
+     "code": "H12",
+     "lat": 43.03626,
+     "lon": 141.38562
+    },
+    {
+     "ja": "月寒中央",
+     "en": "Tsukisamu-chuo",
+     "code": "H13",
+     "lat": 43.02992,
+     "lon": 141.39667
+    },
+    {
+     "ja": "福住",
+     "en": "Fukuzumi",
+     "code": "H14",
+     "lat": 43.02185,
+     "lon": 141.40288
+    }
+   ]
+  },
+  {
+   "id": "JROtaru",
+   "name": "JR Hakodate Line",
+   "ja": "函館本線",
+   "code": "S",
+   "color": "#c8372d",
+   "kind": "rail",
+   "loop": false,
+   "stations": [
+    {
+     "ja": "余市",
+     "en": "Yoichi",
+     "code": "",
+     "lat": 43.1869,
+     "lon": 140.79479
+    },
+    {
+     "ja": "蘭島",
+     "en": "Ranshima",
+     "code": "",
+     "lat": 43.19673,
+     "lon": 140.85594
+    },
+    {
+     "ja": "塩谷",
+     "en": "Shioya",
+     "code": "",
+     "lat": 43.20248,
+     "lon": 140.92484
+    },
+    {
+     "ja": "小樽",
+     "en": "Otaru",
+     "code": "S15",
+     "lat": 43.19758,
+     "lon": 140.99337
+    },
+    {
+     "ja": "南小樽",
+     "en": "Minami-Otaru",
+     "code": "S14",
+     "lat": 43.18686,
+     "lon": 141.00733
+    },
+    {
+     "ja": "小樽築港",
+     "en": "Otaru-Chikko",
+     "code": "S13",
+     "lat": 43.18081,
+     "lon": 141.02776
+    },
+    {
+     "ja": "朝里",
+     "en": "Asari",
+     "code": "S12",
+     "lat": 43.17691,
+     "lon": 141.06369
+    },
+    {
+     "ja": "銭函",
+     "en": "Zenibako",
+     "code": "S11",
+     "lat": 43.14348,
+     "lon": 141.15972
+    },
+    {
+     "ja": "ほしみ",
+     "en": "Hoshimi",
+     "code": "S10",
+     "lat": 43.13352,
+     "lon": 141.19214
+    },
+    {
+     "ja": "星置",
+     "en": "Hoshioki",
+     "code": "S09",
+     "lat": 43.13234,
+     "lon": 141.21097
+    },
+    {
+     "ja": "稲穂",
+     "en": "Inaho",
+     "code": "S08",
+     "lat": 43.12813,
+     "lon": 141.22297
+    },
+    {
+     "ja": "手稲",
+     "en": "Teine",
+     "code": "S07",
+     "lat": 43.12026,
+     "lon": 141.24361
+    },
+    {
+     "ja": "稲積公園",
+     "en": "Inazumi-koen",
+     "code": "S06",
+     "lat": 43.11226,
+     "lon": 141.2568
+    },
+    {
+     "ja": "発寒",
+     "en": "Hassamu",
+     "code": "S05",
+     "lat": 43.0998,
+     "lon": 141.27729
+    },
+    {
+     "ja": "発寒中央",
+     "en": "Hassamu-chuo",
+     "code": "S04",
+     "lat": 43.08948,
+     "lon": 141.29424
+    },
+    {
+     "ja": "琴似",
+     "en": "Kotoni (JR)",
+     "code": "S03",
+     "lat": 43.08153,
+     "lon": 141.30743
+    },
+    {
+     "ja": "桑園",
+     "en": "Soen",
+     "code": "S02",
+     "lat": 43.07074,
+     "lon": 141.33199
+    },
+    {
+     "ja": "札幌",
+     "en": "Sapporo",
+     "code": "01",
+     "lat": 43.06864,
+     "lon": 141.35092
+    }
+   ]
+  },
+  {
+   "id": "JRAirport",
+   "name": "JR Chitose Line",
+   "ja": "千歳線",
+   "code": "H",
+   "color": "#1f5fa8",
+   "kind": "rail",
+   "loop": false,
+   "stations": [
+    {
+     "ja": "札幌",
+     "en": "Sapporo",
+     "code": "01",
+     "lat": 43.06864,
+     "lon": 141.35092
+    },
+    {
+     "ja": "苗穂",
+     "en": "Naebo",
+     "code": "H02",
+     "lat": 43.06853,
+     "lon": 141.37376
+    },
+    {
+     "ja": "白石",
+     "en": "Shiroishi (JR)",
+     "code": "H03",
+     "lat": 43.05485,
+     "lon": 141.41382
+    },
+    {
+     "ja": "平和",
+     "en": "Heiwa",
+     "code": "H04",
+     "lat": 43.04689,
+     "lon": 141.43858
+    },
+    {
+     "ja": "新札幌",
+     "en": "Shin-Sapporo",
+     "code": "H05",
+     "lat": 43.0388,
+     "lon": 141.47251
+    },
+    {
+     "ja": "上野幌",
+     "en": "Kami-Nopporo",
+     "code": "H06",
+     "lat": 43.01629,
+     "lon": 141.48702
+    },
+    {
+     "ja": "北広島",
+     "en": "Kita-Hiroshima",
+     "code": "H07",
+     "lat": 42.97877,
+     "lon": 141.56318
+    },
+    {
+     "ja": "島松",
+     "en": "Shimamatsu",
+     "code": "H08",
+     "lat": 42.92203,
+     "lon": 141.57317
+    },
+    {
+     "ja": "恵み野",
+     "en": "Megumino",
+     "code": "H09",
+     "lat": 42.90241,
+     "lon": 141.57433
+    },
+    {
+     "ja": "恵庭",
+     "en": "Eniwa",
+     "code": "H10",
+     "lat": 42.8827,
+     "lon": 141.58681
+    },
+    {
+     "ja": "サッポロビール庭園",
+     "en": "Sapporo Beer Teien",
+     "code": "H11",
+     "lat": 42.8675,
+     "lon": 141.6048
+    },
+    {
+     "ja": "長都",
+     "en": "Osatsu",
+     "code": "H12",
+     "lat": 42.85236,
+     "lon": 141.62272
+    },
+    {
+     "ja": "千歳",
+     "en": "Chitose",
+     "code": "H13",
+     "lat": 42.82826,
+     "lon": 141.65186
+    },
+    {
+     "ja": "南千歳",
+     "en": "Minami-Chitose",
+     "code": "H14",
+     "lat": 42.80853,
+     "lon": 141.67495
+    },
+    {
+     "ja": "新千歳空港",
+     "en": "New Chitose Airport",
+     "code": "AP15",
+     "lat": 42.78781,
+     "lon": 141.68087
+    }
+   ]
+  }
+ ]
+}

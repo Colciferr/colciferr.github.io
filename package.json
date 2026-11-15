@@ -14,7 +14,8 @@
     "pictures": "node scripts/build-pictures.mjs",
     "lines:fetch": "node scripts/fetch-other-lines.mjs",
     "land:fetch": "node scripts/fetch-land.mjs",
-    "kansai:fetch": "node scripts/fetch-kansai.mjs"
+    "kansai:fetch": "node scripts/fetch-kansai.mjs",
+    "sapporo:fetch": "node scripts/fetch-sapporo.mjs"
   },
   "dependencies": {
     "astro": "^6.4.4"

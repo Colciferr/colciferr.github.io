@@ -1,12 +1,15 @@
 ---
-// The map itself, used by both map pages: Tokyo (src/pages/index.astro, the
-// home page) and Kansai (src/pages/kansai.astro, Osaka and Kyoto).
+// The map itself, used by every map page: Tokyo (src/pages/index.astro, the
+// home page), Kansai (src/pages/kansai.astro, Osaka and Kyoto) and Sapporo
+// (src/pages/sapporo.astro).
 //
 // Tokyo: the Yamanote loop in the middle, the Tokyo Metro woven through it,
 // the Seibu lines heading west, and trains running on all of it.
 // Kansai: the Osaka Loop and Osaka Metro, the Kyoto subway, and the three
 // lines between the two cities. Its stations come from OpenStreetMap
 // (`npm run kansai:fetch`) and its shape from src/lib/kansai-layout.ts.
+// Sapporo: the three subway lines, and JR out to Yoichi and to the airport
+// (`npm run sapporo:fetch`, src/lib/sapporo-layout.ts).
 //
 // - Which page lives at which station: src/data/stops.ts
 // - Photographs, by the station they were taken near: `npm run pictures`
@@ -21,26 +24,38 @@ import { places } from '../data/places';
 import pictures from '../data/pictures.json';
 import { pickForMap } from '../data/map-picks';
 import kansaiNetwork from '../data/kansai/network.json';
+import sapporoNetwork from '../data/sapporo/network.json';
 
 interface Props {
-  map?: 'tokyo' | 'kansai';
+  map?: 'tokyo' | 'kansai' | 'sapporo';
 }
 const { map = 'tokyo' } = Astro.props;
-const kansai = map === 'kansai';
+// `kansai` here means "not the Tokyo map": Kansai and Sapporo are both drawn
+// from OpenStreetMap stations and work the same way.
+const kansai = map !== 'tokyo';
+const sapporo = map === 'sapporo';
 
-// Each map has its own layout module; both produce the same things.
-const layout = kansai ? await import('../lib/kansai-layout') : await import('../lib/metro-layout');
+// Each map has its own layout module; they all produce the same things.
+const layout = sapporo
+  ? await import('../lib/sapporo-layout')
+  : kansai
+    ? await import('../lib/kansai-layout')
+    : await import('../lib/metro-layout');
 const { lines, nodes, geo, width, height, lineWidth, labelSize, labelLine2, fetched } = layout;
 
-// Stations that lead straight to the other map instead of opening a panel.
-const portals: Record<string, { title: string; href: string }> = kansai
-  ? { 'Shin-Osaka': { title: 'Tokyo map', href: '/' } }
-  : { Kyoto: { title: 'Kansai map', href: '/kansai' } };
-// Timetable files, where the map has them. Kansai has none: its trains run
-// to typical frequencies and journey times instead (see kansai-layout.ts).
+// Stations that lead straight to another map instead of opening a panel.
+const portals: Record<string, { title: string; href: string }> = sapporo
+  ? { 'New Chitose Airport': { title: 'Tokyo map', href: '/' } }
+  : kansai
+    ? { 'Shin-Osaka': { title: 'Tokyo map', href: '/' } }
+    : { Kyoto: { title: 'Kansai map', href: '/kansai' }, Sapporo: { title: 'Sapporo map', href: '/sapporo' } };
+// Timetable files, where the map has them. Kansai and Sapporo have none:
+// their trains run to typical frequencies and journey times instead.
 const trainFiles = kansai ? [] : ['/metro/trains-', '/metro/trains-other-'];
-// Stations on the other map, so things filed there are not reported as lost.
-const elsewhere = new Set(kansai ? [] : kansaiNetwork.lines.flatMap((l) => l.stations.map((st) => st.en.toLowerCase())));
+// Stations on the other maps, so things filed there are not reported as lost.
+const elsewhere = new Set(
+  kansai ? [] : [...kansaiNetwork.lines, ...sapporoNetwork.lines].flatMap((l) => l.stations.map((st) => st.en.toLowerCase())),
+);
 
 interface Photo {
   station: string;
@@ -88,7 +103,7 @@ const photos: Record<number, Photo[]> = {};
 for (const photo of (pictures as { photos: Photo[] }).photos) {
   const node = byName.get(photo.station.toLowerCase());
   if (!node) {
-    if (!kansai && !elsewhere.has(photo.station.toLowerCase())) console.warn(`[map] A photo is filed under "${photo.station}", which is not a station on either map.`);
+    if (!kansai && !elsewhere.has(photo.station.toLowerCase())) console.warn(`[map] A photo is filed under "${photo.station}", which is not a station on any of the maps.`);
     continue;
   }
   // A station that leads to the other map shows its photographs there.
@@ -111,7 +126,7 @@ for (const { stations, ...place } of places) {
   for (const station of stations) {
     const node = byName.get(station.toLowerCase());
     if (!node) {
-      if (!kansai && !elsewhere.has(station.toLowerCase())) console.warn(`[map] "${place.name}" is filed under "${station}", which is not a station on either map.`);
+      if (!kansai && !elsewhere.has(station.toLowerCase())) console.warn(`[map] "${place.name}" is filed under "${station}", which is not a station on any of the maps.`);
       continue;
     }
     if (sections[node.id]?.go) continue;
@@ -161,19 +176,22 @@ for (const snapshot of Object.values(snapshots)) {
   boards[node.id] = { line: snapshot.line, source: snapshot.source, fetched: dateFmt.format(new Date(snapshot.scrapedAt)), names, days };
 }
 
-const loop = lines.find((l) => l.loop)!;
-const loopNodes = loop.nodes.map((id) => nodes[id]);
-const start = {
-  x: loopNodes.reduce((s, n) => s + n.x, 0) / loopNodes.length,
-  y: loopNodes.reduce((s, n) => s + n.y, 0) / loopNodes.length,
-};
+// Where the map opens: the middle of its loop line, or the layout's own choice
+// where there is no loop (Sapporo).
+const loopNodes = (lines.find((l) => l.loop)?.nodes ?? []).map((id) => nodes[id]);
+const start = loopNodes.length
+  ? {
+      x: loopNodes.reduce((s, n) => s + n.x, 0) / loopNodes.length,
+      y: loopNodes.reduce((s, n) => s + n.y, 0) / loopNodes.length,
+    }
+  : (layout as { start?: { x: number; y: number } }).start ?? { x: width / 2, y: height / 2 };
 
 // Everything the browser needs to move trains and fill in the side panel.
 const data = {
   start,
   trainFiles,
   // The station the opening animation pulls back from.
-  origin: kansai ? 'Osaka' : 'Tokyo',
+  origin: sapporo ? 'Sapporo' : kansai ? 'Osaka' : 'Tokyo',
   lines: lines.map((l) => ({ id: l.id, name: l.name, ja: l.ja, code: l.code, color: l.color, kind: l.kind, loop: l.loop, sim: l.sim, nodes: l.nodes, segs: l.segs })),
   nodes: nodes.map((n) => ({
     id: n.id,
@@ -213,7 +231,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <title>{kansai ? 'Kansai map · Nicholas Cole Davis' : 'Nicholas Cole Davis'}</title>
+    <title>{sapporo ? 'Sapporo map · Nicholas Cole Davis' : kansai ? 'Kansai map · Nicholas Cole Davis' : 'Nicholas Cole Davis'}</title>
   </head>
   <body>
     <div class="viewport" id="viewport">
@@ -335,7 +353,8 @@ const fetchedOn = dateFmt.format(new Date(fetched));
       </p>
       <div class="views maps" role="group" aria-label="Which map">
         <a href="/" aria-current={kansai ? undefined : 'page'}>Tokyo</a>
-        <a href="/kansai" aria-current={kansai ? 'page' : undefined}>Osaka &amp; Kyoto</a>
+        <a href="/kansai" aria-current={kansai && !sapporo ? 'page' : undefined}>Osaka &amp; Kyoto</a>
+        <a href="/sapporo" aria-current={sapporo ? 'page' : undefined}>Sapporo</a>
       </div>
       <div class="views" role="group" aria-label="Map style">
         <button type="button" data-view="diagram" aria-pressed="true">Logical</button>
