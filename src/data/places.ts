@@ -25,7 +25,7 @@ export const places: Place[] = [
     name: 'Sekai no Yamachan',
     ja: '世界の山ちゃん',
     kind: 'Eat',
-    stations: ['Tachikawa', 'Seibu-Shinjuku'],
+    stations: ['Tachikawa', 'Seibu-Shinjuku', 'Kyoto Shiyakusho-mae'],
     note: 'An izakaya chain, and one of my favorite places to eat.',
     photo: {
       src: '/places/sekai-no-yamachan.jpg',
