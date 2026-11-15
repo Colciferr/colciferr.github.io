@@ -32,7 +32,7 @@ const stations = [...new Set(photos.map((p) => p.station))].map((station) => {
   {photos.length === 0 && <p>Nothing here yet.</p>}
   {
     stations.map(({ station, places }) => (
-      <section class="station">
+      <section class="station" id={station}>
         <h2>
           <a href={mapLink(station)}>{station}</a>
         </h2>
@@ -58,6 +58,7 @@ const stations = [...new Set(photos.map((p) => p.station))].map((station) => {
 
 <style>
   .station {
+    scroll-margin-top: 6rem;
     margin-bottom: 4rem;
   }
 

@@ -19,6 +19,7 @@ import { roles } from '../data/resume';
 import { stops } from '../data/stops';
 import { places } from '../data/places';
 import pictures from '../data/pictures.json';
+import { pickForMap } from '../data/map-picks';
 import kansaiNetwork from '../data/kansai/network.json';
 
 interface Props {
@@ -95,6 +96,14 @@ for (const photo of (pictures as { photos: Photo[] }).photos) {
   (photos[node.id] ??= []).push(photo);
 }
 const photoStations = Object.keys(photos).map((id) => nodes[Number(id)]);
+// The map shows a few photographs per station (src/data/map-picks.ts); the
+// Pictures page has them all.
+const mapPhotos: Record<number, Photo[]> = {};
+const photoTotals: Record<number, number> = {};
+for (const [id, list] of Object.entries(photos)) {
+  mapPhotos[Number(id)] = pickForMap(nodes[Number(id)].en, list);
+  photoTotals[Number(id)] = list.length;
+}
 
 // Favourite places, grouped by station (a place can be at several).
 const liked: Record<number, { name: string; ja?: string; kind: string; note?: string; link?: string; photo?: { src: string; alt: string; credit?: string; source?: string } }[]> = {};
@@ -181,7 +190,8 @@ const data = {
   // The same stations and lines laid out where they really are.
   geo,
   sections,
-  photos,
+  photos: mapPhotos,
+  photoTotals,
   places: liked,
   boards,
 };
@@ -505,6 +515,7 @@ const fetchedOn = dateFmt.format(new Date(fetched));
         origin: string;
         sections: Record<string, Section>;
         photos: Record<string, Photo[]>;
+        photoTotals: Record<string, number>;
         places: Record<string, { name: string; ja?: string; kind: string; note?: string; link?: string; photo?: { src: string; alt: string; credit?: string; source?: string } }[]>;
         boards: Record<string, { line: string; source: string; fetched: string; names: string[]; days: Record<string, { name: string; rows: number[][] }[]> }>;
       };
@@ -1184,7 +1195,11 @@ const fetchedOn = dateFmt.format(new Date(fetched));
                     )
                     .join('')}</div>`,
               )
-              .join('')}`
+              .join('')}${
+              (data.photoTotals[id] ?? 0) > shown.length
+                ? `<p class="all-shots"><a href="/pictures#${encodeURIComponent(node.en)}">See all ${data.photoTotals[id]} pictures from here</a></p>`
+                : ''
+            }`
           : '';
 
         openPanel(`
@@ -2313,6 +2328,11 @@ const fetchedOn = dateFmt.format(new Date(fetched));
     font-style: normal;
     font-size: 0.78rem;
     color: var(--muted);
+  }
+
+  .all-shots {
+    margin: 0.7rem 0 0;
+    font-size: 0.88rem;
   }
 
   .place {
