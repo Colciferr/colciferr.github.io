@@ -44,7 +44,7 @@ const stations = [...new Set(photos.map((p) => p.station))].map((station) => {
             </p>
             <div class="grid">
               {shots.map((p) => (
-                <a href={p.src} style={`--ratio:${(p.w / p.h).toFixed(3)}`}>
+                <a href={p.src} data-caption={[station, place === station ? '' : place, p.date].filter(Boolean).join(' · ')} style={`--ratio:${(p.w / p.h).toFixed(3)}`}>
                   <img src={p.thumb} alt={place} width={p.w} height={p.h} loading="lazy" />
                 </a>
               ))}
@@ -54,7 +54,57 @@ const stations = [...new Set(photos.map((p) => p.station))].map((station) => {
       </section>
     ))
   }
+
+  <!-- A photograph opened large, with arrows to the ones before and after. -->
+  <dialog class="lightbox" id="lightbox" aria-label="Photograph">
+    <img id="lightbox-img" alt="" />
+    <p id="lightbox-caption"></p>
+    <button type="button" class="lb-prev" id="lightbox-prev" aria-label="Previous photograph">‹</button>
+    <button type="button" class="lb-next" id="lightbox-next" aria-label="Next photograph">›</button>
+    <button type="button" class="lb-close" id="lightbox-close" aria-label="Close">×</button>
+  </dialog>
 </Site>
+
+<script>
+  // Clicking a photograph opens it over the page. The arrows (on screen or
+  // on the keyboard) step through every photograph on the page, in order.
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.grid a'));
+  const lightbox = document.getElementById('lightbox') as HTMLDialogElement;
+  const image = document.getElementById('lightbox-img') as HTMLImageElement;
+  const caption = document.getElementById('lightbox-caption')!;
+  let current = 0;
+
+  function show(index: number) {
+    if (!links.length) return;
+    current = (index + links.length) % links.length;
+    const link = links[current];
+    image.src = link.href;
+    image.alt = link.querySelector('img')?.alt ?? '';
+    caption.textContent = [link.dataset.caption, `${current + 1} of ${links.length}`].filter(Boolean).join(' · ');
+    if (!lightbox.open) lightbox.showModal();
+    // Fetch the neighbours now so the arrows feel instant.
+    for (const step of [1, -1]) new Image().src = links[(current + step + links.length) % links.length].href;
+  }
+
+  links.forEach((link, index) =>
+    link.addEventListener('click', (e) => {
+      // Leave Ctrl-click, middle-click and the like to open the file as usual.
+      if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      e.preventDefault();
+      show(index);
+    }),
+  );
+  document.getElementById('lightbox-prev')!.addEventListener('click', () => show(current - 1));
+  document.getElementById('lightbox-next')!.addEventListener('click', () => show(current + 1));
+  document.getElementById('lightbox-close')!.addEventListener('click', () => lightbox.close());
+  lightbox.addEventListener('click', (e) => e.target === lightbox && lightbox.close());
+  lightbox.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') show(current - 1);
+    if (e.key === 'ArrowRight') show(current + 1);
+  });
+  // Put the page back where the last photograph viewed sits.
+  lightbox.addEventListener('close', () => links[current]?.focus());
+</script>
 
 <style>
   .station {
@@ -114,5 +164,81 @@ const stations = [...new Set(photos.map((p) => p.station))].map((station) => {
   .grid a:hover img,
   .grid a:focus-visible img {
     opacity: 0.85;
+  }
+
+  /* The large view. It matches the one on the map. */
+  .lightbox {
+    width: 100vw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 2.5rem 3.5rem 3rem;
+    border: 0;
+    background: rgb(10 14 24 / 0.94);
+    color: #fff;
+  }
+
+  .lightbox[open] {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    place-items: center;
+    gap: 0.75rem;
+  }
+
+  .lightbox::backdrop {
+    background: transparent;
+  }
+
+  .lightbox img {
+    max-width: 100%;
+    max-height: 100%;
+    min-height: 0;
+    object-fit: contain;
+  }
+
+  .lightbox p {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    text-align: center;
+  }
+
+  .lightbox button {
+    position: absolute;
+    background: none;
+    border: 0;
+    color: #fff;
+    font-size: 2.4rem;
+    line-height: 1;
+    padding: 0.5rem 0.9rem;
+    cursor: pointer;
+    opacity: 0.75;
+  }
+
+  .lightbox button:hover {
+    opacity: 1;
+  }
+
+  .lb-prev {
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .lb-next {
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .lb-close {
+    top: 0;
+    right: 0;
+  }
+
+  @media (max-width: 640px) {
+    .lightbox {
+      padding: 2.5rem 0.5rem 2.5rem;
+    }
   }
 </style>
