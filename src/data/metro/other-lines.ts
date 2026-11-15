@@ -231,9 +231,7 @@ export const TOKAIDO_SHINKANSEN: LoopStation[] = [
 
 // The Shinkansen north from Tokyo: the Tohoku line to Shin-Aomori, then the
 // Hokkaido line under the sea to Shin-Hakodate-Hokuto (the station for
-// Hakodate). From there to Sapporo the line is still being built; those
-// stations are where it is planned to stop, and the two that do not exist
-// yet (Shin-Yakumo, Shin-Otaru) are placed approximately.
+// Hakodate), which is as far as it goes.
 export const NORTH_SHINKANSEN: LoopStation[] = [
   { en: 'Tokyo', ja: '東京', lat: 35.6812, lon: 139.7671 },
   { en: 'Ueno', ja: '上野', lat: 35.7138, lon: 139.7773 },
@@ -261,10 +259,20 @@ export const NORTH_SHINKANSEN: LoopStation[] = [
   { en: 'Okutsugaru-Imabetsu', ja: '奥津軽いまべつ', lat: 41.1449, lon: 140.515 },
   { en: 'Kikonai', ja: '木古内', lat: 41.6776, lon: 140.434 },
   { en: 'Shin-Hakodate-Hokuto', ja: '新函館北斗', lat: 41.9048, lon: 140.6464 },
-  { en: 'Shin-Yakumo', ja: '新八雲', lat: 42.25, lon: 140.22 },
+];
+
+// The rest of the way to Sapporo is by ordinary train: the limited express
+// round the bay and along the south coast, picking up from the Shinkansen at
+// Shin-Hakodate-Hokuto. These are the main stops.
+export const HAKODATE_SAPPORO: LoopStation[] = [
+  { en: 'Mori', ja: '森', lat: 42.1087, lon: 140.5737 },
+  { en: 'Yakumo', ja: '八雲', lat: 42.2537, lon: 140.2727 },
   { en: 'Oshamambe', ja: '長万部', lat: 42.513, lon: 140.376 },
-  { en: 'Kutchan', ja: '倶知安', lat: 42.901, lon: 140.756 },
-  { en: 'Shin-Otaru', ja: '新小樽', lat: 43.155, lon: 140.985 },
+  { en: 'Toya', ja: '洞爺', lat: 42.5514, lon: 140.7636 },
+  { en: 'Higashi-Muroran', ja: '東室蘭', lat: 42.3493, lon: 141.0263 },
+  { en: 'Tomakomai', ja: '苫小牧', lat: 42.6397, lon: 141.5968 },
+  { en: 'Minami-Chitose', ja: '南千歳', lat: 42.8092, lon: 141.6727 },
+  { en: 'Shin-Sapporo', ja: '新札幌', lat: 43.0388, lon: 141.4722 },
   { en: 'Sapporo', ja: '札幌', lat: 43.0687, lon: 141.3508 },
 ];
 
@@ -272,6 +280,6 @@ export const NORTH_SHINKANSEN: LoopStation[] = [
 // short dashed spur from the station you would leave from.
 export const EXCURSIONS = [
   { from: 'Shin-Yokohama', en: 'Kyoto', ja: '京都', by: 'Shinkansen' },
-  { from: 'Ueno', en: 'Sapporo', ja: '札幌', by: 'Shinkansen' },
+  { from: 'Ueno', en: 'Sapporo', ja: '札幌', by: 'Shinkansen, then limited express' },
   { from: 'Takao', en: 'Takaosanguchi', ja: '高尾山口', by: 'Keio Takao Line' },
 ];
